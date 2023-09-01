@@ -5,7 +5,7 @@ import connectDB from "./config/db.js";
 
 import puppeteer from "puppeteer";
 
-const scrapeRiders = async (desiredOffset) => {
+const scrapeTable = async (desiredOffset) => {
   //check for current page, if not start at 0
   try {
     if (!desiredOffset) {
@@ -25,41 +25,107 @@ const scrapeRiders = async (desiredOffset) => {
       await page.goto(url);
 
       //grab rider info from the tr elements
-      const pageRiderData = await page.evaluate(() => {
-        const riderRows = Array.from(document.getElementsByTagName("tr"));
+      const findAnchors = await page.evaluate(() => {
+        const tableRows = Array.from(document.getElementsByTagName("tr"));
 
         //skip first row since it's the header
-        const dataRows = riderRows.slice(1);
+        const dataRows = tableRows.slice(1);
 
         const riderInfo = dataRows.map((rider) => {
-          //map through each tr and grab elements
-          const tdElements = rider.querySelectorAll("td");
-          const spanElement = rider.querySelectorAll("span");
-          const aElements = rider.querySelectorAll("a");
+          //map through and find the first anchor since it has the href i need
+          // const tdElements = rider.querySelectorAll("td");
+          // const spanElement = rider.querySelectorAll("span");
+          const aElement = rider.querySelector("a"); // Use querySelector to get the first 'a' element
+          const href = aElement.getAttribute("href"); // Get the 'href' attribute of the 'a' element
 
           return {
-            ranking: tdElements[0].textContent.trim() || "",
-            nationality: spanElement[1].className,
-            riderName: aElements[0].textContent.trim() || "",
-            team: tdElements[4].textContent.trim() || "",
-            points: aElements[1].textContent.trim() || "",
+            // ranking: tdElements[0].textContent.trim() || "",
+            // nationality: spanElement[1].className,
+            // riderName: aElements[0].textContent.trim() || "",
+            name: `https://www.procyclingstats.com/${href}`,
+            // team: tdElements[4].textContent.trim() || "",
+            // points: aElements[1].textContent.trim() || "",
           };
         });
 
         return riderInfo;
       });
       //add riders to the array and increase the offset to trigger new page load
-      riderData.push(pageRiderData);
+      riderData.push(...findAnchors);
       currentOffset += 100;
     }
-    console.log(riderData);
+
     await browser.close();
+    return riderData;
   } catch (err) {
     console.log(err);
   }
 };
-//call
-scrapeRiders(100);
+
+// call scrapedData and get the result
+(async () => {
+  try {
+    // const riderUrlsToScrape = await scrapeTable(0);
+    // console.log(riderUrlsToScrape)
+    // const data = await scrapeURLS(riderUrlsToScrape);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+})();
+
+const scrapeURLS = async (riderUrlsToScrape) => {
+  //set up puppeteer
+
+  try {
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
+
+    //initiate variable
+    let cyclists = [];
+
+    //for of loop to set up iteration over urls
+    for (let url of riderUrlsToScrape) {
+      // console.log(url);
+      const individualURL = url.name;
+      await page.goto(individualURL);
+
+      const findData = await page.evaluate(() => {
+        const h1Element = document.querySelector("h1");
+        const nationality = document
+          .querySelector(".rdr-info-cont .flag")
+          .getAttribute("class")
+          .split(" ")[2];
+        const nationalityName = document.querySelector(
+          ".rdr-info-cont .black"
+        ).textContent;
+        // const oneDayRaces = document
+        //   .querySelector('.title a:contains("One day races")')
+        //   .previousSibling.textContent.trim();
+        // const gc = document
+        //   .querySelector('.title a:contains("GC")')
+        //   .previousSibling.textContent.trim();
+        const imageSrc = document
+          .querySelector(".rdr-img-cont img")
+          .getAttribute("src");
+        return {
+          name: h1Element.textContent,
+          nationality,
+          nationalityName,
+          // oneDayRaces,
+          // gc,
+          imageSrc,
+        };
+      });
+      cyclists.push(findData);
+      console.log(cyclists);
+    }
+    await browser.close();
+
+    return cyclists;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const port = process.env.PORT || 5000;
 
