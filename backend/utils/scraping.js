@@ -1,6 +1,7 @@
+import Cyclist from "../models/Cyclist.js";
 import puppeteer from "puppeteer";
 
-const scrapeTable = async (desiredOffset) => {
+export const scrapeTable = async (desiredOffset) => {
   //check for current page, if not start at 0
   try {
     if (!desiredOffset) {
@@ -58,7 +59,7 @@ const scrapeTable = async (desiredOffset) => {
 // call scrapedData and get the result
 (async () => {
   try {
-    const riderUrlsToScrape = await scrapeTable(0);
+    const riderUrlsToScrape = await scrapeTable(600);
     // console.log(riderUrlsToScrape)
     const data = await scrapeURLS(riderUrlsToScrape);
   } catch (error) {
@@ -67,7 +68,7 @@ const scrapeTable = async (desiredOffset) => {
 })();
 
 //scrapes the urls grabbed from the scrapeTable function
-const scrapeURLS = async (riderUrlsToScrape) => {
+export const scrapeURLS = async (riderUrlsToScrape) => {
   //set up puppeteer
 
   try {
@@ -80,9 +81,9 @@ const scrapeURLS = async (riderUrlsToScrape) => {
     //for of loop to set up iteration over urls
     for (let url of riderUrlsToScrape) {
       //grab values from return of scrapeTable function
-      const individualURL = url.name;
-      const team = url.team || "";
-      const points = url.points;
+      const individualURL = url.name || "none";
+      const team = url.team || "Free Agent";
+      const points = url.points || 0;
 
       //open puppeteer
       await page.goto(individualURL);
@@ -92,55 +93,75 @@ const scrapeURLS = async (riderUrlsToScrape) => {
           //rider name
           const name = document.querySelector("h1").textContent.trim();
 
-          //classname for flags
-          const nationality = document
-            .querySelector(".rdr-info-cont .flag")
-            .getAttribute("class");
-          // .split(" ")[2];
+          //remove extra spaces
+          const normalizedName = name.replace(/\s+/g, " ").trim();
 
-          //from what country
-          const nationalityName = document
-            .querySelector(".rdr-info-cont .black")
-            .textContent.trim();
-          //grab the image
-          const imageSrc = document
-            .querySelector(".rdr-img-cont img")
-            .getAttribute("src");
+          //classname for flags and checking for values
+          const nationalityElement = document.querySelector(
+            ".rdr-info-cont .flag"
+          );
+          const nationality =
+            nationalityElement?.getAttribute("class") || "n/a";
+
+          //from what country and checking for values
+          const nationalityNameElement = document.querySelector(
+            ".rdr-info-cont .black"
+          );
+          const nationalityName =
+            nationalityNameElement?.textContent.trim() || "n/a";
+
+          //grab the image and checking for values
+          const imageSrc =
+            document.querySelector(".rdr-img-cont img")
+          const image = imageSrc?.getAttribute("src") ||
+            "n/a";
 
           //grab a list of rider specialties, return as an object
           const pointsPerSpecialtyDiv = Array.from(
             document.querySelectorAll(".pps li")
           );
 
-          const riderSpecialties = pointsPerSpecialtyDiv.map((rider) => {
-            const points = Number(
-              rider.querySelector(".pnt").textContent.trim()
-            );
-            const specialty = rider
-              .querySelector(".title a")
-              .textContent.trim();
+          const riderSpecialties = pointsPerSpecialtyDiv?.map((rider) => {
+            const points =
+              Number(rider.querySelector(".pnt")?.textContent.trim()) || 0;
+            const specialty =
+              rider.querySelector(".title a")?.textContent.trim() || "n/a";
 
-            return { points, specialty };
+            return { specialty, points };
           });
 
           return {
-            name,
+            name: normalizedName,
             team,
             nationality,
             nationalityName,
             riderSpecialties,
-            imageSrc,
-            yearEndUciPoints: points,
+            imageSrc: `https://www.procyclingstats.com/${image}`,
+            yearEndUciPoints: Number(points),
           };
         },
         team,
         points
       );
 
-      //push each cyclist to a list
-      cyclists.push(findData);
+      // Create an instance of the Cyclist model
+      const newCyclist = new Cyclist({
+        name: findData.name || "none",
+        team: findData.team || "none",
+        nationality: findData.nationality || "none",
+        nationalityName: findData.nationalityName || "none",
+        riderSpecialties: findData.riderSpecialties || [],
+        imageSrc: findData.imageSrc || "none",
+        yearEndUciPoints: findData.yearEndUciPoints || 0,
+      });
 
-      console.log(cyclists);
+      // Save the instance to the database
+      try {
+        await newCyclist.save();
+        console.log(`Saved ${newCyclist.name} to the database.`);
+      } catch (error) {
+        console.error(`Error saving ${newCyclist.name}: ${error}`);
+      }
     }
     await browser.close();
 
@@ -148,4 +169,8 @@ const scrapeURLS = async (riderUrlsToScrape) => {
   } catch (err) {
     console.log(err);
   }
+  //close mongodb connection
+  mongoose.connection.close();
 };
+
+export default { scrapeTable, scrapeURLS };
