@@ -1,6 +1,13 @@
+import Cyclist from "../models/Cyclist.js";
+import { StatusCodes } from "http-status-codes";
 //@desc    get all riders
 //@route   GET /api/riders
 //@access  public
+
+const getAllRiders = async (req, res) => {
+  const cyclists = await Cyclist.find({});
+  res.status(StatusCodes.OK).json(cyclists);
+};
 
 //@desc    get individual rider stats
 //@route   GET /api/riders/:id
@@ -29,3 +36,6 @@
 //@desc    add teams to league
 //@route   PATCH /api/myLeague
 //@access  private
+
+
+export { getAllRiders }
