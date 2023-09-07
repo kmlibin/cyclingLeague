@@ -20,6 +20,9 @@ const cyclistSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    yearEndRanking: {
+      type: Number
+    },
     nationality: {
       type: String,
       required: true,
