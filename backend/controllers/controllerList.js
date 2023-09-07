@@ -6,7 +6,10 @@ import { StatusCodes } from "http-status-codes";
 //@access  public
 
 const getAllRiders = async (req, res) => {
-  const cyclists = await Cyclist.find({});
+const tab = req.query.tab ? { mainSpecialty: { $regex: req.query.tab, $options: "i" } }
+: {};
+console.log(tab)
+  const cyclists = await Cyclist.find({...tab});
   res.status(StatusCodes.OK).json(cyclists);
 };
 
