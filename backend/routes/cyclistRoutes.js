@@ -1,9 +1,13 @@
-import express from 'express'
+import express from "express";
 
-import { getAllRiders } from '../controllers/controllerList.js'
+import {
+  getAllRiders,
+  getRidersByCategory,
+} from "../controllers/controllerList.js";
 
 const router = express.Router();
 
-router.route("/").get(getAllRiders)
+router.route("/").get(getAllRiders);
+router.route("/:category").get(getRidersByCategory);
 
-export default router
+export default router;
