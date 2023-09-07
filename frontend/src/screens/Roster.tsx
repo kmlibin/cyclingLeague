@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useGetCyclistsQuery } from "../slices/cyclistApiSlice";
 import { Cyclist } from "../interfaces/Cyclist";
-import styled from 'styled-components'
-import  TabsComponent  from '../components/TabsComponent'
+import styled from "styled-components";
+import TabsComponent from "../components/TabsComponent";
 
 import DataTable, { TableColumn } from "react-data-table-component";
 
@@ -42,8 +43,6 @@ const columns: TableColumn<DataRow>[] = [
   },
 ];
 
-
-
 type Props = {};
 
 //override some of the styling of react data table
@@ -52,45 +51,44 @@ const HideSelectionSummary = styled.div`
     display: none;
   }
   .goRgCU {
-   z-index: -10
+    z-index: -10;
   }
   .sc-hLclGa.sc-bqOBKd.eWcvIQ.kNUNAY.rdt_TableCol input[type="checkbox"] {
     display: none;
   }
 `;
 
-
 const Roster = (props: Props) => {
-  const { data: cyclists } = useGetCyclistsQuery({});
+  const { tab } = useParams();
+  console.log(tab);
+  //all doesn't have a value in the db, so pass back an empty object if 'all' in order to get all riders
+  const { data: cyclists, refetch } = useGetCyclistsQuery(tab === 'all' ? {} : tab);
   const handleChange = ({ selectedRows }: { selectedRows: DataRow[] }) => {
     // You can set state or dispatch with something like Redux so we can use the retrieved data
     console.log("Selected Rows: ");
-    
   };
+
+  useEffect(() => {
+    refetch();
+  }, [tab, refetch]);
+
   return (
     <>
-    <TabsComponent />
-    <HideSelectionSummary>
-      <DataTable
-        title="League Roster"
-        columns={columns}
-        data={cyclists || []}
-        selectableRows
-        onSelectedRowsChange={handleChange}
-        dense
-        pagination
-        paginationPerPage={20}
-      />
+      <TabsComponent />
+      <HideSelectionSummary>
+        <DataTable
+          title="League Roster"
+          columns={columns}
+          data={cyclists || []}
+          selectableRows
+          onSelectedRowsChange={handleChange}
+          dense
+          pagination
+          paginationPerPage={20}
+        />
       </HideSelectionSummary>
     </>
   );
 };
 
 export default Roster;
-//  {cyclists?.map((cyclist: Cyclist) => (
-//     <div key={cyclist._id}>
-//       {cyclist.name} {/* Display cyclist data */}
-//     </div>
-//   ))}
-
-
