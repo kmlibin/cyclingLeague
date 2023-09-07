@@ -58,15 +58,15 @@ export const scrapeTable = async (desiredOffset) => {
 };
 
 // call scrapedData and get the result
-// (async () => {
-//   try {
-//     const riderUrlsToScrape = await scrapeTable(600);
-//     // console.log(riderUrlsToScrape)
-//     const data = await scrapeURLS(riderUrlsToScrape);
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// })();
+(async () => {
+  try {
+    const riderUrlsToScrape = await scrapeTable(600);
+    // console.log(riderUrlsToScrape)
+    const data = await scrapeURLS(riderUrlsToScrape);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+})();
 
 //scrapes the urls grabbed from the scrapeTable function
 export const scrapeURLS = async (riderUrlsToScrape) => {
@@ -141,7 +141,7 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
             return { specialty, points };
           });
 
-          // Determine the highest-scoring specialty
+          // determine the highest scoring specialty
           let mainSpecialty = "n/a";
           let highestPoints = 0;
 
@@ -152,7 +152,7 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
             }
           });
 
-          // If "GC" is the highest-scoring specialty, find the second highest-scoring specialty
+          // if "GC" is the highest-scoring, find the second highest-scoring specialty
           if (mainSpecialty === "GC") {
             let secondHighestScoringSpecialty = "n/a";
             let secondHighestPoints = 0;
