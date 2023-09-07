@@ -5,6 +5,11 @@ const specialtySchema = new mongoose.Schema({
   points: Number,
 });
 
+const socialMediaSchema = new mongoose.Schema({
+  icon: String,
+  href: String,
+});
+
 const cyclistSchema = new mongoose.Schema(
   {
     name: {
@@ -23,8 +28,15 @@ const cyclistSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    socialUrls: {
+      type: [socialMediaSchema],
+    },
     riderSpecialties: {
       type: [specialtySchema],
+      required: true,
+    },
+    mainSpecialty: {
+      type: String,
       required: true,
     },
     imageSrc: {
