@@ -1,6 +1,7 @@
 import Cyclist from "../models/Cyclist.js";
 import puppeteer from "puppeteer";
 
+
 export const scrapeTable = async (desiredOffset) => {
   //check for current page, if not start at 0
   try {
@@ -57,15 +58,15 @@ export const scrapeTable = async (desiredOffset) => {
 };
 
 // call scrapedData and get the result
-(async () => {
-  try {
-    const riderUrlsToScrape = await scrapeTable(600);
-    // console.log(riderUrlsToScrape)
-    const data = await scrapeURLS(riderUrlsToScrape);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-})();
+// (async () => {
+//   try {
+//     const riderUrlsToScrape = await scrapeTable(600);
+//     // console.log(riderUrlsToScrape)
+//     const data = await scrapeURLS(riderUrlsToScrape);
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// })();
 
 //scrapes the urls grabbed from the scrapeTable function
 export const scrapeURLS = async (riderUrlsToScrape) => {
@@ -92,7 +93,6 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
         (team, points) => {
           //rider name
           const name = document.querySelector("h1").textContent.trim();
-
           //remove extra spaces
           const normalizedName = name.replace(/\s+/g, " ").trim();
 
@@ -111,10 +111,21 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
             nationalityNameElement?.textContent.trim() || "n/a";
 
           //grab the image and checking for values
-          const imageSrc =
-            document.querySelector(".rdr-img-cont img")
-          const image = imageSrc?.getAttribute("src") ||
-            "n/a";
+          const imageSrc = document.querySelector(".rdr-img-cont img");
+          const image = imageSrc?.getAttribute("src") || "n/a";
+
+          const socialMedia = Array.from(
+            document.querySelectorAll(".list.horizontal.sites li")
+          );
+
+          const socialUrls = socialMedia.map((li) => {
+            const aElement = li.querySelector("a");
+
+            const icon = aElement?.textContent.trim() || "n/a";
+            const href = aElement?.getAttribute("href") || "n/a";
+
+            return { icon, href };
+          });
 
           //grab a list of rider specialties, return as an object
           const pointsPerSpecialtyDiv = Array.from(
@@ -130,19 +141,58 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
             return { specialty, points };
           });
 
+          // Determine the highest-scoring specialty
+          let mainSpecialty = "n/a";
+          let highestPoints = 0;
+
+          riderSpecialties.forEach((specialtyData) => {
+            if (specialtyData.points > highestPoints) {
+              highestPoints = specialtyData.points;
+              mainSpecialty = specialtyData.specialty;
+            }
+          });
+
+          // If "GC" is the highest-scoring specialty, find the second highest-scoring specialty
+          if (mainSpecialty === "GC") {
+            let secondHighestScoringSpecialty = "n/a";
+            let secondHighestPoints = 0;
+
+            riderSpecialties.forEach((specialtyData) => {
+              const points = specialtyData.points;
+              const specialty = specialtyData.specialty;
+
+              if (points > secondHighestPoints && specialty !== "GC") {
+                secondHighestPoints = points;
+                secondHighestScoringSpecialty = specialty;
+              }
+            });
+
+            mainSpecialty = secondHighestScoringSpecialty;
+          }
+
+          const defaultUser = "/images/defaultUser.png";
           return {
             name: normalizedName,
             team,
             nationality,
             nationalityName,
+            socialUrls,
             riderSpecialties,
-            imageSrc: `https://www.procyclingstats.com/${image}`,
+            mainSpecialty,
+            imageSrc:
+              image === "n/a"
+                ? defaultUser
+                : `https://www.procyclingstats.com/${image}`,
             yearEndUciPoints: Number(points),
           };
         },
         team,
         points
       );
+      //push each cyclist to a list
+      cyclists.push(findData);
+
+      console.log(cyclists);
 
       // Create an instance of the Cyclist model
       const newCyclist = new Cyclist({
@@ -150,7 +200,9 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
         team: findData.team || "none",
         nationality: findData.nationality || "none",
         nationalityName: findData.nationalityName || "none",
+        socialUrls: findData.socialUrls || "none",
         riderSpecialties: findData.riderSpecialties || [],
+        mainSpecialty: findData.mainSpecialty || "none",
         imageSrc: findData.imageSrc || "none",
         yearEndUciPoints: findData.yearEndUciPoints || 0,
       });
