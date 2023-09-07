@@ -1,21 +1,37 @@
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import Nav from "react-bootstrap/Nav";
 
-function TabsComponent() {
+type Props = {
+  setTab?: (tab: string | undefined) => void;
+};
+
+function TabsComponent(props: Props) {
+  const navigate = useNavigate();
+
+  const handleClick = (tab: string | undefined) => {
+    console.log(tab);
+    navigate(`/riders/${tab}`);
+  };
+
   return (
-    <Tabs
-      defaultActiveKey="All"
-      transition={true}
-      justify
-      id="noanim-tab-example"
-      className="mb-3"
-    >
-      <Tab eventKey="all" title="All"></Tab>
-      <Tab eventKey="climber" title="Climbers"></Tab>
-      <Tab eventKey="oneday" title="One Day Specialists"></Tab>
-      <Tab eventKey="timetrial" title="Time Trialsts"></Tab>
-      <Tab eventKey="sprint" title="Sprinters"></Tab>
-    </Tabs>
+    <Nav variant="tabs" defaultActiveKey="/home">
+      <Nav.Item onClick = {() => handleClick('all')}>
+        <Nav.Link eventKey="all">All</Nav.Link>
+      </Nav.Item>
+      <Nav.Item onClick = {() => handleClick('Climber')}>
+        <Nav.Link eventKey="climbers">Climbers</Nav.Link>
+      </Nav.Item>
+      <Nav.Item onClick = {() => handleClick('One day races')}>
+        <Nav.Link eventKey="one day">One Day Specialists</Nav.Link>
+      </Nav.Item>
+      <Nav.Item onClick = {() => handleClick('Time trial')}>
+        <Nav.Link eventKey="time trial">Time Trial</Nav.Link>
+      </Nav.Item>
+      <Nav.Item onClick = {() => handleClick('Sprint')}>
+        <Nav.Link eventKey="sprinters">Sprinters</Nav.Link>
+      </Nav.Item>
+    </Nav>
   );
 }
 
