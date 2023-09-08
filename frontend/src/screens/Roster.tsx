@@ -29,7 +29,8 @@ const columns: TableColumn<DataRow>[] = [
   {
     name: "Name",
     selector: (row) => row.name,
-    format: (row) => <a href={`/cyclist/${row.name}`}>{row.name}</a>,
+    //encode the component because the name has spaces in it
+    format: (row) => <a href={`/cyclist/${encodeURIComponent(row.name)}`}>{row.name}</a>,
   },
   {
     name: "Team",
