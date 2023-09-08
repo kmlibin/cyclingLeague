@@ -12,7 +12,14 @@ export const cyclistsApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Cyclist"],
       keepUnusedDataFor: 5
     }),
+    getSingleCyclist: builder.query({
+      query: (cyclistName) => ({
+        url: `${CYCLISTS_URL}/${cyclistName}`
+      }),
+      keepUnusedDataFor: 2
+    })
   }),
+ 
 });
 
-export const { useGetCyclistsQuery } = cyclistsApiSlice;
+export const { useGetCyclistsQuery, useGetSingleCyclistQuery } = cyclistsApiSlice;
