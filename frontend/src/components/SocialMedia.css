@@ -1,0 +1,16 @@
+.socials {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center
+}
+
+.socials a {
+    padding: 0.25em 0.5em 0.25em 0.5em;
+    text-decoration: none;
+    color: #212529
+}
+
+.socials a:hover {
+    color: lightblue;
+}
