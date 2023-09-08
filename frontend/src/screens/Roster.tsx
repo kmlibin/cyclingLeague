@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useGetCyclistsQuery } from "../slices/cyclistApiSlice";
-import { Cyclist } from "../interfaces/Cyclist";
 import styled from "styled-components";
 import TabsComponent from "../components/TabsComponent";
+import SearchBar from "../components/SearchBar";
 
 import DataTable, { TableColumn } from "react-data-table-component";
 
@@ -25,9 +25,11 @@ const columns: TableColumn<DataRow>[] = [
     name: "Specialty",
     selector: (row) => row.mainSpecialty,
   },
+
   {
     name: "Name",
     selector: (row) => row.name,
+    format: (row) => <a href={`/cyclist/${row.name}`}>{row.name}</a>,
   },
   {
     name: "Team",
@@ -36,6 +38,7 @@ const columns: TableColumn<DataRow>[] = [
   {
     name: "Points",
     selector: (row) => row.yearEndUciPoints,
+    sortable: true,
   },
   {
     name: "Cost",
@@ -59,10 +62,18 @@ const HideSelectionSummary = styled.div`
 `;
 
 const Roster = (props: Props) => {
-  const { tab } = useParams();
+  const { tab, keyword } = useParams();
+  const searchObject = {
+    tab: tab === "all" ? {} : tab,
+    keyword: keyword ? keyword : {},
+  };
+
+  console.log(searchObject);
   console.log(tab);
   //all doesn't have a value in the db, so pass back an empty object if 'all' in order to get all riders
-  const { data: cyclists, refetch } = useGetCyclistsQuery(tab === 'all' ? {} : tab);
+  const { data: cyclists, refetch } = useGetCyclistsQuery(
+    searchObject
+  );
   const handleChange = ({ selectedRows }: { selectedRows: DataRow[] }) => {
     // You can set state or dispatch with something like Redux so we can use the retrieved data
     console.log("Selected Rows: ");
@@ -75,6 +86,7 @@ const Roster = (props: Props) => {
   return (
     <>
       <TabsComponent />
+      <SearchBar />
       <HideSelectionSummary>
         <DataTable
           title="League Roster"
@@ -84,6 +96,9 @@ const Roster = (props: Props) => {
           onSelectedRowsChange={handleChange}
           dense
           pagination
+          highlightOnHover
+          responsive
+          fixedHeader
           paginationPerPage={20}
         />
       </HideSelectionSummary>
