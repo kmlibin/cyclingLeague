@@ -2,12 +2,12 @@ import express from "express";
 
 import {
   getAllRiders,
-  getRidersByCategory,
+  getSingleRider,
 } from "../controllers/controllerList.js";
 
 const router = express.Router();
 
 router.route("/").get(getAllRiders);
-router.route("/:category").get(getRidersByCategory);
+router.route("/:name").get(getSingleRider);
 
 export default router;
