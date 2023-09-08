@@ -17,24 +17,17 @@ const getAllRiders = async (req, res) => {
 };
 
 //@desc    get individual rider stats
-//@route   GET /api/cyclists/:category
+//@route   GET /api/cyclists/:name
 //@access  public
 
-const getRidersByCategory = async (req, res) => {
-  try {
-    const { category } = req.params;
-    const cyclists = await Cyclist.find({ mainSpecialty: category });
-    if (!cyclists || cyclists.length === 0) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ msg: "no riders found with that category" });
-    }
-    res.status(StatusCodes.OK).json({ cyclists });
-  } catch (error) {
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Internal server error" });
+const getSingleRider = async (req, res) => {
+  const {name} = req.params;
+  console.log(name)
+  const singleRider = await Cyclist.find({name: name})
+  if(!singleRider) {
+    res.status(StatusCodes.NOT_FOUND).json({msg: 'no cyclist with that name'})
   }
+  res.status(StatusCodes.OK).json({singleRider})
 };
 //@desc    get individual rider stats
 //@route   GET /api/riders/:id
@@ -64,4 +57,4 @@ const getRidersByCategory = async (req, res) => {
 //@route   PATCH /api/myLeague
 //@access  private
 
-export { getAllRiders, getRidersByCategory };
+export { getAllRiders, getSingleRider };
