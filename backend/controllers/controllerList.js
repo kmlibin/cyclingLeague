@@ -1,15 +1,18 @@
 import Cyclist from "../models/Cyclist.js";
 import { StatusCodes } from "http-status-codes";
 
-//@desc    get all riders
+//@desc    get all riders, enable searching through mainspecialty and name
 //@route   GET /api/cyclists
 //@access  public
 
 const getAllRiders = async (req, res) => {
-const tab = req.query.tab ? { mainSpecialty: { $regex: req.query.tab, $options: "i" } }
-: {};
-console.log(tab)
-  const cyclists = await Cyclist.find({...tab});
+  const tab = req.query.tab
+    ? { mainSpecialty: { $regex: req.query.tab, $options: "i" } }
+    : {};
+  const keyword = req.query.keyword
+    ? { name: { $regex: req.query.keyword, $options: "i" } }
+    : {};
+  const cyclists = await Cyclist.find({ ...tab, ...keyword });
   res.status(StatusCodes.OK).json(cyclists);
 };
 
