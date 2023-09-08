@@ -1,21 +1,17 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 
-type Props = {
-  setTab?: (tab: string | undefined) => void;
-};
 
-function TabsComponent(props: Props) {
+function TabsComponent() {
   const navigate = useNavigate();
 
   const handleClick = (tab: string | undefined) => {
-    console.log(tab);
     navigate(`/riders/${tab}`);
   };
 
   return (
-    <Nav variant="tabs" defaultActiveKey="/home">
+    <Nav variant="tabs"  justify>
       <Nav.Item onClick = {() => handleClick('all')}>
         <Nav.Link eventKey="all">All</Nav.Link>
       </Nav.Item>
