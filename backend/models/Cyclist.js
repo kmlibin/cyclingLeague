@@ -52,6 +52,11 @@ const cyclistSchema = new mongoose.Schema(
     currentUciPoints: {
       type: Number,
     },
+    //reference to the team model
+    teamRef: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Team",
+    },
   },
   { timestamps: true }
 );
