@@ -34,7 +34,7 @@ const getSingleRider = async (req, res) => {
 //@route   GET /api/teams
 //@access  public
 
-const getTeams = async (req, res) => {
+const getAllTeams = async (req, res) => {
   const teamRoster = await Team.find().populate('cyclists')
   if (!teamRoster) {
     res.status(StatusCodes.NOT_FOUND).json({msg: 'no teams found'})
@@ -45,6 +45,16 @@ const getTeams = async (req, res) => {
 //@desc    get all races
 //@route   GET /api/races
 //@access  public
+
+const getSingleTeam = async (req, res) => {
+  const {name} = req.params
+  const teamRoster = await Team.find({_id: name}).populate('cyclists')
+  if (!teamRoster) {
+    res.status(StatusCodes.NOT_FOUND).json({msg: 'no teams found'})
+  }
+  res.status(StatusCodes.OK).json(teamRoster)
+}
+
 
 //@desc    get individual race results
 //@route   GET /api/races/:id
@@ -66,4 +76,4 @@ const getTeams = async (req, res) => {
 //@route   PATCH /api/myLeague
 //@access  private
 
-export { getAllRiders, getSingleRider, getTeams };
+export { getAllRiders, getSingleRider, getAllTeams, getSingleTeam };
