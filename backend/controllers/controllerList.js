@@ -1,4 +1,5 @@
 import Cyclist from "../models/Cyclist.js";
+import Team from "../models/Team.js";
 import { StatusCodes } from "http-status-codes";
 
 //@desc    get all riders, enable searching through mainspecialty and name
@@ -29,9 +30,17 @@ const getSingleRider = async (req, res) => {
   }
   res.status(StatusCodes.OK).json({singleRider})
 };
-//@desc    get individual rider stats
-//@route   GET /api/riders/:id
+//@desc    get teams and their roster
+//@route   GET /api/teams
 //@access  public
+
+const getTeams = async (req, res) => {
+  const teamRoster = await Team.find().populate('cyclists')
+  if (!teamRoster) {
+    res.status(StatusCodes.NOT_FOUND).json({msg: 'no teams found'})
+  }
+  res.status(StatusCodes.OK).json(teamRoster)
+}
 
 //@desc    get all races
 //@route   GET /api/races
@@ -57,4 +66,4 @@ const getSingleRider = async (req, res) => {
 //@route   PATCH /api/myLeague
 //@access  private
 
-export { getAllRiders, getSingleRider };
+export { getAllRiders, getSingleRider, getTeams };
