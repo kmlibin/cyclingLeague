@@ -35,5 +35,5 @@ export const cyclistsApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetCyclistsQuery, useGetSingleCyclistQuery, useGetTeamsQuery } =
+export const { useGetCyclistsQuery, useGetSingleCyclistQuery, useGetTeamsQuery, useGetSingleTeamQuery } =
   cyclistsApiSlice;
