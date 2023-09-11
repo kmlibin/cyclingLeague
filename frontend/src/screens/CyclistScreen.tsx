@@ -1,8 +1,9 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useGetSingleCyclistQuery } from "../slices/cyclistApiSlice";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+
 import Image from "react-bootstrap/Image";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -34,7 +35,7 @@ const CyclistScreen: React.FC<Props> = () => {
               <Col md={3}>
                 <Card bg="light" border="dark">
                   <Card.Title className="text-center">
-                    <h2>{rider.name}</h2>
+                   <h2>{rider.name}</h2>
                   </Card.Title>
                   <ListGroup.Item className="text-center pb-2">
                     <strong>Country: </strong>
@@ -60,7 +61,7 @@ const CyclistScreen: React.FC<Props> = () => {
                         <Col>
                           <strong>Team: </strong>
                         </Col>
-                        <Col>{rider.team}</Col>
+                        <Col><Link to={`/teams/${rider.team}`}>{rider.team}</Link></Col>
                       </Row>
                     </ListGroup.Item>
 
