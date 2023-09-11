@@ -10,6 +10,9 @@ import connectDB from "./config/db.js";
 
 //routes
 import cyclistRoutes from "./routes/cyclistRoutes.js";
+import teamRoutes from './routes/teamRoutes.js'
+
+import createTeamData from "./utils/aggregations.js";
 
 //port variable
 const port = process.env.PORT || 5000;
@@ -17,17 +20,28 @@ const port = process.env.PORT || 5000;
 //init db and server
 connectDB();
 const app = express();
-app.use(express.urlencoded({ extended: true }));
+
 
 
 //body parser middleware
 app.use(express.json());
 
+//create team data through aggregation 
+// createTeamData();
+
 app.get("/", (req, res) => {
   res.send("API is up and running...");
 });
 
+
 //routes
 app.use("/api/cyclists", cyclistRoutes);
+app.use("/api/teams", teamRoutes)
 
-app.listen(port, () => console.log(`server running on port ${port}`));
+try {
+  // await createTeamData()
+  app.listen(port, () => console.log(`server running on port ${port}`));
+} catch (error) {
+  
+}
+
