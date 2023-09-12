@@ -14,6 +14,8 @@ import App from "./App";
 import Roster from "./screens/Roster";
 import CyclistScreen from "./screens/CyclistScreen";
 import TeamScreen from './screens/TeamScreen';
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +26,8 @@ const router = createBrowserRouter(
       <Route path="/riders/:tab/search/:keyword" element={<Roster />} />
       <Route path="/cyclist/:name" element={<CyclistScreen />} />
       <Route path="/teams/:name" element={<TeamScreen />} />
+      <Route path="/login" element={<LoginScreen />} />
+      <Route path="/register" element={<RegisterScreen />} />
     </Route>
   )
 );
