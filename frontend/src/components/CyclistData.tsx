@@ -18,6 +18,7 @@ type Props = {
 };
 
 const CyclistData: React.FC<Props> = ({ cyclistData: rider }) => {
+    console.log(rider)
   return (
     <Container
       key={rider._id}
