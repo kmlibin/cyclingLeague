@@ -8,7 +8,7 @@
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
-    "scrape": "node backend/utils/scraping.js",
+    "scrape": "concurrently \"npm run server\" \"node backend/utils/scraping.js\"",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
@@ -22,8 +22,10 @@
   },
   "homepage": "https://github.com/kmlibin/cyclingLeague#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.18.2",
     "http-status-codes": "^2.2.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.0",
     "puppeteer": "^21.1.1"
   },
