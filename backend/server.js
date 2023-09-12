@@ -11,6 +11,7 @@ import connectDB from "./config/db.js";
 //routes
 import cyclistRoutes from "./routes/cyclistRoutes.js";
 import teamRoutes from './routes/teamRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 
 import createTeamData from "./utils/aggregations.js";
 
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 //routes
 app.use("/api/cyclists", cyclistRoutes);
 app.use("/api/teams", teamRoutes)
+app.use("/api/users", userRoutes)
 
 try {
   // await createTeamData()
