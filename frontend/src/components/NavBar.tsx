@@ -7,11 +7,13 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";
+import { LinkContainer } from "react-router-bootstrap";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { userInfo } = useAppSelector((state) => state.auth);
+
   console.log(userInfo);
   const [logoutApiCall] = useLogoutMutation();
 
@@ -29,10 +31,10 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
+            <LinkContainer to = "/"><Nav.Link>Home</Nav.Link></LinkContainer>
             <Nav.Link href="#link">My League</Nav.Link>
 
-            <NavDropdown title={`Welcome name`} id="basic-nav-dropdown">
+            <NavDropdown title={`Welcome username`} id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Another action
