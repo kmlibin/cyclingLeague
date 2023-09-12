@@ -24,7 +24,7 @@ const getAllRiders = async (req, res) => {
 const getSingleRider = async (req, res) => {
   const {name} = req.params;
   console.log(name)
-  const singleRider = await Cyclist.find({name: name})
+  const singleRider = await Cyclist.findOne({name: name})
   if(!singleRider) {
     res.status(StatusCodes.NOT_FOUND).json({msg: 'no cyclist with that name'})
   }
@@ -48,7 +48,7 @@ const getAllTeams = async (req, res) => {
 
 const getSingleTeam = async (req, res) => {
   const {name} = req.params
-  const teamRoster = await Team.find({_id: name}).populate('cyclists')
+  const teamRoster = await Team.findOne({_id: name}).populate('cyclists')
   if (!teamRoster) {
     res.status(StatusCodes.NOT_FOUND).json({msg: 'no teams found'})
   }
