@@ -11,14 +11,8 @@ const CyclistScreen: React.FC = () => {
   //need to decode the names...right now, it's passed as tadej%20Pogacar because spaces are dumb. but i'd rather use rider name than id
   const decodedName = decodeURIComponent(name || "");
   const { data: cyclist } = useGetSingleCyclistQuery(decodedName);
-
-  return (
-    <>
-      {cyclist?.singleRider?.map((rider: Cyclist) => {
-        return <CyclistData key={rider._id} cyclistData={rider} />;
-      })}
-    </>
-  );
+  console.log(cyclist);
+  return <>{cyclist && <CyclistData cyclistData={cyclist} />}</>;
 };
 
 export default CyclistScreen;
