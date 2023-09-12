@@ -38,7 +38,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-//@desc auth user and get token
+//@desc login/authorize user and get token
 //@route POST /api/users/login
 //@access Public
 
