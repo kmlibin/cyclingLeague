@@ -1,13 +1,11 @@
-import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
+import React from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
+const COLORS = ["#cc0000", "#6751eb", "#51d5eb", "#009900", "#ffa500"];
 
-const COLORS = ['#ffa500', '#009900', '#51d5eb','#6751eb', '#cc0000'];
-
-
-const PieChartComponent = ({specialties}) => {
+const PieChartComponent = ({ specialties }) => {
   return (
- <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={300}>
       <PieChart>
         <Pie
           data={specialties}
@@ -17,16 +15,16 @@ const PieChartComponent = ({specialties}) => {
           innerRadius={60}
           outerRadius={80}
           labelLine={false}
-          nameKey = "specialty"
+          nameKey="specialty"
           label
         >
           {specialties.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Legend verticalAlign="bottom" iconType= "circle" height={36} />
+        <Legend verticalAlign="bottom" iconType="circle" height={36} />
       </PieChart>
- </ResponsiveContainer>
+    </ResponsiveContainer>
   );
 };
 
