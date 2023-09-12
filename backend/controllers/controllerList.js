@@ -28,7 +28,7 @@ const getSingleRider = async (req, res) => {
   if(!singleRider) {
     res.status(StatusCodes.NOT_FOUND).json({msg: 'no cyclist with that name'})
   }
-  res.status(StatusCodes.OK).json({singleRider})
+  res.status(StatusCodes.OK).json(singleRider)
 };
 //@desc    get teams and their roster
 //@route   GET /api/teams
