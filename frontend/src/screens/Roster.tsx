@@ -32,6 +32,7 @@ const HideSelectionSummary = styled.div`
 
 const Roster: React.FC = () => {
   const [team, setTeam] = useState<DataRow[]>([]);
+  const [points, setPoints] = useState(0);
   const { tab, keyword } = useParams();
   const searchObject = {
     tab: tab === "all" ? {} : tab,
@@ -43,7 +44,7 @@ const Roster: React.FC = () => {
 
   const addToTeam = (row: DataRow) => {
     setTeam((prev: DataRow[]) => [...prev, row]);
-    console.log(team);
+    setPoints(points + row.yearEndUciPoints / 100);
   };
 
   //split this off into a different file
@@ -87,7 +88,7 @@ const Roster: React.FC = () => {
     // },
     {
       name: "Specialty",
-      maxWidth: '7%',
+      maxWidth: "7%",
       selector: (row) => row.mainSpecialty,
       format: (row) => getColorCircle(row.mainSpecialty),
     },
@@ -111,12 +112,11 @@ const Roster: React.FC = () => {
     },
     {
       name: "Cost",
-      selector: (row) => row.cost,
+      selector: (row) => row.yearEndUciPoints / 100,
     },
     {
       name: "",
       selector: (row) => row.cost,
-
       format: (row) => (
         <button onClick={() => addToTeam(row)}>Add To Team</button>
       ),
@@ -129,8 +129,8 @@ const Roster: React.FC = () => {
 
   useEffect(() => {
     // Log the updated team state when it changes
-    console.log("Updated Team:", team);
-  }, [team]);
+    console.log("Updated Team:", team, points);
+  }, [team, points]);
 
   return (
     <>
