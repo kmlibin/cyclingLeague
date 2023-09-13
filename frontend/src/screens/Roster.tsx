@@ -4,7 +4,10 @@ import { useGetCyclistsQuery } from "../slices/cyclistApiSlice";
 import styled from "styled-components";
 import TabsComponent from "../components/TabsComponent";
 import SearchBar from "../components/SearchBar";
-import Button from "react-bootstrap";
+import MyTeamDropdown from "../components/MyTeamDropdown";
+import getColorCircle from "../utils/circleColor";
+import {MdPersonAdd} from 'react-icons/md'
+import {ImCheckmark} from 'react-icons/im'
 
 import DataTable, { TableColumn } from "react-data-table-component";
 
@@ -32,7 +35,7 @@ const HideSelectionSummary = styled.div`
 
 const Roster: React.FC = () => {
   const [team, setTeam] = useState<DataRow[]>([]);
-  const [points, setPoints] = useState(0);
+  const [pointsSpent, setPointsSpent] = useState<Number>(0);
   const { tab, keyword } = useParams();
   const searchObject = {
     tab: tab === "all" ? {} : tab,
@@ -43,43 +46,21 @@ const Roster: React.FC = () => {
   const { data: cyclists, refetch } = useGetCyclistsQuery(searchObject);
 
   const addToTeam = (row: DataRow) => {
-    setTeam((prev: DataRow[]) => [...prev, row]);
-    setPoints(points + row.yearEndUciPoints / 100);
-  };
-
-  //split this off into a different file
-  const getColorCircle = (mainSpecialty: string) => {
-    const circleSize = "20px"; // Adjust the size as needed
-    const circleStyle: React.CSSProperties = {
-      width: circleSize,
-      height: circleSize,
-      backgroundColor: "transparent",
-      borderRadius: "50%",
-      display: "inline-block",
-    };
-
-    switch (mainSpecialty) {
-      case "One day races":
-        circleStyle.backgroundColor = "#ffa500";
-        break;
-      case "Sprint":
-        circleStyle.backgroundColor = "#009900";
-        break;
-      // Add more cases for other specialties if needed
-      case "Time trial":
-        circleStyle.backgroundColor = "#51d5eb";
-        break;
-      case "Climber":
-        circleStyle.backgroundColor = "#cc0000";
-        break;
-
-      default:
-        circleStyle.backgroundColor = "transparent";
-        break;
+    if (team.includes(row)) {
+      return team;
+    } else {
+      setTeam([...team, row]);
+      setPointsSpent(Number(pointsSpent) + Number(row.yearEndUciPoints / 100));
     }
-
-    return <div style={circleStyle}></div>;
   };
+
+  const deleteFromTeam = (row: DataRow) => {
+    const newTeam = team.filter((rider) => rider.name !== row.name)
+    setTeam(newTeam)
+    //need to set points
+  }
+
+
 
   const columns: TableColumn<DataRow>[] = [
     // {
@@ -117,9 +98,14 @@ const Roster: React.FC = () => {
     {
       name: "",
       selector: (row) => row.cost,
-      format: (row) => (
-        <button onClick={() => addToTeam(row)}>Add To Team</button>
-      ),
+      right: true,
+      format: (row) => {
+        if (team.includes(row)) {
+          return <ImCheckmark style={{color: 'green', fontSize: "1.7em"}}/>;
+        } else {
+          return <button onClick={() => addToTeam(row)} style={{backgroundColor: 'white'}}><MdPersonAdd style={{ fontSize: "1.7em"}} /></button>;
+        }
+      },
     },
   ];
 
@@ -129,12 +115,13 @@ const Roster: React.FC = () => {
 
   useEffect(() => {
     // Log the updated team state when it changes
-    console.log("Updated Team:", team, points);
-  }, [team, points]);
+    console.log("Updated Team:", team, pointsSpent);
+  }, [team, pointsSpent]);
 
   return (
     <>
       <TabsComponent />
+      <MyTeamDropdown team = {team} points= {pointsSpent} deleteFromTeam={deleteFromTeam}/>
       <SearchBar />
       <HideSelectionSummary>
         <DataTable
