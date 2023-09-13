@@ -9,6 +9,7 @@ import getColorCircle from "../utils/circleColor";
 import { MdPersonAdd } from "react-icons/md";
 import { ImCheckmark } from "react-icons/im";
 import calculatePrice from "../utils/calculatePoints";
+import { useCreateLeagueMutation } from "../slices/leagueApiSlice";
 
 import DataTable, { TableColumn } from "react-data-table-component";
 
@@ -19,6 +20,7 @@ type DataRow = {
   team: string;
   yearEndUciPoints: number;
   price: number;
+  _id: string
 };
 
 //override some of the styling of react data table
@@ -36,7 +38,9 @@ const HideSelectionSummary = styled.div`
 
 const Roster: React.FC = () => {
   const [team, setTeam] = useState<DataRow[]>([]);
+  const [teamIds, setTeamIds] = useState<string[]>([])
   const [pointsRemaining, setPointsRemaining] = useState<number>(150);
+  const [createTeam, { isLoading, error}] = useCreateLeagueMutation()
   const { tab, keyword } = useParams();
   const searchObject = {
     tab: tab === "all" ? {} : tab,
@@ -60,6 +64,7 @@ const Roster: React.FC = () => {
       //send error
     } else {
       setTeam([...team, row]);
+      setTeamIds([...teamIds, row._id])
       //I don't have a 'price' on my data, so i have to access year end uci points and put it through calculate Price
       setPointsRemaining(
         pointsRemaining - calculatePrice(row.yearEndUciPoints)
@@ -130,13 +135,26 @@ const Roster: React.FC = () => {
     },
   ];
 
+
+  const createTeamHandler = async () => {
+    try {
+      const cyclistIds: string[] = teamIds
+      console.log(cyclistIds)
+      const res = await createTeam({
+        cyclistIds: cyclistIds, 
+      })
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
     refetch();
   }, [tab, refetch]);
 
   useEffect(() => {
     // Log the updated team state when it changes
-    console.log("Updated Team:", team, pointsRemaining);
+    console.log("Updated Team:", team, teamIds);
   }, [team, pointsRemaining]);
 
   return (
@@ -146,6 +164,7 @@ const Roster: React.FC = () => {
         team={team}
         points={pointsRemaining}
         deleteFromTeam={deleteFromTeam}
+        createTeamHandler = {createTeamHandler}
       />
       <SearchBar />
       <HideSelectionSummary>
