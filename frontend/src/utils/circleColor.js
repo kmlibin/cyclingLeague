@@ -1,4 +1,4 @@
-  //split this off into a different file
+
    const getColorCircle = (mainSpecialty) => {
     const circleSize = "20px"; // Adjust the size as needed
     const circleStyle = {
