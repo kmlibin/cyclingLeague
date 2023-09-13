@@ -27,7 +27,13 @@ const userSchema = new mongoose.Schema(
     myTeam: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Cyclist",
+        ref: "UserTeam",
+      },
+    ],
+    myLeague: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserTeam",
       },
     ],
   },
