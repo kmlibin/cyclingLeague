@@ -1,5 +1,5 @@
 import { apiSlice } from './apiSlice'
-import { LEAGUE_URL } from '../constants';
+import { FANTASY_TEAM_URL } from '../constants';
 
 export const usersApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -7,9 +7,9 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       createLeague: builder.mutation({
         //name and password send in data
         query: (league) => ({
-          url: LEAGUE_URL,
+          url: FANTASY_TEAM_URL,
           method: "POST",
-          body: {...league},
+          body: league,
         }),
       }),
     }),
