@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import { DataRow } from "../types/DataRow";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -8,15 +8,40 @@ import Button from "react-bootstrap/Button";
 import getColorCircle from "../utils/circleColor";
 import { MdPerson, MdPersonRemove } from "react-icons/md";
 import calculatePrice from "../utils/calculatePoints";
+import { useCreateLeagueMutation } from "../slices/fantasyTeamApiSlice";
+import Form from "react-bootstrap/Form";
+import Badge from 'react-bootstrap/Badge'
 
 type Props = {
   team: DataRow[];
   points: Number;
   deleteFromTeam: (row: DataRow) => void;
+  createTeamHandler: () => Promise<void>;
+  teamName: string
+  setTeamName:React.Dispatch<React.SetStateAction<string>>
 };
 
-const MyTeamDropdown: React.FC<Props> = ({ team, points, deleteFromTeam }) => {
-  console.log(team);
+const MyTeamDropdown: React.FC<Props> = ({
+  team,
+  points,
+  deleteFromTeam,
+  createTeamHandler,
+  teamName,
+  setTeamName
+}) => {
+  const pointsValue = points.valueOf();
+  const [editing, setEditing] = useState(true);
+
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setEditing(false);
+    console.log(teamName);
+  };
+
+  const editHandler = () => {
+    setEditing(true);
+  };
+
   return (
     <Accordion>
       <Accordion.Item eventKey="0">
@@ -24,7 +49,7 @@ const MyTeamDropdown: React.FC<Props> = ({ team, points, deleteFromTeam }) => {
           <div className="header-content">
             <p>My Team</p>
             <div className="info">
-              <p>{points.toString()}/150 points</p>
+              <p>{150 - pointsValue}/150 points</p>
               <p>{team.length} riders </p>
             </div>
           </div>
@@ -63,7 +88,46 @@ const MyTeamDropdown: React.FC<Props> = ({ team, points, deleteFromTeam }) => {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item className="text-end">
-              <Button variant="info">Finalize Team</Button>
+              <Row>
+                
+                  {editing ? (
+                  <Col xs={8} >
+                    <Form onSubmit={submitHandler} className="d-flex">
+                      <Form.Group style={{ marginRight: "10px" }}>
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter Your Team Name"
+                          value={teamName}
+                          onChange={(e) => setTeamName(e.target.value)}
+                        ></Form.Control>
+                      </Form.Group>
+                      <Button variant="info" type="submit">
+                        Submit Team Name
+                      </Button>
+                    </Form>
+                    </Col>
+                  ) : (
+                   
+                    <Col className="d-flex">
+                      <Badge bg="dark" className="d-flex align-items-center" style={{marginRight: '10px', minWidth: "20%", fontSize: '18px'}}>{teamName}</Badge>
+                      {teamName ? (
+                        <Button variant="info" onClick={editHandler}>
+                          Edit Team Name
+                        </Button>
+                      ) : (
+                        <Button variant="info" onClick={editHandler}>
+                          Submit Team Name
+                        </Button>
+                      )}
+                    </Col>
+                  )}
+                
+                <Col xs={4}>
+                  <Button variant="info" onClick={createTeamHandler}>
+                    Finalize Team
+                  </Button>
+                </Col>
+              </Row>
             </ListGroup.Item>
           </ListGroup>
         </Accordion.Body>
