@@ -4,9 +4,11 @@ import {
   createTeam
 } from "../controllers/fantasyTeamController.js";
 
+import { protect } from '../middleware/authMiddleware.js'
+
 const router = express.Router();
 
-router.route("/").post(createTeam);
+router.route("/").post(protect, createTeam);
 
 
 export default router;
