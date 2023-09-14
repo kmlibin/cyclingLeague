@@ -1,4 +1,4 @@
-import UserTeam from '../models/UserTeam.js';
+import FantasyTeam from '../models/FantasyTeam.js';
 import {StatusCodes} from 'http-status-codes'
 
 
@@ -8,11 +8,9 @@ import {StatusCodes} from 'http-status-codes'
 //@access Public
 const createTeam = async (req, res) => {
     const { cyclistIds} = req.body
-    console.log(req.body)
-    const owner = req.user._id
+    console.log(req)
 
-    const team = new UserTeam({
-        owner, 
+    const team = new FantasyTeam({
         cyclists: cyclistIds
     })
     const createdTeam = await team.save()

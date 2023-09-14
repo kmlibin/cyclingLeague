@@ -2,7 +2,7 @@ import express from "express";
 
 import {
   createTeam
-} from "../controllers/userTeamController.js";
+} from "../controllers/fantasyTeamController.js";
 
 const router = express.Router();
 

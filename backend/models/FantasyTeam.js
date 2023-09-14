@@ -1,13 +1,12 @@
 import mongoose from "mongoose";
 
-const userTeamSchema = new mongoose.Schema({
+const fantasyTeamSchema = new mongoose.Schema({
   teamName: {
     type: String,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
   },
   cyclists: [
     {
@@ -17,7 +16,7 @@ const userTeamSchema = new mongoose.Schema({
   ],
 });
 
-const UserTeam = mongoose.model("UserTeam", userTeamSchema);
-export default UserTeam;
+const FantasyTeam = mongoose.model("FantasyTeam", fantasyTeamSchema);
+export default FantasyTeam;
 
 
