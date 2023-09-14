@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minLength: 3,
-      maxLength: 25
+      maxLength: 25,
     },
     email: {
       type: String,
@@ -17,19 +17,18 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minLength: 6
+      minLength: 6,
     },
     isAdmin: {
       type: Boolean,
       required: true,
       default: false,
     },
-    myTeam: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "UserTeam",
-      },
-    ],
+    myTeam: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "FantasyTeam",
+    },
+
     myLeague: [
       {
         type: mongoose.Schema.Types.ObjectId,
