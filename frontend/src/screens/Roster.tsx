@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useGetCyclistsQuery } from "../slices/cyclistApiSlice";
 import styled from "styled-components";
 import TabsComponent from "../components/TabsComponent";
@@ -8,6 +8,8 @@ import MyTeamDropdown from "../components/MyTeamDropdown";
 import getColorCircle from "../utils/circleColor";
 import { MdPersonAdd } from "react-icons/md";
 import { ImCheckmark } from "react-icons/im";
+import { updateTeam } from "../slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import calculatePrice from "../utils/calculatePoints";
 import { useCreateLeagueMutation } from "../slices/fantasyTeamApiSlice";
 
@@ -41,17 +43,18 @@ const Roster: React.FC = () => {
   const [teamName, setTeamName] = useState<string>("");
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [pointsRemaining, setPointsRemaining] = useState<number>(150);
-  const navigate = useNavigate()
   const [createTeam, { isLoading, error }] = useCreateLeagueMutation();
+  const { userInfo } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
   const { tab, keyword } = useParams();
   const searchObject = {
     tab: tab === "all" ? {} : tab,
     keyword: keyword ? keyword : {},
   };
-
+  
   //all doesn't have a value in the db, so pass back an empty object if 'all' in order to get all riders
   const { data: cyclists, refetch } = useGetCyclistsQuery(searchObject);
-
+  console.log(userInfo);
   const addToTeam = (row: DataRow) => {
     if (team.includes(row)) {
       return team;
@@ -149,7 +152,17 @@ const Roster: React.FC = () => {
           cyclistIds,
           teamName,
         });
-       //navigate somewhere
+
+        //save to local state
+        //have to typecheck it for the reducer in authSlice (update team, either can have string or object)
+        if (typeof userInfo === "object") {
+          const updatedTeamInfo = {
+            cyclists: cyclistIds,
+            teamName,
+          };
+          dispatch(updateTeam(updatedTeamInfo));
+        }
+        //navigate somewhere
       } catch (error) {
         console.log(error);
       }
