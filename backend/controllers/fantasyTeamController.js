@@ -29,15 +29,21 @@ const createTeam = async (req, res) => {
 //@access Public
 
 const getSingleFantasyTeam = async (req, res) => {
-  const { _id: teamId } = req.body;
-  console.log(teamId);
-  const fantasyTeam = await FantasyTeam.findById(teamId).populate("cyclists");
-  if (!fantasyTeam) {
+  const { userId } = req.params;
+
+  try {
+    const fantasyTeam = await FantasyTeam.findOne({ owner: userId }).populate(
+      "cyclists"
+    );
+    if (!fantasyTeam) {
+      res.status(StatusCodes.NOT_FOUND).json({ msg: "no team with that name" });
+    }
+    res.status(StatusCodes.OK).json(fantasyTeam);
+  } catch (error) {
     res
-      .status(StatusCodes.NOT_FOUND)
-      .json({ msg: "no cyclist with that name" });
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ msg: "internal server error" });
   }
-  res.status(StatusCodes.OK).json(fantasyTeam);
 };
 // const getAllLeagues = async(req,res) => {
 //     try {
