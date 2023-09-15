@@ -22,6 +22,7 @@ const registerUser = async (req, res) => {
     email,
     password,
     isAdmin,
+    myTeam,
   });
 
   if (user) {
@@ -55,6 +56,7 @@ const authUser = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      fantasyTeam: user.myTeam,
     });
   } else {
     res.status(401).json({ msg: "invalid credentials" });
@@ -72,5 +74,7 @@ const logoutUser = async (req, res) => {
   });
   res.status(200).json({ msg: "logged out successfully" });
 };
+
+
 
 export { registerUser, authUser, logoutUser };
