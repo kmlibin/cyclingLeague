@@ -37,6 +37,7 @@ const authSlice = createSlice({
     updateTeam: (state, action) => {
       if (typeof state.userInfo === "object") {
         state.userInfo.fantasyTeam = action.payload;
+        localStorage.setItem("userInfo", JSON.stringify(state.userInfo))
       }
     },
     logout: (state, action) => {
