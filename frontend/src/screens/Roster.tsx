@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useGetCyclistsQuery } from "../slices/cyclistApiSlice";
 import styled from "styled-components";
 import TabsComponent from "../components/TabsComponent";
@@ -46,6 +46,7 @@ const Roster: React.FC = () => {
   const [createTeam, { isLoading, error }] = useCreateLeagueMutation();
   const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { tab, keyword } = useParams();
   const searchObject = {
     tab: tab === "all" ? {} : tab,
@@ -161,8 +162,9 @@ const Roster: React.FC = () => {
             teamName,
           };
           dispatch(updateTeam(updatedTeamInfo));
+          navigate(`/users/${userInfo._id}/dashboard`)
         }
-        //navigate somewhere
+        
       } catch (error) {
         console.log(error);
       }
