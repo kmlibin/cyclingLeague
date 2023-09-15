@@ -22,7 +22,6 @@ const registerUser = async (req, res) => {
     email,
     password,
     isAdmin,
-    myTeam,
   });
 
   if (user) {
@@ -74,7 +73,5 @@ const logoutUser = async (req, res) => {
   });
   res.status(200).json({ msg: "logged out successfully" });
 };
-
-
 
 export { registerUser, authUser, logoutUser };
