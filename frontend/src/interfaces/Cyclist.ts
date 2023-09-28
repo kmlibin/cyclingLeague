@@ -1,7 +1,7 @@
 export interface Cyclist {
     _id: string;
     name: string;
-    yearEndRanking: number
+    yearEndRanking: number;
     imageSrc: string;
     nationality: string;
     nationalityName: string;
@@ -14,4 +14,11 @@ export interface Cyclist {
     team: string,
     yearEndUciPoints: number;
     currentUciPoints?: number
+  }
+
+  export interface FantasyTeam {
+    _id: string;
+    teamName: string;
+    owner: string;
+    cyclists: Cyclist[];
   }
