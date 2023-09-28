@@ -19,6 +19,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import AllTeamsScreen from "./screens/AllTeamsScreen";
 import PrivateRoute from "./components/PrivateRoute";
 import DashboardScreen from "./screens/DashboardScreen";
+import FantasyTeamsScreen from "./screens/FantasyTeamsScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
       <Route path="/users/:id/dashboard" element={<DashboardScreen />} />
+      <Route path="/fantasyteams" element={<FantasyTeamsScreen />} />
   
     </Route>
   )
