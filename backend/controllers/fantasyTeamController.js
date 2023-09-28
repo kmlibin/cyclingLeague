@@ -24,7 +24,7 @@ const createTeam = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ createdTeam });
 };
 
-//@desc fetch all leagues
+//@desc fetch single leagues
 //@route GET /api/fantasyteam
 //@access Public
 
@@ -45,14 +45,23 @@ const getSingleFantasyTeam = async (req, res) => {
       .json({ msg: "internal server error" });
   }
 };
-// const getAllLeagues = async(req,res) => {
-//     try {
-//         const leagues = await League.find().populate('cyclists')
-//         res.json(leagues)
-//     }catch(error) {
-//         console.log('error');
-//         res.status(500).json({msg: 'internal server error'})
-//     }
-// }
 
-export { createTeam, getSingleFantasyTeam };
+//@desc fetch all leagues
+//@route GET /api/fantasyteam
+//@access Public
+
+const getAllFantasyTeams = async (req, res) => {
+  try {
+    const teams = await FantasyTeam.find().populate("cyclists");
+    if (!teams) {
+      res.status(StatusCodes.NOT_FOUND).json({ msg: "no teams available" });
+    }
+    res.status(StatusCodes.OK).json(teams);
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ msg: "internal server error" });
+  }
+};
+
+export { createTeam, getSingleFantasyTeam, getAllFantasyTeams };
