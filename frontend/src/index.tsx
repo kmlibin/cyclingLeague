@@ -17,6 +17,8 @@ import TeamScreen from './screens/TeamScreen';
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import AllTeamsScreen from "./screens/AllTeamsScreen";
+import PrivateRoute from "./components/PrivateRoute";
+import DashboardScreen from "./screens/DashboardScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +32,8 @@ const router = createBrowserRouter(
       <Route path="/teams/:name" element={<TeamScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
+      <Route path="/users/:id/dashboard" element={<DashboardScreen />} />
+  
     </Route>
   )
 );
