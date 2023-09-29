@@ -8,7 +8,6 @@ import Button from "react-bootstrap/Button";
 import getColorCircle from "../utils/circleColor";
 import { MdPerson, MdPersonRemove } from "react-icons/md";
 import calculatePrice from "../utils/calculatePoints";
-import { useCreateLeagueMutation } from "../slices/fantasyTeamApiSlice";
 import Form from "react-bootstrap/Form";
 import Badge from 'react-bootstrap/Badge'
 
