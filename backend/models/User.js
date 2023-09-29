@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "FantasyTeam",
     },
+    myLeague: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "FantasyTeam"
+    }
   },
   { timestamps: true }
 );
