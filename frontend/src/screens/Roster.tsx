@@ -11,7 +11,7 @@ import { ImCheckmark } from "react-icons/im";
 import { updateTeam } from "../slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import calculatePrice from "../utils/calculatePoints";
-import { useCreateLeagueMutation } from "../slices/fantasyTeamApiSlice";
+import { useCreateTeamMutation } from "../slices/fantasyTeamApiSlice";
 
 import DataTable, { TableColumn } from "react-data-table-component";
 
@@ -43,7 +43,7 @@ const Roster: React.FC = () => {
   const [teamName, setTeamName] = useState<string>("");
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [pointsRemaining, setPointsRemaining] = useState<number>(150);
-  const [createTeam, { isLoading, error }] = useCreateLeagueMutation();
+  const [createTeam, { isLoading, error }] = useCreateTeamMutation();
   const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
