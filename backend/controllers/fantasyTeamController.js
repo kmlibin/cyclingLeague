@@ -2,7 +2,7 @@ import FantasyTeam from "../models/FantasyTeam.js";
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
 
-//@desc create league
+//@desc create team
 //@route POST /api/fantasyteam
 //@access Public
 const createTeam = async (req, res) => {
@@ -24,7 +24,7 @@ const createTeam = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ createdTeam });
 };
 
-//@desc fetch single leagues
+//@desc fetch single teams
 //@route GET /api/fantasyteam
 //@access Public
 
@@ -46,13 +46,13 @@ const getSingleFantasyTeam = async (req, res) => {
   }
 };
 
-//@desc fetch all leagues
+//@desc fetch all teams
 //@route GET /api/fantasyteam
 //@access Public
 
 const getAllFantasyTeams = async (req, res) => {
   try {
-    const teams = await FantasyTeam.find().populate("cyclists");
+    const teams = await FantasyTeam.find().populate("cyclists").populate({path: "owner", select: "name"});
     if (!teams) {
       res.status(StatusCodes.NOT_FOUND).json({ msg: "no teams available" });
     }
