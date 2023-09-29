@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import './index.css'
 import NavBar from "./components/NavBar";
 
 const App = () => {
