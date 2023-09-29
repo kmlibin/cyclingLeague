@@ -14,6 +14,7 @@ import Row from "react-bootstrap/Row";
 import { ImCheckmark } from "react-icons/im";
 import { User } from "../interfaces/Cyclist";
 import { useAppSelector } from "../hooks/hooks";
+import { isDoStatement } from "typescript";
 
 type League = {
   teamName: string;
@@ -23,35 +24,44 @@ type League = {
 
 const FantasyTeamsScreen = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
-  const fantasyTeam = (userInfo as User)?.fantasyTeam.teamName;
   const [createLeague, setCreateLeague] = useState(false);
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const { data: team } = useGetAllFantasyTeamsQuery({});
   const [league, setLeague] = useState<League[]>([]);
   const [edit, setEdit] = useState(false);
+  const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
   const [leagueName, setLeagueName] = useState("Click to Edit League Name");
-  console.log(team);
 
-  //find logged in user's fantasy team
-  let userFantasyTeam = null;
-
-  if (team) {
-    for (const t of team) {
-      if (typeof userInfo === "object") {
-        if (t.owner._id === userInfo._id) {
-          userFantasyTeam = t;
-          break;
+  //find logged in user's fantasy team so that it will always show in leagues, and cannot be deleted from league or ids
+  useEffect(() => {
+    if (team) {
+      for (const t of team) {
+        if (typeof userInfo === "object") {
+          if (t.owner._id === userInfo._id) {
+            console.log(t);
+            setUserFantasyTeam({
+              teamName: t.teamName,
+              owner: { _id: t._id, name: t.owner.name },
+              id: t._id,
+            });
+            break;
+          }
         }
       }
     }
-  }
+  }, [team, userInfo]);
 
-  if (userFantasyTeam) {
-    console.log("User's fantasy team found:", userFantasyTeam);
-  } else {
-    console.log("User does not have a fantasy team.");
-  }
+  //kept getting stuck in infinite loop if this wasn't in a useEffect. now set teamIds and leagues so that users fantasy league is inside
+  useEffect(() => {
+    if (userFantasyTeam) {
+      setTeamIds([userFantasyTeam.id]);
+      setLeague([userFantasyTeam]);
+    } else {
+      console.log("User does not have a fantasy team.");
+    }
+  }, [userFantasyTeam]);
 
+  //add team to league
   const addToLeague = (
     teamName: string,
     owner: { name: string; _id: string },
@@ -75,11 +85,18 @@ const FantasyTeamsScreen = () => {
     }
   };
 
+  //delete team from league
   const deleteFromLeague = (idToDelete: string) => {
+    //make sure logged in users team cannot be deleted
+    if (userFantasyTeam && userFantasyTeam.id === idToDelete) {
+      console.log("cannot delete");
+      return;
+    }
     let ids: string[] = [];
     const leagueIds = league.map((team) => {
       ids.push(team.id);
     });
+
     const newLeague = league.filter((team) => team.id !== idToDelete);
     setLeague(newLeague);
     setTeamIds((prev) => prev.filter((id) => id !== idToDelete));
@@ -121,11 +138,17 @@ const FantasyTeamsScreen = () => {
 
   return (
     <Container className="d-flex flex-column">
-      <Row className="button-container w-100 d-flex justify-content-end mb-2">
-        <Button style={{ width: "15%" }} onClick={() => setCreateLeague(true)}>
-          Create New League
-        </Button>
-      </Row>
+      {!createLeague && (
+        <Row className="button-container w-100 d-flex justify-content-end mb-2">
+          <Button
+            style={{ width: "15%" }}
+            onClick={() => setCreateLeague(true)}
+          >
+            Create New League
+          </Button>
+        </Row>
+      )}
+
       {createLeague && (
         <Accordion>
           <Accordion.Item eventKey="0">
