@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ListGroup from "react-bootstrap/ListGroup";
 import Badge from "react-bootstrap/Badge";
@@ -7,58 +7,189 @@ import Accordion from "react-bootstrap/Accordion";
 import Container from "react-bootstrap/Container";
 import { useGetAllFantasyTeamsQuery } from "../slices/fantasyTeamApiSlice";
 import { GrAdd } from "react-icons/gr";
+import { IoMdRemove } from "react-icons/io";
+import { FantasyTeam } from "../interfaces/Cyclist";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import { ImCheckmark } from "react-icons/im";
+import { User } from "../interfaces/Cyclist";
+import { useAppSelector } from "../hooks/hooks";
+
+type League = {
+  teamName: string;
+  owner: { name: string; _id: string };
+  id: string;
+};
 
 const FantasyTeamsScreen = () => {
-  const [createLeague, setCreateLeague] = useState(true);
-  const [edit, setEdit] = useState(false);
-  const [leagueName, setLeagueName] = useState("Click to Edit Team Name");
+  const { userInfo } = useAppSelector((state) => state.auth);
+  const fantasyTeam = (userInfo as User)?.fantasyTeam.teamName;
+  const [createLeague, setCreateLeague] = useState(false);
+  const [teamIds, setTeamIds] = useState<string[]>([]);
   const { data: team } = useGetAllFantasyTeamsQuery({});
+  const [league, setLeague] = useState<League[]>([]);
+  const [edit, setEdit] = useState(false);
+  const [leagueName, setLeagueName] = useState("Click to Edit League Name");
   console.log(team);
 
+  //find logged in user's fantasy team
+  let userFantasyTeam = null;
 
-  const addToLeague = (id: string) => {};
+  if (team) {
+    for (const t of team) {
+      if (typeof userInfo === "object") {
+        if (t.owner._id === userInfo._id) {
+          userFantasyTeam = t;
+          break;
+        }
+      }
+    }
+  }
+
+  if (userFantasyTeam) {
+    console.log("User's fantasy team found:", userFantasyTeam);
+  } else {
+    console.log("User does not have a fantasy team.");
+  }
+
+  const addToLeague = (
+    teamName: string,
+    owner: { name: string; _id: string },
+    id: string
+  ) => {
+    let ids: string[] = [];
+    const leagueIds = league.map((team) => {
+      ids.push(team.id);
+    });
+
+    if (ids.includes(id)) {
+      return league;
+      //send error
+    }
+    if (team.length >= 10) {
+      return league;
+      //send error
+    } else {
+      setLeague([...league, { teamName, owner, id }]);
+      setTeamIds([...teamIds, id]);
+    }
+  };
+
+  const deleteFromLeague = (idToDelete: string) => {
+    let ids: string[] = [];
+    const leagueIds = league.map((team) => {
+      ids.push(team.id);
+    });
+    const newLeague = league.filter((team) => team.id !== idToDelete);
+    setLeague(newLeague);
+    setTeamIds((prev) => prev.filter((id) => id !== idToDelete));
+  };
+
+  //   const createLeagueHandler = async () => {
+  //     const confirmed = window.confirm(
+  //       "Finalize league? You'll no longer be able to edit..."
+  //     );
+  //     if (confirmed) {
+  //       try {
+  //         const cyclistIds: string[] = teamIds;
+  //         console.log(cyclistIds);
+  //         const res = await createTeam({
+  //           cyclistIds,
+  //           teamName,
+  //         });
+
+  //         //save to local state
+  //         //have to typecheck it for the reducer in authSlice (update team, either can have string or object)
+  //         if (typeof userInfo === "object") {
+  //           const updatedTeamInfo = {
+  //             cyclists: cyclistIds,
+  //             teamName,
+  //           };
+  //           dispatch(updateTeam(updatedTeamInfo));
+  //           navigate(`/users/${userInfo._id}/dashboard`)
+  //         }
+
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //   };
+
+  useEffect(() => {
+    console.log(league, teamIds);
+  });
+
   return (
     <Container className="d-flex flex-column">
-      <div className="button-container w-100 d-flex justify-content-end mb-2">
+      <Row className="button-container w-100 d-flex justify-content-end mb-2">
         <Button style={{ width: "15%" }} onClick={() => setCreateLeague(true)}>
           Create New League
         </Button>
-      </div>
+      </Row>
       {createLeague && (
         <Accordion>
           <Accordion.Item eventKey="0">
-          <Accordion.Header>
-            {edit ? (
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                setEdit(false)
-              }}>
-                <input
-                  type="text"
-                  placeholder="League Name"
-                  value={leagueName}
-                  onChange={(e) => setLeagueName(e.target.value)}
-                />
-                {/* <button type="submit">Save</button> */}
-              </form>
-            ) : (
-              <div onClick={() => setEdit(true)}>{leagueName}</div>
-            )}
-          </Accordion.Header>
-
+            <Accordion.Header>
+              {edit ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setEdit(false);
+                  }}
+                >
+                  <input
+                    type="text"
+                    placeholder="League Name"
+                    value={leagueName}
+                    onChange={(e) => setLeagueName(e.target.value)}
+                  />
+                  {/* <button type="submit">Save</button> */}
+                </form>
+              ) : (
+                <div onClick={() => setEdit(true)}>{leagueName}</div>
+              )}
+            </Accordion.Header>
             <Accordion.Body>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
+              {league?.map((team) => (
+                <ListGroup.Item
+                  key={team.id}
+                  as="li"
+                  className="d-flex justify-content-between align-items-center mt-2"
+                >
+                  <div className="ms-2 me-auto">
+                    <div className="fw-bold">{team.teamName}</div>
+                    {team.owner.name}
+                  </div>
+                  <div></div>
+                  <Button
+                    style={{ marginLeft: "1rem" }}
+                    size="sm"
+                    variant="danger"
+                    onClick={() => deleteFromLeague(team.id)}
+                  >
+                    <IoMdRemove
+                      style={{ fontSize: "1.9rem", color: "black" }}
+                    />
+                  </Button>
+                </ListGroup.Item>
+              ))}
+
+              <ListGroup.Item className="d-flex justify-content-center align-items-end flex-column mt-2">
+                <Row>
+                  <Col>
+                    <Button variant="info">Finalize Team</Button>
+                  </Col>
+                </Row>
+              </ListGroup.Item>
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
       )}
+
       <ListGroup as="ol">
+        <Row className="text-center m-2">
+          <h2>Fantasy Teams</h2>
+        </Row>
         {team?.map((team: any) => {
           return (
             <ListGroup.Item
@@ -76,12 +207,19 @@ const FantasyTeamsScreen = () => {
               </Badge>
 
               {createLeague && (
-                <button
-                  onClick={() => addToLeague(team._id)}
-                  style={{ backgroundColor: "white", marginLeft: "1rem" }}
+                <Button
+                  variant="success"
+                  onClick={() =>
+                    addToLeague(team.teamName, team.owner, team._id)
+                  }
+                  style={{ marginLeft: "1rem" }}
                 >
-                  <GrAdd style={{ fontSize: "1.7em", color: "black" }} />
-                </button>
+                  {league.some((leagueTeam) => leagueTeam.id === team._id) ? (
+                    <ImCheckmark />
+                  ) : (
+                    <GrAdd style={{ fontSize: "1.7rem", color: "green" }} />
+                  )}
+                </Button>
               )}
             </ListGroup.Item>
           );
