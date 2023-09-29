@@ -4,7 +4,7 @@ import { FANTASY_TEAM_URL } from "../constants";
 export const fantasyApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     //sends request to backend and gets cookie. then when we get data back, we call "set credentials" in authslice
-    createLeague: builder.mutation({
+    createTeam: builder.mutation({
       //name and password send in data
       query: (league) => ({
         url: FANTASY_TEAM_URL,
@@ -29,5 +29,5 @@ export const fantasyApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useCreateLeagueMutation, useGetSingleFantasyTeamQuery, useGetAllFantasyTeamsQuery } =
+export const { useCreateTeamMutation, useGetSingleFantasyTeamQuery, useGetAllFantasyTeamsQuery } =
   fantasyApiSlice;
