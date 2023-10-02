@@ -13,14 +13,13 @@ import "./assets/index.css";
 import App from "./App";
 import Roster from "./screens/Roster";
 import CyclistScreen from "./screens/CyclistScreen";
-import TeamScreen from './screens/TeamScreen';
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import AllTeamsScreen from "./screens/AllTeamsScreen";
 import PrivateRoute from "./components/PrivateRoute";
 import DashboardScreen from "./screens/DashboardScreen";
 import FantasyTeamsScreen from "./screens/FantasyTeamsListScreen";
-import FantasyTeamScreen from "./screens/FantasyTeamScreen";
+import TeamDataScreen from "./screens/TeamDataScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,14 +30,12 @@ const router = createBrowserRouter(
       <Route path="/riders/:tab/search/:keyword" element={<Roster />} />
       <Route path="/cyclist/:name" element={<CyclistScreen />} />
       <Route path="/teams" element={<AllTeamsScreen />} />
-      <Route path="/teams/:name" element={<TeamScreen />} />
+      <Route path="/teams/:name" element={<TeamDataScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
       <Route path="/users/:id/dashboard" element={<DashboardScreen />} />
       <Route path="/fantasyteams" element={<FantasyTeamsScreen />} />
-      <Route path="/fantasyteams/:teamId" element={<FantasyTeamScreen />} />
-
-  
+      <Route path="/fantasyteams/:teamId" element={<TeamDataScreen />} />
     </Route>
   )
 );
