@@ -100,4 +100,31 @@ const createLeague = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ User });
 };
 
-export { createTeam, getSingleFantasyTeam, getAllFantasyTeams, createLeague, getSingleFantasyTeamById };
+//@desc get list of teams in users' league
+//@route GET /api/fantasyteam/:id/myleague
+//@access private eventually
+const getLeague = async (req, res) => {
+  const { userId } = req.params;
+console.log(userId)
+  try {
+    const fantasyLeague = await User.findOne({_id: userId}).populate({
+      path: "myLeague.teamIds",
+      populate: {
+        path: "owner",
+        select: "name"
+      }
+    }
+    );
+    if (!fantasyLeague) {
+      res.status(StatusCodes.NOT_FOUND).json({ msg: "no league with that user" });
+    }
+  const {myLeague } = fantasyLeague
+    res.status(StatusCodes.OK).json(myLeague);
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ msg: "internal server error" });
+  }
+};
+
+export { createTeam, getSingleFantasyTeam, getAllFantasyTeams, createLeague, getSingleFantasyTeamById, getLeague };
