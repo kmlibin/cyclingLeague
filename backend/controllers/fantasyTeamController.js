@@ -52,7 +52,9 @@ const getSingleFantasyTeam = async (req, res) => {
 
 const getAllFantasyTeams = async (req, res) => {
   try {
-    const teams = await FantasyTeam.find().populate("cyclists").populate({path: "owner", select: "name"});
+    const teams = await FantasyTeam.find()
+      .populate("cyclists")
+      .populate({ path: "owner", select: "name" });
     if (!teams) {
       res.status(StatusCodes.NOT_FOUND).json({ msg: "no teams available" });
     }
@@ -64,4 +66,19 @@ const getAllFantasyTeams = async (req, res) => {
   }
 };
 
-export { createTeam, getSingleFantasyTeam, getAllFantasyTeams };
+//@desc create fantasy league teams
+//@route PATCH /api/fantasyteam/:id/myleague
+//@access private eventually
+const createLeague = async (req, res) => {
+  const { leagueName, teamIds } = req.body;
+  const owner = req.user._id;
+
+  // update the user's myLeaguefield
+  await User.findByIdAndUpdate(owner, {
+    myLeague: { name: leagueName, teamIds: teamIds },
+  });
+
+  res.status(StatusCodes.CREATED).json({ User });
+};
+
+export { createTeam, getSingleFantasyTeam, getAllFantasyTeams, createLeague };

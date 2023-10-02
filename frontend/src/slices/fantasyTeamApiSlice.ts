@@ -26,8 +26,15 @@ export const fantasyApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+    createLeague: builder.mutation({
+      query: ({id, leagueDetails}) => ({
+        url: `${FANTASY_TEAM_URL}/${id}/myleague`,
+        method: "PATCH",
+        body: {...leagueDetails},
+      }),
+    }),
   }),
 });
 
-export const { useCreateTeamMutation, useGetSingleFantasyTeamQuery, useGetAllFantasyTeamsQuery } =
+export const { useCreateTeamMutation, useGetSingleFantasyTeamQuery, useGetAllFantasyTeamsQuery, useCreateLeagueMutation } =
   fantasyApiSlice;
