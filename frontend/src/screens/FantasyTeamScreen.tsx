@@ -1,29 +1,20 @@
-import React from 'react'
-import { useParams } from 'react-router-dom';
-import { useGetSingleFantasyTeamQuery } from '../slices/fantasyTeamApiSlice';
-import CyclistData from '../components/CyclistData';
-import { Cyclist } from '../interfaces/Cyclist';
-import { useAppSelector } from '../hooks/hooks';
+import React from "react";
+import { useParams } from "react-router-dom";
+import { useGetSingleFantasyTeamByIdQuery } from "../slices/fantasyTeamApiSlice";
+import CyclistData from "../components/CyclistData";
+import { Cyclist } from "../interfaces/Cyclist";
 
-const FantasyTeamScreen = () => {
-    const { id } = useParams();
-    const userInfo = useAppSelector((state) => state.auth)
-console.log(id)
-const userId = (typeof userInfo === 'object') ? userInfo._id : null
+const FantasyTeamScreen: React.FC = () => {
+  const { teamId } = useParams();
+  const { data: team } = useGetSingleFantasyTeamByIdQuery(teamId);
 
-
-    const { data: team } = useGetSingleFantasyTeamQuery(id);
-    console.log(team)
-  
   return (
     <>
-    {team?.map((rider: Cyclist) => (
+      {team?.cyclists?.map((rider: Cyclist) => (
         <CyclistData key={rider._id} cyclistData={rider} /> // Return the component here
-    ))}
+      ))}
+    </>
+  );
+};
 
-</>
-  )
-}
-
-
-export default FantasyTeamScreen
+export default FantasyTeamScreen;
