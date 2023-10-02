@@ -25,7 +25,7 @@ const createTeam = async (req, res) => {
 };
 
 //@desc fetch single teams
-//@route GET /api/fantasyteam
+//@route GET /api/fantasyteam/:userId
 //@access Public
 
 const getSingleFantasyTeam = async (req, res) => {
@@ -43,6 +43,25 @@ const getSingleFantasyTeam = async (req, res) => {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
+  }
+};
+
+//@desc fetch single teams BY THEIR IDS
+//@route GET /api/fantasyteam/teams/:teamId
+//@access Public
+
+const getSingleFantasyTeamById = async (req, res) => {
+  const { teamId } = req.params;
+  try {
+    const fantasyTeam = await FantasyTeam.findById(teamId).populate("cyclists");
+    if (!fantasyTeam) {
+      res.status(StatusCodes.NOT_FOUND).json({ msg: "No team with that ID" });
+    }
+    res.status(StatusCodes.OK).json(fantasyTeam);
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ msg: "Internal server error" });
   }
 };
 
@@ -81,4 +100,4 @@ const createLeague = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ User });
 };
 
-export { createTeam, getSingleFantasyTeam, getAllFantasyTeams, createLeague };
+export { createTeam, getSingleFantasyTeam, getAllFantasyTeams, createLeague, getSingleFantasyTeamById };
