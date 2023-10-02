@@ -25,7 +25,7 @@ type League = {
   id: string;
 };
 
-const FantasyTeamsScreen = () => {
+const FantasyTeamsListScreen = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
   const [showCreateLeague, setShowCreateLeague] = useState(false);
   const [teamIds, setTeamIds] = useState<string[]>([]);
@@ -37,7 +37,7 @@ const FantasyTeamsScreen = () => {
   const [createLeague, { isLoading, error }] = useCreateLeagueMutation();
   const navigate = useNavigate();
 
-  console.log(leagueName);
+  console.log(team);
   //find logged in user's fantasy team so that it will always show in leagues, and cannot be deleted from league or ids
   useEffect(() => {
     if (team) {
@@ -223,7 +223,7 @@ const FantasyTeamsScreen = () => {
               className="d-flex justify-content-between align-items-center mt-2"
             >
               <div className="ms-2 me-auto">
-                <Link to={`/fantasyteams/${encodeURIComponent(team._id)}`}>
+                <Link to={`/fantasyteams/${team._id}`}>
                   <div className="fw-bold">{team.teamName}</div>
                 </Link>
               </div>
@@ -254,4 +254,4 @@ const FantasyTeamsScreen = () => {
   );
 };
 
-export default FantasyTeamsScreen;
+export default FantasyTeamsListScreen;
