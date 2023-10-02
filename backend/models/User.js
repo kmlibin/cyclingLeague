@@ -29,9 +29,12 @@ const userSchema = new mongoose.Schema(
       ref: "FantasyTeam",
     },
     myLeague: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "FantasyTeam"
-    }
+      name: String,
+      teamIds: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "FantasyTeam",
+      }],
+    },
   },
   { timestamps: true }
 );
