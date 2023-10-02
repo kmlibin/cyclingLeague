@@ -5,7 +5,10 @@ import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
 import Container from "react-bootstrap/Container";
-import { useGetAllFantasyTeamsQuery } from "../slices/fantasyTeamApiSlice";
+import {
+  useGetAllFantasyTeamsQuery,
+  useCreateLeagueMutation,
+} from "../slices/fantasyTeamApiSlice";
 import { GrAdd } from "react-icons/gr";
 import { IoMdRemove } from "react-icons/io";
 import { FantasyTeam } from "../interfaces/Cyclist";
@@ -14,7 +17,7 @@ import Row from "react-bootstrap/Row";
 import { ImCheckmark } from "react-icons/im";
 import { User } from "../interfaces/Cyclist";
 import { useAppSelector } from "../hooks/hooks";
-import { isDoStatement } from "typescript";
+import { useNavigate } from "react-router-dom";
 
 type League = {
   teamName: string;
@@ -24,14 +27,17 @@ type League = {
 
 const FantasyTeamsScreen = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
-  const [createLeague, setCreateLeague] = useState(false);
+  const [showCreateLeague, setShowCreateLeague] = useState(false);
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const { data: team } = useGetAllFantasyTeamsQuery({});
   const [league, setLeague] = useState<League[]>([]);
   const [edit, setEdit] = useState(false);
   const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
   const [leagueName, setLeagueName] = useState("Click to Edit League Name");
+  const [createLeague, { isLoading, error }] = useCreateLeagueMutation();
+  const navigate = useNavigate();
 
+  console.log(leagueName);
   //find logged in user's fantasy team so that it will always show in leagues, and cannot be deleted from league or ids
   useEffect(() => {
     if (team) {
@@ -92,45 +98,39 @@ const FantasyTeamsScreen = () => {
       console.log("cannot delete");
       return;
     }
-    let ids: string[] = [];
-    const leagueIds = league.map((team) => {
-      ids.push(team.id);
-    });
+    // let ids: string[] = [];
+    // const leagueIds = league.map((team) => {
+    //   ids.push(team.id);
+    // });
 
     const newLeague = league.filter((team) => team.id !== idToDelete);
     setLeague(newLeague);
     setTeamIds((prev) => prev.filter((id) => id !== idToDelete));
   };
 
-  //   const createLeagueHandler = async () => {
-  //     const confirmed = window.confirm(
-  //       "Finalize league? You'll no longer be able to edit..."
-  //     );
-  //     if (confirmed) {
-  //       try {
-  //         const cyclistIds: string[] = teamIds;
-  //         console.log(cyclistIds);
-  //         const res = await createTeam({
-  //           cyclistIds,
-  //           teamName,
-  //         });
-
-  //         //save to local state
-  //         //have to typecheck it for the reducer in authSlice (update team, either can have string or object)
-  //         if (typeof userInfo === "object") {
-  //           const updatedTeamInfo = {
-  //             cyclists: cyclistIds,
-  //             teamName,
-  //           };
-  //           dispatch(updateTeam(updatedTeamInfo));
-  //           navigate(`/users/${userInfo._id}/dashboard`)
-  //         }
-
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   };
+  //send league to backend, to be stored in user model
+  const createLeagueHandler = async () => {
+    const confirmed = window.confirm(
+      "Finalize league? You'll no longer be able to edit..."
+    );
+    if (confirmed) {
+      try {
+        //make sure userInfo exists
+        if (typeof userInfo === "object") {
+          const res = await createLeague({
+            id: userInfo._id,
+            leagueDetails: {
+              leagueName,
+              teamIds,
+            },
+          });
+          navigate(`/users/${userInfo._id}/dashboard`);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   useEffect(() => {
     console.log(league, teamIds);
@@ -138,18 +138,18 @@ const FantasyTeamsScreen = () => {
 
   return (
     <Container className="d-flex flex-column">
-      {!createLeague && (
+      {!showCreateLeague && (
         <Row className="button-container w-100 d-flex justify-content-end mb-2">
           <Button
             style={{ width: "15%" }}
-            onClick={() => setCreateLeague(true)}
+            onClick={() => setShowCreateLeague(true)}
           >
             Create New League
           </Button>
         </Row>
       )}
 
-      {createLeague && (
+      {showCreateLeague && (
         <Accordion>
           <Accordion.Item eventKey="0">
             <Accordion.Header>
@@ -200,7 +200,9 @@ const FantasyTeamsScreen = () => {
               <ListGroup.Item className="d-flex justify-content-center align-items-end flex-column mt-2">
                 <Row>
                   <Col>
-                    <Button variant="info">Finalize Team</Button>
+                    <Button variant="info" onClick={createLeagueHandler}>
+                      Finalize Team
+                    </Button>
                   </Col>
                 </Row>
               </ListGroup.Item>
@@ -229,7 +231,7 @@ const FantasyTeamsScreen = () => {
                 {team.cyclists.length}
               </Badge>
 
-              {createLeague && (
+              {showCreateLeague && (
                 <Button
                   variant="success"
                   onClick={() =>
