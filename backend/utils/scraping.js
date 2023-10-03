@@ -1,6 +1,6 @@
 import Cyclist from "../models/Cyclist.js";
 import puppeteer from "puppeteer";
-
+import createTeamData from "./aggregations.js";
 
 export const scrapeTable = async (desiredOffset) => {
   //check for current page, if not start at 0
@@ -33,12 +33,18 @@ export const scrapeTable = async (desiredOffset) => {
           const tdElements = rider.querySelectorAll("td"); //get all td elements
           const aElement = rider.querySelector("a"); //  get the first 'a' element
           const href = aElement.getAttribute("href"); // get 'href' attribute of the 'a' element
+          const rank = tdElements[0].textContent.trim() | "";
           const team = tdElements[4].textContent.trim() || "";
           const points = tdElements[5].textContent.trim();
+
+          // Extract the rider's name from the URL
+          const riderName = decodeURIComponent(href.split("/").pop() || "");
           return {
             name: `https://www.procyclingstats.com/${href}`,
             team,
             points,
+            rank,
+            riderName,
           };
         });
 
@@ -57,22 +63,14 @@ export const scrapeTable = async (desiredOffset) => {
   }
 };
 
-// call scrapedData and get the result
-(async () => {
-  try {
-    const riderUrlsToScrape = await scrapeTable(600);
-    // console.log(riderUrlsToScrape)
-    const data = await scrapeURLS(riderUrlsToScrape);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-})();
+
 
 //scrapes the urls grabbed from the scrapeTable function
 export const scrapeURLS = async (riderUrlsToScrape) => {
   //set up puppeteer
 
   try {
+    await Cyclist.deleteMany({})
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
 
@@ -85,12 +83,13 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
       const individualURL = url.name || "none";
       const team = url.team || "Free Agent";
       const points = url.points || 0;
+      const rank = url.rank || 0;
 
       //open puppeteer
       await page.goto(individualURL);
 
       const findData = await page.evaluate(
-        (team, points) => {
+        (team, points, rank) => {
           //rider name
           const name = document.querySelector("h1").textContent.trim();
           //remove extra spaces
@@ -174,6 +173,7 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
           return {
             name: normalizedName,
             team,
+            rank,
             nationality,
             nationalityName,
             socialUrls,
@@ -187,7 +187,8 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
           };
         },
         team,
-        points
+        points,
+        rank
       );
       //push each cyclist to a list
       cyclists.push(findData);
@@ -198,6 +199,7 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
       const newCyclist = new Cyclist({
         name: findData.name || "none",
         team: findData.team || "none",
+        prevYearRank: findData.rank || "none",
         nationality: findData.nationality || "none",
         nationalityName: findData.nationalityName || "none",
         socialUrls: findData.socialUrls || "none",
@@ -225,4 +227,84 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
   mongoose.connection.close();
 };
 
-export default { scrapeTable, scrapeURLS };
+export const scrapeAndUpdateData = async (riderUrlsToScrape) => {
+  try {
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
+
+    for (let url of riderUrlsToScrape) {
+      // console.log(url)
+      //grab values from return of scrapeTable function
+      const rank = url.rank || "";
+      const individualURL = url.name || "none";
+
+      //open puppeteer
+      await page.goto(individualURL);
+
+      const findData = await page.evaluate((rank) => {
+        //rider name
+        const name = document.querySelector("h1").textContent.trim();
+        //remove extra spaces
+        const normalizedName = name.replace(/\s+/g, " ").trim();
+
+        return {
+          name: normalizedName,
+          rank,
+        };
+      }, rank);
+
+      const name = findData.name || "none";
+      const existingRider = await Cyclist.findOne({ name: name });
+      // console.log(existingRider)
+      if (existingRider) {
+        existingRider.prevYearRank = findData.rank;
+
+        try {
+          await existingRider.save();
+          console.log(`Updated ${existingRider.name}'s rank in the db`);
+        } catch (error) {
+          console.log(`Error updating ${existingRider.name} in db: ${error}`);
+        }
+      }
+    }
+
+    console.log("after the loop");
+  } catch (error) {
+    console.log(error);
+  }
+
+  // riderData.push(findData)
+  // console.log(riderData)
+};
+
+//for initial data scrape, to seed the db, call scrape table, save result
+// and send return to scrapeURLS where data is actually saved in db:
+
+export const seedDataBase = (async () => {
+  try {
+    const riderUrlsToScrape = await scrapeTable(800);
+    const data = await scrapeURLS(riderUrlsToScrape);
+    await createTeamData();
+  } catch (error) {
+    console.error("Error:", error);
+  }
+});
+
+// to update the current points (and rank, because I didn't do it the first time), call
+// scrapeTable again, save the result and then send it to scrapeToUpdateData
+
+export const updateRiderData = (async () => {
+  try {
+    const riderUrlsToScrape = await scrapeTable(600);
+    console.log("scraping 1 success");
+    const updatedNames = await scrapeAndUpdateData(riderUrlsToScrape);
+    console.log("update success")
+  } catch (error) {
+    console.error("Error:", error);
+  }
+});
+
+
+
+
+export default { scrapeTable, scrapeURLS, scrapeAndUpdateData, seedDataBase, updateRiderData };
