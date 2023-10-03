@@ -20,8 +20,8 @@ const cyclistSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    yearEndRanking: {
-      type: Number
+    prevYearRank : {
+      type: String || Number,
     },
     nationality: {
       type: String,
