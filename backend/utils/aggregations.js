@@ -1,9 +1,11 @@
 import Cyclist from "../models/Cyclist.js";
 import Team from "../models/Team.js";
 
+
 //create team db from an aggregation of cyclists. in backend, i populate cyclist stats based on ids
 export const createTeamData = async () => {
   try {
+    await Team.deleteMany({});
     const teams = await Cyclist.aggregate([
       {
         $group: {
