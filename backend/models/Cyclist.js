@@ -21,7 +21,7 @@ const cyclistSchema = new mongoose.Schema(
       required: true,
     },
     prevYearRank : {
-      type: String || Number,
+      type: String,
     },
     nationality: {
       type: String,
@@ -50,7 +50,10 @@ const cyclistSchema = new mongoose.Schema(
       required: true,
     },
     currentUciPoints: {
-      type: Number,
+      type: String
+    },
+    currentRank: {
+      type: String
     },
     //reference to the team model
     teamRef: {
