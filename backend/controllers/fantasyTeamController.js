@@ -11,17 +11,29 @@ const createTeam = async (req, res) => {
 
   //if team is not 25 ids, throw error
 
-  const team = new FantasyTeam({
-    owner,
-    cyclists: cyclistIds,
-    teamName,
-  });
-  const createdTeam = await team.save();
+  //check if user already has a team, if so, delete.
+  try {
+    const existingTeam = await FantasyTeam.findOne({ owner });
+    if (existingTeam) {
+      await FantasyTeam.deleteMany({ owner });
+    }
 
-  // update the user's myTeam field
-  await User.findByIdAndUpdate(owner, { myTeam: createdTeam._id });
-  console.log(createdTeam);
-  res.status(StatusCodes.CREATED).json({ createdTeam });
+    const team = new FantasyTeam({
+      owner,
+      cyclists: cyclistIds,
+      teamName,
+    });
+    const createdTeam = await team.save();
+
+    // update the user's myTeam field
+    await User.findByIdAndUpdate(owner, { myTeam: createdTeam._id, $unset: {myLeague: ""} });
+    res.status(StatusCodes.CREATED).json({ createdTeam });
+  } catch (error) {
+    console.log("error creating team");
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to create team" });
+  }
 };
 
 //@desc fetch single teams
@@ -105,20 +117,21 @@ const createLeague = async (req, res) => {
 //@access private eventually
 const getLeague = async (req, res) => {
   const { userId } = req.params;
-console.log(userId)
+  console.log(userId);
   try {
-    const fantasyLeague = await User.findOne({_id: userId}).populate({
+    const fantasyLeague = await User.findOne({ _id: userId }).populate({
       path: "myLeague.teamIds",
       populate: {
         path: "owner",
-        select: "name"
-      }
-    }
-    );
+        select: "name",
+      },
+    });
     if (!fantasyLeague) {
-      res.status(StatusCodes.NOT_FOUND).json({ msg: "no league with that user" });
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ msg: "no league with that user" });
     }
-  const {myLeague } = fantasyLeague
+    const { myLeague } = fantasyLeague;
     res.status(StatusCodes.OK).json(myLeague);
   } catch (error) {
     res
@@ -127,4 +140,11 @@ console.log(userId)
   }
 };
 
-export { createTeam, getSingleFantasyTeam, getAllFantasyTeams, createLeague, getSingleFantasyTeamById, getLeague };
+export {
+  createTeam,
+  getSingleFantasyTeam,
+  getAllFantasyTeams,
+  createLeague,
+  getSingleFantasyTeamById,
+  getLeague,
+};
