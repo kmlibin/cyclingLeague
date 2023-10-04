@@ -15,8 +15,6 @@ import teamRoutes from "./routes/teamRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import fantasyTeamRoutes from "./routes/fantasyTeamRoutes.js";
 
-import createTeamData from "./utils/aggregations.js";
-
 //port variable
 const port = process.env.PORT || 5000;
 
@@ -24,13 +22,11 @@ const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
 
+
 //body parser middleware
 app.use(express.json());
-app.use(express.urlencoded({extended: true}))
-app.use(cookieParser())
-
-//create team data through aggregation
-// createTeamData();
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("API is up and running...");
