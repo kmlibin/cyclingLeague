@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const fantasyTeamSchema = new mongoose.Schema({
   teamName: {
-    type: String,
+    type: String, 
     required: true,
   },
   owner: {
