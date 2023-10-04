@@ -14,6 +14,9 @@ const NavBar = () => {
   const dispatch = useAppDispatch();
   const { userInfo } = useAppSelector((state) => state.auth);
 
+  const id = typeof userInfo === "object" ? userInfo._id : null;
+  const userName = typeof userInfo === "object" ? userInfo.name : null;
+
   console.log(userInfo);
   const [logoutApiCall] = useLogoutMutation();
 
@@ -31,20 +34,38 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <LinkContainer to = "/"><Nav.Link>Home</Nav.Link></LinkContainer>
-            <Nav.Link href="#link">My League</Nav.Link>
+            <LinkContainer to="/">
+              <Nav.Link>Home</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/roster">
+              <Nav.Link>Cyclists</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/roster">
+              <Nav.Link>Fantasy Team</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/teams">
+              <Nav.Link>Teams</Nav.Link>
+            </LinkContainer>
 
-            <NavDropdown title={`Welcome username`} id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item onClick={logoutHandler}>
-                Logout
-              </NavDropdown.Item>
-            </NavDropdown>
+            {userInfo && (
+              <NavDropdown
+                title={`Welcome ${userName}`}
+                id="basic-nav-dropdown"
+              >
+                <LinkContainer to={`/users/${id}/dashboard`}>
+                  <NavDropdown.Item>Dashboard</NavDropdown.Item>
+                </LinkContainer>
+
+                <NavDropdown.Item href="#action/3.2">
+                  Another action
+                </NavDropdown.Item>
+
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={logoutHandler}>
+                  Logout
+                </NavDropdown.Item>
+              </NavDropdown>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
