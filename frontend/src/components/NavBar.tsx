@@ -40,9 +40,6 @@ const NavBar = () => {
             <LinkContainer to="/roster">
               <Nav.Link>Cyclists</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/roster">
-              <Nav.Link>Fantasy Team</Nav.Link>
-            </LinkContainer>
             <LinkContainer to="/teams">
               <Nav.Link>Teams</Nav.Link>
             </LinkContainer>
@@ -56,9 +53,13 @@ const NavBar = () => {
                   <NavDropdown.Item>Dashboard</NavDropdown.Item>
                 </LinkContainer>
 
-                <NavDropdown.Item href="#action/3.2">
-                  Another action
-                </NavDropdown.Item>
+                <LinkContainer to={`/`}>
+                  <NavDropdown.Item>Build Fantasy Team</NavDropdown.Item>
+                </LinkContainer>
+
+                <LinkContainer to={`/fantasyteams`}>
+                  <NavDropdown.Item>Build Fantasy League</NavDropdown.Item>
+                </LinkContainer>
 
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={logoutHandler}>
