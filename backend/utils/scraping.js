@@ -63,14 +63,12 @@ export const scrapeTable = async (desiredOffset) => {
   }
 };
 
-
-
 //scrapes the urls grabbed from the scrapeTable function
 export const scrapeURLS = async (riderUrlsToScrape) => {
   //set up puppeteer
 
   try {
-    await Cyclist.deleteMany({})
+    await Cyclist.deleteMany({});
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
 
@@ -192,8 +190,7 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
       );
       //push each cyclist to a list
       cyclists.push(findData);
-
-      console.log(cyclists);
+      // console.log(cyclists);
 
       // Create an instance of the Cyclist model
       const newCyclist = new Cyclist({
@@ -227,7 +224,7 @@ export const scrapeURLS = async (riderUrlsToScrape) => {
   mongoose.connection.close();
 };
 
-export const scrapeAndUpdateData = async (riderUrlsToScrape) => {
+export const scrapeAndUpdateRank = async (riderUrlsToScrape) => {
   try {
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
@@ -272,15 +269,90 @@ export const scrapeAndUpdateData = async (riderUrlsToScrape) => {
   } catch (error) {
     console.log(error);
   }
+};
 
-  // riderData.push(findData)
-  // console.log(riderData)
+export const scrapePointsAndRank = async (riderUrlsToScrape) => {
+  //set up puppeteer
+
+  try {
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
+
+    //initiate variable to store data
+    let cyclists = [];
+
+    //for of loop to set up iteration over urls
+    for (let url of riderUrlsToScrape) {
+      //grab values from return of scrapeTable function
+      const individualURL = url.name || "none";
+
+      //open puppeteer
+      await page.goto(individualURL);
+
+      const findData = await page.evaluate(() => {
+        //rider name
+        const name = document.querySelector("h1").textContent.trim();
+        //remove extra spaces
+        const normalizedName = name.replace(/\s+/g, " ").trim();
+
+        let currentRank = "n/a";
+        let currentPoints = "n/a";
+
+        // Check if the rankings element exists
+        const rankings = document.querySelector(
+          ".list.horizontal.rdr-rankings"
+        );
+        if (rankings) {
+          // Get all <li> elements within the rankings element
+          const rankingItems = rankings.querySelectorAll("li");
+          if (rankingItems.length > 0) {
+            // Grab the second div element inside the first li element
+            const secondDiv = rankingItems[0].querySelectorAll("div")[1];
+            currentRank = secondDiv ? secondDiv.textContent.trim() : "N/A";
+          }
+        }
+        // get uci score
+        const rdrResultsSum = document.querySelector(".rdrResultsSum");
+        // Find all <b> elements within the <div>
+        if(rdrResultsSum) {
+          const boldElements = rdrResultsSum.querySelectorAll("b");
+          if (boldElements.length >= 3) {
+            currentPoints = boldElements[2].textContent.trim();
+          }
+        }
+
+        return {
+          name: normalizedName,
+          currentRank: currentRank || "n/a",
+          currentPoints: currentPoints || "n/a",
+        };
+      });
+
+      const name = findData.name || "none";
+      const existingRider = await Cyclist.findOne({ name: name });
+      // console.log(existingRider)
+      if (existingRider) {
+        existingRider.currentRank = findData.currentRank;
+        existingRider.currentUciPoints = findData.currentPoints;
+
+        try {
+          await existingRider.save();
+          // console.log(`Updated ${existingRider.name}'s rank in the db`);
+        } catch (error) {
+          console.log(`Error updating ${existingRider.name} in db: ${error}`);
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 //for initial data scrape, to seed the db, call scrape table, save result
-// and send return to scrapeURLS where data is actually saved in db:
+// and send return to scrapeURLS where data is actually saved in db. then run the aggregate function to
+//create teams collection and store in db.
 
-export const seedDataBase = (async () => {
+export const seedDataBase = async () => {
   try {
     const riderUrlsToScrape = await scrapeTable(800);
     const data = await scrapeURLS(riderUrlsToScrape);
@@ -288,23 +360,39 @@ export const seedDataBase = (async () => {
   } catch (error) {
     console.error("Error:", error);
   }
-});
+};
 
-// to update the current points (and rank, because I didn't do it the first time), call
+// I didn't do year end rank the first time...it should work in the initial seed data now, but if it doesn't here is the func. calls
 // scrapeTable again, save the result and then send it to scrapeToUpdateData
 
-export const updateRiderData = (async () => {
+export const updateYearEndRank = async () => {
   try {
-    const riderUrlsToScrape = await scrapeTable(600);
+    const riderUrlsToScrape = await scrapeTable(800);
     console.log("scraping 1 success");
-    const updatedNames = await scrapeAndUpdateData(riderUrlsToScrape);
-    console.log("update success")
+    const updatedNames = await scrapeAndUpdateRank(riderUrlsToScrape);
+    console.log("update success");
   } catch (error) {
     console.error("Error:", error);
   }
-});
+};
 
+//this is the function that will essentially update cyclists' current ranking, and current uci points.
+export const updatePointsAndRank = async () => {
+  try {
+    const riderUrlsToScrape = await scrapeTable(800);
+    console.log("scraping 1 success");
+    const updatedNames = await scrapePointsAndRank(riderUrlsToScrape);
+    console.log("update success");
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
-
-
-export default { scrapeTable, scrapeURLS, scrapeAndUpdateData, seedDataBase, updateRiderData };
+export default {
+  scrapeTable,
+  scrapeURLS,
+  scrapeAndUpdateRank,
+  seedDataBase,
+  updateYearEndRank,
+  updatePointsAndRank,
+};
