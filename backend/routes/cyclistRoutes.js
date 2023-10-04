@@ -7,7 +7,7 @@ import {
 
 const router = express.Router();
 
-router.route("/").get(getAllRiders);
+router.route("/").get( getAllRiders);
 router.route("/:name").get(getSingleRider);
 
 export default router;
