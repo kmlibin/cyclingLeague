@@ -10,12 +10,14 @@ const createTeam = async (req, res) => {
   const owner = req.user._id;
 
   //if team is not 25 ids, throw error
+  //no name, throw error
 
   //check if user already has a team, if so, delete.
   try {
     const existingTeam = await FantasyTeam.findOne({ owner });
     if (existingTeam) {
       await FantasyTeam.deleteMany({ owner });
+      await User.findByIdAndUpdate(owner, { $unset: { myLeague: "" } });
     }
 
     const team = new FantasyTeam({
@@ -26,7 +28,7 @@ const createTeam = async (req, res) => {
     const createdTeam = await team.save();
 
     // update the user's myTeam field
-    await User.findByIdAndUpdate(owner, { myTeam: createdTeam._id, $unset: {myLeague: ""} });
+    await User.findByIdAndUpdate(owner, { myTeam: createdTeam._id });
     res.status(StatusCodes.CREATED).json({ createdTeam });
   } catch (error) {
     console.log("error creating team");
@@ -104,12 +106,24 @@ const createLeague = async (req, res) => {
   const { leagueName, teamIds } = req.body;
   const owner = req.user._id;
 
-  // update the user's myLeaguefield
-  await User.findByIdAndUpdate(owner, {
+  try {
+
+    const updatedUser =   await User.findByIdAndUpdate(owner, {
     myLeague: { name: leagueName, teamIds: teamIds },
   });
 
-  res.status(StatusCodes.CREATED).json({ User });
+  if(!updatedUser) {
+    console.log('user not found')
+  } else {
+    console.log('league created')
+  }
+  res.status(StatusCodes.CREATED).json({ msg: "created" });
+  }catch(error) {
+    console.log('error creating league')
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "internal server error" });
+
+  }
+  
 };
 
 //@desc get list of teams in users' league
@@ -117,6 +131,7 @@ const createLeague = async (req, res) => {
 //@access private eventually
 const getLeague = async (req, res) => {
   const { userId } = req.params;
+  console.log("fetched");
   console.log(userId);
   try {
     const fantasyLeague = await User.findOne({ _id: userId }).populate({
