@@ -15,7 +15,8 @@ export interface Cyclist {
   mainSpecialty: string;
   team: string;
   yearEndUciPoints: number;
-  currentUciPoints?: number;
+  currentUciPoints: number;
+  currentRank: string
 }
 
 export interface FantasyTeam {
