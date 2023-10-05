@@ -1,6 +1,9 @@
 import Cyclist from "../models/Cyclist.js";
+import FantasyTeam from "../models/FantasyTeam.js";
 import puppeteer from "puppeteer";
-import createTeamData from "./aggregations.js";
+import {createTeamData} from "../utils/index.js";
+import {recalculateTotalPoints} from '../utils/index.js'
+
 
 export const scrapeTable = async (desiredOffset) => {
   //check for current page, if not start at 0
@@ -308,7 +311,7 @@ export const scrapePointsAndRank = async (riderUrlsToScrape) => {
           if (rankingItems.length > 0) {
             // Grab the second div element inside the first li element
             const secondDiv = rankingItems[0].querySelectorAll("div")[1];
-            currentRank = secondDiv ? secondDiv.textContent.trim() : "N/A";
+            currentRank = secondDiv ? secondDiv.textContent.trim() : "n/a";
           }
         }
         // get uci score
@@ -337,6 +340,10 @@ export const scrapePointsAndRank = async (riderUrlsToScrape) => {
 
         try {
           await existingRider.save();
+          const affectedTeams = await FantasyTeam.find({cyclists: existingRider._id})
+          for (const team of affectedTeams) {
+            await recalculateTotalPoints(team._id)
+          }
           // console.log(`Updated ${existingRider.name}'s rank in the db`);
         } catch (error) {
           console.log(`Error updating ${existingRider.name} in db: ${error}`);
