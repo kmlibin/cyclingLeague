@@ -15,6 +15,9 @@ const fantasyTeamSchema = new mongoose.Schema({
       ref: "Cyclist",
     },
   ],
+  totalPoints: {
+    type: Number,
+  }
 });
 
 const FantasyTeam = mongoose.model("FantasyTeam", fantasyTeamSchema);
