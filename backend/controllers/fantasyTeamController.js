@@ -1,6 +1,7 @@
 import FantasyTeam from "../models/FantasyTeam.js";
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
+import { calculateTotalPoints } from "../utils/index.js";
 
 //@desc create team
 //@route POST /api/fantasyteam
@@ -12,8 +13,9 @@ const createTeam = async (req, res) => {
   //if team is not 25 ids, throw error
   //no name, throw error
 
-  //check if user already has a team, if so, delete.
   try {
+    const totalPoints = await calculateTotalPoints(cyclistIds);
+    //check if user already has a team, if so, delete.
     const existingTeam = await FantasyTeam.findOne({ owner });
     if (existingTeam) {
       await FantasyTeam.deleteMany({ owner });
@@ -24,7 +26,9 @@ const createTeam = async (req, res) => {
       owner,
       cyclists: cyclistIds,
       teamName,
+      totalPoints,
     });
+
     const createdTeam = await team.save();
 
     // update the user's myTeam field
@@ -107,23 +111,22 @@ const createLeague = async (req, res) => {
   const owner = req.user._id;
 
   try {
+    const updatedUser = await User.findByIdAndUpdate(owner, {
+      myLeague: { name: leagueName, teamIds: teamIds },
+    });
 
-    const updatedUser =   await User.findByIdAndUpdate(owner, {
-    myLeague: { name: leagueName, teamIds: teamIds },
-  });
-
-  if(!updatedUser) {
-    console.log('user not found')
-  } else {
-    console.log('league created')
+    if (!updatedUser) {
+      console.log("user not found");
+    } else {
+      console.log("league created");
+    }
+    res.status(StatusCodes.CREATED).json({ msg: "created" });
+  } catch (error) {
+    console.log("error creating league");
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ msg: "internal server error" });
   }
-  res.status(StatusCodes.CREATED).json({ msg: "created" });
-  }catch(error) {
-    console.log('error creating league')
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: "internal server error" });
-
-  }
-  
 };
 
 //@desc get list of teams in users' league
