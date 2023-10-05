@@ -16,7 +16,7 @@ const router = express.Router();
 router.route("/").post(protect, createTeam).get(getAllFantasyTeams);
 router.route("/teams/:teamId").get(getSingleFantasyTeamById);
 router.route("/:userId").get(protect, getSingleFantasyTeam);
-router.route("/:userId/myleague").patch(protect, createLeague).get(getLeague);
+router.route("/:userId/myleague").patch(protect, createLeague).get(protect, getLeague);
 
 export default router;
 
