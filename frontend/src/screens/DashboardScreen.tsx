@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppSelector } from "../hooks/hooks";
 import {
   useGetLeagueQuery,
@@ -13,10 +13,18 @@ import TeamList from "../components/TeamList";
 
 const DashboardScreen: React.FC = () => {
   const { id } = useParams();
+  console.log(id);
   const { data: team } = useGetSingleFantasyTeamQuery(id);
-  const { data: league } = useGetLeagueQuery(id);
-
+  const { data: league, refetch }: any = useGetLeagueQuery(id);
+  // console.log(league);
   const { userInfo } = useAppSelector((state) => state.auth);
+
+  //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
+  //to fetch once it mounts. not ideal, but it's a fine patch until i can figure out why the behavior happens.
+  useEffect(() => {
+    refetch();
+  }, []);
+
   console.log(userInfo);
   return (
     <Container
@@ -37,6 +45,7 @@ const DashboardScreen: React.FC = () => {
                 <TeamList data={team} />
               </Col>
             </Row>
+
             <Row
               className="d-flex flex-column"
               style={{ backgroundColor: "orange" }}
