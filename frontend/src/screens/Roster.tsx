@@ -12,6 +12,8 @@ import { updateTeam } from "../slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import calculatePrice from "../utils/calculatePoints";
 import { useCreateTeamMutation } from "../slices/fantasyTeamApiSlice";
+import CountryFlag from "react-country-flag";
+import { getCode } from "country-list";
 
 import DataTable, { TableColumn } from "react-data-table-component";
 
@@ -23,6 +25,8 @@ type DataRow = {
   yearEndUciPoints: number;
   price: number;
   _id: string;
+  prevYearRank: string;
+  nationalityName: string;
 };
 
 //override some of the styling of react data table
@@ -52,7 +56,7 @@ const Roster: React.FC = () => {
     tab: tab === "all" ? {} : tab,
     keyword: keyword ? keyword : {},
   };
-  
+
   //all doesn't have a value in the db, so pass back an empty object if 'all' in order to get all riders
   const { data: cyclists, refetch } = useGetCyclistsQuery(searchObject);
   console.log(userInfo);
@@ -94,14 +98,22 @@ const Roster: React.FC = () => {
     {
       name: "Rank",
       maxWidth: "7%",
-      selector: (row) => 1,
+      selector: (row) => row.prevYearRank,
+      sortable: true,
     },
     {
       name: "Name",
       selector: (row) => row.name,
       //encode the component because the name has spaces in it
       format: (row) => (
-        <a href={`/cyclist/${encodeURIComponent(row.name)}`}>{row.name}</a>
+        <>
+          <CountryFlag
+            countryCode={getCode(row.nationalityName) || "none"}
+            svg
+          />
+          &nbsp;
+          <a href={`/cyclist/${encodeURIComponent(row.name)}`}>{row.name}</a>
+        </>
       ),
     },
     {
@@ -162,9 +174,8 @@ const Roster: React.FC = () => {
             teamName,
           };
           dispatch(updateTeam(updatedTeamInfo));
-          navigate(`/users/${userInfo._id}/dashboard`)
+          navigate(`/users/${userInfo._id}/dashboard`);
         }
-        
       } catch (error) {
         console.log(error);
       }
