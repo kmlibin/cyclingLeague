@@ -12,10 +12,10 @@ import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
 import { Cyclist } from "../interfaces/Cyclist";
 import calculatePrice from "../utils/calculatePoints";
-import ListGroup from "react-bootstrap/ListGroup";
 
 import TeamList from "../components/TeamList";
 import PieChartComponent from "../components/PieChartComponent";
+import { LinkContainer } from "react-router-bootstrap";
 
 type SpecialtyData = {
   specialty: string;
@@ -32,6 +32,8 @@ const DashboardScreen: React.FC = () => {
   const [sortedTeams, setSortedTeams] = useState<any[]>()
   console.log(league);
   const { userInfo } = useAppSelector((state) => state.auth);
+
+  console.log(league)
 
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
   //to fetch once it mounts. not ideal, but it's a fine patch until i can figure out why the behavior happens.
@@ -120,9 +122,6 @@ const DashboardScreen: React.FC = () => {
     leagueSort()
   }, [team, league]);
 
-  console.log(sortedTeams);
-
-  const first = team?.cyclists[0];
 
   return (
     <Container
@@ -131,7 +130,7 @@ const DashboardScreen: React.FC = () => {
     >
       <Row
         md={3}
-        className="item1  align-items-center"
+        className="item-margin align-items-center"
         style={{ backgroundColor: "yellow" }}
       >
         <Col className="d-flex flex-column align-items-center w-100">
@@ -191,10 +190,10 @@ const DashboardScreen: React.FC = () => {
       >
         <Col>
           <Container fluid className="d-flex flex-column">
-            <h2>
-              <b>{team?.teamName}</b>
+            <h2 className="m-3">
+              My Team: <b>{team?.teamName}</b>
             </h2>
-            <Row style={{ backgroundColor: "blue", minWidth: "100%" }}>
+            <Row style={{ minWidth: "100%" }}>
               <Col className="m-0">
                 <TeamList data={team} />
               </Col>
@@ -204,12 +203,12 @@ const DashboardScreen: React.FC = () => {
                 My League: <b>{league?.name}</b>
               </h2>
             </Row>
-            <Container style={{ maxWidth: "60%" }}>
+            <Container style={{ maxWidth: "70%" }}>
               <Table striped bordered hover responsive>
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Team Name</th>
+                    <th style={{display: "flex", justifyContent: "flex-start"}}>Team Name</th>
                     <th >Score</th>
                   </tr>
                 </thead>
@@ -217,7 +216,7 @@ const DashboardScreen: React.FC = () => {
                   {sortedTeams?.map((team: any, index) => (
                     <tr key={team._id}>
                       <td>{index +1}</td>
-                      <td >{team.teamName}</td>
+                      <LinkContainer to={`/fantasyteams/${team._id}`}><td className="link-styles">{team.teamName}</td></LinkContainer>
                       <td>
                         {team.totalPoints}
                       </td>
