@@ -4,6 +4,8 @@ import { FantasyTeam } from "../interfaces/Cyclist";
 import DataTable, { TableColumn } from "react-data-table-component";
 import getColorCircle from "../utils/circleColor";
 import calculatePrice from "../utils/calculatePoints";
+import { getCode } from "country-list";
+import CountryFlag from "react-country-flag";
 type Props = {
   data: FantasyTeam;
 };
@@ -13,8 +15,9 @@ type DataRow = {
   name: string;
   team: string;
   currentRank: string;
-  yearEndUciPoints: number,
-  currentUciPoints: number,
+  yearEndUciPoints: number;
+  currentUciPoints: number;
+  nationalityName: string;
   _id: string;
 };
 
@@ -22,7 +25,7 @@ const TeamList: React.FC<Props> = ({ data }) => {
   const columns: TableColumn<DataRow>[] = [
     {
       name: "Specialty",
-        width: "90px",
+
       selector: (row) => row.mainSpecialty,
       format: (row) => getColorCircle(row.mainSpecialty),
     },
@@ -37,12 +40,19 @@ const TeamList: React.FC<Props> = ({ data }) => {
       selector: (row) => row.name,
       //encode the component because the name has spaces in it
       format: (row) => (
-        <a href={`/cyclist/${encodeURIComponent(row.name)}`}>{row.name}</a>
+        <>
+          <CountryFlag
+            countryCode={getCode(row.nationalityName) || "none"}
+            svg
+          />
+          &nbsp;
+          <a href={`/cyclist/${encodeURIComponent(row.name)}`}>{row.name}</a>
+        </>
       ),
     },
     {
       name: "Team",
-      minWidth: "25%",
+      width: "20%",
       selector: (row) => row.team,
     },
     {
@@ -52,16 +62,15 @@ const TeamList: React.FC<Props> = ({ data }) => {
     },
     {
       name: "Current Points",
-      width: "115px",
-   right: true,
+
+      right: true,
       selector: (row) => Math.round(row.currentUciPoints),
     },
   ];
 
-  console.log(data);
   return (
     <DataTable
-      title={data?.teamName}
+      // title={data?.teamName}
       columns={columns}
       data={data?.cyclists || []}
       dense
