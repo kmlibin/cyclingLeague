@@ -23,13 +23,14 @@ type SpecialtyData = {
 };
 const DashboardScreen: React.FC = () => {
   const { id } = useParams();
-  console.log(id);
+ 
   const { data: team } = useGetSingleFantasyTeamQuery(id);
   const { data: league, refetch }: any = useGetLeagueQuery(id);
   const [topCyclist, setTopCyclist] = useState<Cyclist>();
   const [bestValue, setBestValue] = useState<Cyclist>();
   const [specialties, setSpecialties] = useState<SpecialtyData[]>();
-  console.log(team);
+  const [sortedTeams, setSortedTeams] = useState<any[]>()
+  console.log(league);
   const { userInfo } = useAppSelector((state) => state.auth);
 
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
@@ -103,13 +104,23 @@ const DashboardScreen: React.FC = () => {
     setSpecialties(data);
   };
 
+
+  const leagueSort = () => {
+    if(league) {
+      const sort = [...league.teamIds].sort((a, b) => b.totalPoints - a.totalPoints)
+      setSortedTeams(sort)
+    }
+    console.log(sortedTeams)
+  }
+
   useEffect(() => {
     highScore();
     bestValueCyclist();
     teamSpecialties();
-  }, [team]);
+    leagueSort()
+  }, [team, league]);
 
-  console.log(topCyclist, bestValue, specialties);
+  console.log(sortedTeams);
 
   const first = team?.cyclists[0];
 
@@ -124,7 +135,8 @@ const DashboardScreen: React.FC = () => {
         style={{ backgroundColor: "yellow" }}
       >
         <Col className="d-flex flex-column align-items-center w-100">
-          <Card className="d-flex flex-row justify-content-center w-100 m-1">
+        <h5 className="mt-2 mb-2">{team?.teamName}'s Highest Scorer</h5>
+          <Card className="d-flex flex-row justify-content-center w-100">
             <Col>
               <Card.Img src={topCyclist?.imageSrc} />
             </Col>
@@ -144,15 +156,14 @@ const DashboardScreen: React.FC = () => {
               </Card.Body>
             </Col>
           </Card>
+          <h5 className="mt-2 mb-2">{team?.teamName}'s Specialty Breakdown</h5>
           <Card className="w-100">
             <Card.Body>
-              <Card.Title className=" card-title-padding text-center" >
-                {team?.teamName} Specialty Breakdown
-              </Card.Title>
               <PieChartComponent specialties={specialties} />
             </Card.Body>
           </Card>
-          <Card className="d-flex flex-row justify-content-center w-100 m-1">
+          <h5 className="mt-2 mb-2">{team?.teamName}'s Best Value</h5>
+          <Card className="d-flex flex-row justify-content-center w-100 mb-2">
             <Col>
               <Card.Img src={bestValue?.imageSrc} />
             </Col>
@@ -197,15 +208,17 @@ const DashboardScreen: React.FC = () => {
               <Table striped bordered hover responsive>
                 <thead>
                   <tr>
+                    <th>#</th>
                     <th>Team Name</th>
-                    <th className="d-flex justify-content-end">Score</th>
+                    <th >Score</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {league?.teamIds.map((team: any) => (
+                  {sortedTeams?.map((team: any, index) => (
                     <tr key={team._id}>
-                      <td>{team.teamName}</td>
-                      <td className="d-flex justify-content-end">
+                      <td>{index +1}</td>
+                      <td >{team.teamName}</td>
+                      <td>
                         {team.totalPoints}
                       </td>
                     </tr>
