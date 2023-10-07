@@ -18,6 +18,7 @@ import { ImCheckmark } from "react-icons/im";
 import { User } from "../interfaces/Cyclist";
 import { useAppSelector } from "../hooks/hooks";
 import { useNavigate } from "react-router-dom";
+import TeamList from "../components/TeamList";
 
 type League = {
   teamName: string;
@@ -124,6 +125,7 @@ const FantasyTeamsListScreen = () => {
               teamIds,
             },
           });
+
           navigate(`/users/${userInfo._id}/dashboard`);
         }
       } catch (error) {
@@ -210,45 +212,23 @@ const FantasyTeamsListScreen = () => {
           </Accordion.Item>
         </Accordion>
       )}
-
       <ListGroup as="ol">
         <Row className="text-center m-2">
           <h2>Fantasy Teams</h2>
         </Row>
-        {team?.map((team: any) => {
-          return (
-            <ListGroup.Item
-              key={team._id}
-              as="li"
-              className="d-flex justify-content-between align-items-center mt-2"
-            >
-              <div className="ms-2 me-auto">
-                <Link to={`/fantasyteams/${team._id}`}>
-                  <div className="fw-bold">{team.teamName}</div>
-                </Link>
-              </div>
-              <Badge bg="primary" pill className="mr-4">
-                {team.cyclists.length}
-              </Badge>
-
-              {showCreateLeague && (
-                <Button
-                  variant="success"
-                  onClick={() =>
-                    addToLeague(team.teamName, team.owner, team._id)
-                  }
-                  style={{ marginLeft: "1rem" }}
-                >
-                  {league.some((leagueTeam) => leagueTeam.id === team._id) ? (
-                    <ImCheckmark />
-                  ) : (
-                    <GrAdd style={{ fontSize: "1.7rem", color: "green" }} />
-                  )}
-                </Button>
-              )}
-            </ListGroup.Item>
-          );
-        })}
+        {team?.map((team: any) => (
+          <TeamList
+            key={team._id}
+            team={team}
+            teamName={team.teamName}
+            onAddToLeague={addToLeague}
+            //checks if the team has been added to the league
+            isAddedToLeague={league.some(
+              (leagueTeam) => leagueTeam.id === team._id
+            )}
+            onDelete={deleteFromLeague}
+          />
+        ))}
       </ListGroup>
     </Container>
   );

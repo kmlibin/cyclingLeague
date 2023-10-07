@@ -1,85 +1,99 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import ListGroup from "react-bootstrap/ListGroup";
+import Badge from "react-bootstrap/Badge";
+import Button from "react-bootstrap/Button";
+import { GrAdd } from "react-icons/gr";
+import { IoMdRemove } from "react-icons/io";
+import { ImCheckmark } from "react-icons/im";
+import { Cyclist } from "../interfaces/Cyclist";
 
-import { FantasyTeam } from "../interfaces/Cyclist";
-import DataTable, { TableColumn } from "react-data-table-component";
-import getColorCircle from "../utils/circleColor";
-import calculatePrice from "../utils/calculatePoints";
-import { getCode } from "country-list";
-import CountryFlag from "react-country-flag";
-type Props = {
-  data: FantasyTeam;
-};
+interface TeamItemProps {
+  team: {
+    _id: string;
+    teamName: string;
+    owner: { name: string; _id: string };
+    cyclists: Cyclist[]
+  };
+  onDelete?: (id: string) => void;
+  onAddToLeague?: (
+    teamName: string,
+    owner: { name: string; _id: string },
+    id: string
+  ) => void;
+  isAddedToLeague?: boolean;
+  teamName: string;
+}
 
-type DataRow = {
-  mainSpecialty: string;
-  name: string;
-  team: string;
-  currentRank: string;
-  yearEndUciPoints: number;
-  currentUciPoints: number;
-  nationalityName: string;
-  _id: string;
-};
+const TeamList: React.FC<TeamItemProps> = ({
+  team,
+  onDelete,
+  onAddToLeague,
+  isAddedToLeague,
+  teamName,
+}) => {
+  const eightRiders = team.cyclists.slice(0, 8);
 
-const TeamList: React.FC<Props> = ({ data }) => {
-  const columns: TableColumn<DataRow>[] = [
-    {
-      name: "Specialty",
+  //teamslist doesn't always have an ondelete or onaddtoleague passed in, so this helps to get around
+  //TS complaining that they  might be undefined. i'd just called these directly and passed in the necessary info in the conditional
+  //render, but then, as i said, TS complained. 
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(team._id);
+    }
+  };
 
-      selector: (row) => row.mainSpecialty,
-      format: (row) => getColorCircle(row.mainSpecialty),
-    },
-    {
-      name: "Rank",
-      selector: (row) => row.currentRank,
-    },
-
-    {
-      name: "Name",
-      width: "25%",
-      selector: (row) => row.name,
-      //encode the component because the name has spaces in it
-      format: (row) => (
-        <>
-          <CountryFlag
-            countryCode={getCode(row.nationalityName) || "none"}
-            svg
-          />
-          &nbsp;
-          <a href={`/cyclist/${encodeURIComponent(row.name)}`}>{row.name}</a>
-        </>
-      ),
-    },
-    {
-      name: "Team",
-      width: "20%",
-      selector: (row) => row.team,
-    },
-    {
-      name: "Price",
-      right: true,
-      selector: (row) => calculatePrice(row.yearEndUciPoints),
-    },
-    {
-      name: "Current Points",
-
-      right: true,
-      selector: (row) => Math.round(row.currentUciPoints),
-    },
-  ];
-
+  const handleAddToLeague = () => {
+    if (onAddToLeague) {
+      onAddToLeague(team.teamName, team.owner, team._id);
+    }
+  };
   return (
-    <DataTable
-      // title={data?.teamName}
-      columns={columns}
-      data={data?.cyclists || []}
-      dense
-      pagination
-      highlightOnHover
-      responsive
-      fixedHeader
-      paginationPerPage={10}
-    />
+    <ListGroup.Item
+      key={team._id}
+      as="li"
+      className="d-flex justify-content-between align-items-center mt-2"
+    >
+      <div className="ms-2 me-auto">
+        <Link to={`/fantasyteams/${team._id}`}>
+          <div className="fw-bold">{teamName}</div>
+        </Link>
+      </div>
+
+      <div className="d-flex">
+        {eightRiders.map((rider: any) => (
+          <img
+            key={rider._id}
+            src={rider.imageSrc}
+            alt={rider.name}
+            className="me-2 mb-2"
+            style={{ width: "40px", height: "50px", borderRadius: "50%" }}
+          />
+        ))}
+      </div>
+      <Badge bg="primary" pill className="mr-4">
+        . . . {team.cyclists.length}
+      </Badge>
+
+      {isAddedToLeague ? (
+  <Button
+    style={{ marginLeft: "1rem" }}
+    size="sm"
+    variant="danger"
+    onClick={handleDelete}
+  >
+    <IoMdRemove style={{ fontSize: "1.9rem", color: "black" }} />
+  </Button>
+) : (
+  <Button
+    variant="success"
+    onClick={handleAddToLeague}
+    style={{ marginLeft: "1rem" }}
+  >
+    <GrAdd style={{ fontSize: "1.7rem", color: "green" }} />
+  </Button>
+)}
+    </ListGroup.Item>
   );
 };
 
