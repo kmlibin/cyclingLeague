@@ -13,7 +13,7 @@ import Card from "react-bootstrap/Card";
 import { Cyclist } from "../interfaces/Cyclist";
 import calculatePrice from "../utils/calculatePoints";
 
-import TeamList from "../components/TeamList";
+import TeamTable from "../components/TeamTable";
 import PieChartComponent from "../components/PieChartComponent";
 import { LinkContainer } from "react-router-bootstrap";
 
@@ -195,7 +195,7 @@ const DashboardScreen: React.FC = () => {
             </h2>
             <Row style={{ minWidth: "100%" }}>
               <Col className="m-0">
-                <TeamList data={team} />
+                <TeamTable data={team} />
               </Col>
             </Row>
             <Row className="mt-4 mb-4 text-center">
