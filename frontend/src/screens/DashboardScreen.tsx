@@ -26,14 +26,11 @@ const DashboardScreen: React.FC = () => {
 
   const { data: team } = useGetSingleFantasyTeamQuery(id);
   const { data: league, refetch }: any = useGetLeagueQuery(id);
-  const [topCyclist, setTopCyclist] = useState<Cyclist>();
+  const [topCyclist, setTopCyclist] = useState<Cyclist | null>(null);
   const [bestValue, setBestValue] = useState<Cyclist>();
   const [specialties, setSpecialties] = useState<SpecialtyData[]>();
   const [sortedTeams, setSortedTeams] = useState<any[]>();
-  console.log(league);
   const { userInfo } = useAppSelector((state) => state.auth);
-
-  console.log(league);
 
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
   //to fetch once it mounts. not ideal, but it's a fine patch until i can figure out why the behavior happens.
@@ -45,18 +42,22 @@ const DashboardScreen: React.FC = () => {
   const highScore = () => {
     if (team) {
       const { cyclists } = team;
+
       let score = 0;
+      let topCyclist: Cyclist | null = null;
       //check the current uci points of each cyclist, store highest one in state
       for (const cyclist of cyclists) {
-        if (cyclist.currentUciPoints > score) {
+        if (Math.floor(cyclist.currentUciPoints) > Math.floor(score)) {
           score = cyclist.currentUciPoints;
-          setTopCyclist(cyclist);
+          topCyclist = cyclist;
         }
       }
+      setTopCyclist(topCyclist);
     }
     return null;
   };
 
+  console.log(topCyclist);
   //find best value cyclist on team
   const bestValueCyclist = () => {
     if (team) {
@@ -113,16 +114,13 @@ const DashboardScreen: React.FC = () => {
       );
       setSortedTeams(sort);
     }
-    console.log(sortedTeams);
   };
-
   useEffect(() => {
     highScore();
     bestValueCyclist();
     teamSpecialties();
     leagueSort();
   }, [team, league]);
-
   return (
     <Container
       className="d-flex flex-row justify-content-center "
