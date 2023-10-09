@@ -31,12 +31,12 @@ const router = createBrowserRouter(
       <Route path="/cyclist/:name" element={<CyclistScreen />} />
       <Route path="/teams" element={<AllTeamsScreen />} />
       <Route path="/teams/page/:pageNumber" element={<AllTeamsScreen />} />
-      <Route path="/teams/:name" element={<TeamDataScreen />} />
+      <Route path="/teams/:teamId" element={<TeamDataScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
       <Route path="/users/:id/dashboard" element={<DashboardScreen />} />
       <Route path="/fantasyteams" element={<FantasyTeamsScreen />} />
-      <Route path="/fantasyteams/:teamId" element={<TeamDataScreen />} />
+      <Route path="/fantasyteams/:name" element={<TeamDataScreen />} />
     </Route>
   )
 );
