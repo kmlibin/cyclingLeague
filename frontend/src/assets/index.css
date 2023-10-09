@@ -64,3 +64,14 @@ code {
 .left {
   text-align: left;
 }
+
+.onHover:hover {
+  cursor: pointer;
+  color: blue;
+}
+
+.attention {
+  font-size: 14px;
+  margin-top: 5px;
+}
+
