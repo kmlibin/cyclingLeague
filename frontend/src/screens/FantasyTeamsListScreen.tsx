@@ -227,6 +227,7 @@ const FantasyTeamsListScreen = () => {
             )}
             onDelete={deleteFromLeague}
             fantasyLeagueScreen={true}
+            url={`/fantasyteams/${team._id}`}
           />
         ))}
       </ListGroup>
