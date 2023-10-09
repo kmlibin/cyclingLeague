@@ -22,39 +22,52 @@ const getAllRiders = async (req, res) => {
 //@access  public
 
 const getSingleRider = async (req, res) => {
-  const {name} = req.params;
-  console.log(name)
-  const singleRider = await Cyclist.findOne({name: name})
-  if(!singleRider) {
-    res.status(StatusCodes.NOT_FOUND).json({msg: 'no cyclist with that name'})
+  const { name } = req.params;
+  console.log(name);
+  const singleRider = await Cyclist.findOne({ name: name });
+  if (!singleRider) {
+    res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ msg: "no cyclist with that name" });
   }
-  res.status(StatusCodes.OK).json(singleRider)
+  res.status(StatusCodes.OK).json(singleRider);
 };
 //@desc    get teams and their roster
 //@route   GET /api/teams
 //@access  public
 
 const getAllTeams = async (req, res) => {
-  const teamRoster = await Team.find().populate('cyclists')
+  //how many delivered per page
+  const pageSize = 20;
+  //get the page number from frontend, or set at 1
+  const page = Number(req.query.pageNumber || 1);
+  //get total docus in the collection
+  const count = await Team.countDocuments({});
+  //limit to 20, then skip to the page entered from frontend
+  const teamRoster = await Team.find()
+    .populate("cyclists")
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
   if (!teamRoster) {
-    res.status(StatusCodes.NOT_FOUND).json({msg: 'no teams found'})
+    res.status(StatusCodes.NOT_FOUND).json({ msg: "no teams found" });
   }
-  res.status(StatusCodes.OK).json(teamRoster)
-}
+  res
+    .status(StatusCodes.OK)
+    .json({ teamRoster, page, pages: Math.ceil(count / pageSize) });
+};
 
-//@desc    get all races
-//@route   GET /api/races
+//@desc    get single team
+//@route   GET /api/teams/:name
 //@access  public
 
 const getSingleTeam = async (req, res) => {
-  const {name} = req.params
-  const teamRoster = await Team.findOne({_id: name}).populate('cyclists')
+  const { name } = req.params;
+  const teamRoster = await Team.findOne({ _id: name }).populate("cyclists");
   if (!teamRoster) {
-    res.status(StatusCodes.NOT_FOUND).json({msg: 'no teams found'})
+    res.status(StatusCodes.NOT_FOUND).json({ msg: "no teams found" });
   }
-  res.status(StatusCodes.OK).json(teamRoster)
-}
-
+  res.status(StatusCodes.OK).json(teamRoster);
+};
 
 //@desc    get individual race results
 //@route   GET /api/races/:id

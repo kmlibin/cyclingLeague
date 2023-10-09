@@ -30,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="/riders/:tab/search/:keyword" element={<Roster />} />
       <Route path="/cyclist/:name" element={<CyclistScreen />} />
       <Route path="/teams" element={<AllTeamsScreen />} />
+      <Route path="/teams/page/:pageNumber" element={<AllTeamsScreen />} />
       <Route path="/teams/:name" element={<TeamDataScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />

@@ -19,9 +19,10 @@ export const cyclistsApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 2,
     }),
     getTeams: builder.query({
-      query: () => ({
+      query: ({ pageNumber }) => ({
         url: TEAMS_URL,
         method: "GET",
+        params: { pageNumber },
       }),
       keepUnusedDataFor: 5,
     }),
@@ -35,5 +36,9 @@ export const cyclistsApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetCyclistsQuery, useGetSingleCyclistQuery, useGetTeamsQuery, useGetSingleTeamQuery } =
-  cyclistsApiSlice;
+export const {
+  useGetCyclistsQuery,
+  useGetSingleCyclistQuery,
+  useGetTeamsQuery,
+  useGetSingleTeamQuery,
+} = cyclistsApiSlice;
