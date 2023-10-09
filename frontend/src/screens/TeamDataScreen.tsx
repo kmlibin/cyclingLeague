@@ -11,8 +11,8 @@ const TeamDataScreen: React.FC = () => {
   const { teamId } = useParams();
   const { name } = useParams();
 
-  const { data: fantasyTeam } = useGetSingleFantasyTeamByIdQuery(teamId || "");
-  const { data: team } = useGetSingleTeamQuery(decodeURIComponent(name || ""));
+  const { data: fantasyTeam } = useGetSingleFantasyTeamByIdQuery(name || "");
+  const { data: team } = useGetSingleTeamQuery(decodeURIComponent(teamId || ""));
 
   const cyclists = fantasyTeam?.cyclists || team?.cyclists || [];
 
