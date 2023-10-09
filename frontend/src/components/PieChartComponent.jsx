@@ -4,6 +4,10 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 const COLORS = ["#cc0000", "#6751eb", "#51d5eb", "#009900", "#ffa500"];
 
 const PieChartComponent = ({ specialties }) => {
+   //check to handle empty specialties
+   if (!specialties || specialties.length === 0) {
+    return <div>No data available</div>
+  }
   return (
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
@@ -18,7 +22,7 @@ const PieChartComponent = ({ specialties }) => {
           nameKey="specialty"
           label
         >
-          {specialties.map((entry, index) => (
+          {specialties?.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
