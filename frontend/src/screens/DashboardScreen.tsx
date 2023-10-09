@@ -12,15 +12,25 @@ import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
 import { Cyclist } from "../interfaces/Cyclist";
 import calculatePrice from "../utils/calculatePoints";
-
 import TeamTable from "../components/TeamTable";
 import PieChartComponent from "../components/PieChartComponent";
 import { LinkContainer } from "react-router-bootstrap";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Cell,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 type SpecialtyData = {
   specialty: string;
   points: number;
 };
+
 const DashboardScreen: React.FC = () => {
   const { id } = useParams();
 
@@ -30,6 +40,12 @@ const DashboardScreen: React.FC = () => {
   const [bestValue, setBestValue] = useState<Cyclist>();
   const [specialties, setSpecialties] = useState<SpecialtyData[]>();
   const [sortedTeams, setSortedTeams] = useState<any[]>();
+  const [cyclistCounts, setCyclistCounts] = useState({
+    sprinters: 0,
+    climbers: 0,
+    timetrial: 0,
+    oneday: 0,
+  });
   const { userInfo } = useAppSelector((state) => state.auth);
 
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
@@ -37,6 +53,35 @@ const DashboardScreen: React.FC = () => {
   useEffect(() => {
     refetch();
   }, []);
+
+  const cyclistsPerSpecialty = () => {
+    const counts = {
+      sprinters: 0,
+      climbers: 0,
+      timetrial: 0,
+      oneday: 0,
+    };
+    if (team) {
+      const { cyclists } = team;
+
+      cyclists.forEach((cyclist: Cyclist) => {
+        switch (cyclist.mainSpecialty) {
+          case "Sprint":
+            counts.sprinters++;
+            break;
+          case "Climber":
+            counts.climbers++;
+            break;
+          case "Time trial":
+            counts.timetrial++;
+            break;
+          case "One day races":
+            counts.oneday++;
+        }
+      });
+      setCyclistCounts(counts);
+    }
+  };
 
   //find highest scorer on team
   const highScore = () => {
@@ -107,6 +152,7 @@ const DashboardScreen: React.FC = () => {
     setSpecialties(data);
   };
 
+  //make sure league is sorted by total points score
   const leagueSort = () => {
     if (league) {
       const sort = [...league.teamIds].sort(
@@ -115,12 +161,45 @@ const DashboardScreen: React.FC = () => {
       setSortedTeams(sort);
     }
   };
+
+  //call functions that calculate the data for stats
   useEffect(() => {
     highScore();
     bestValueCyclist();
     teamSpecialties();
+    cyclistsPerSpecialty();
     leagueSort();
   }, [team, league]);
+
+  const bardata = [
+    {
+      name: "Sprinters",
+      lName: "S",
+      count: cyclistCounts.sprinters,
+      color: "#cc0000",
+    },
+    {
+      name: "Climbers",
+      lName: "C",
+      count: cyclistCounts.climbers,
+      color: "#6751eb",
+    },
+    {
+      name: "Time Trial",
+      lName: "TT",
+      count: cyclistCounts.timetrial,
+      color: "#51d5eb",
+    },
+    {
+      name: "One Day Specialists",
+      lName: "O",
+      count: cyclistCounts.oneday,
+      color: "#ffa500",
+    },
+  ];
+
+  const COLORS = ["#009900", "#ffa500", "#51d5eb", "#cc0000"];
+
   return (
     <Container
       className="d-flex flex-row justify-content-center "
@@ -128,7 +207,7 @@ const DashboardScreen: React.FC = () => {
     >
       <Row
         md={3}
-        className="item-margin align-items-center"
+        className="item-margin align-items-start"
         style={{ backgroundColor: "yellow" }}
       >
         <Col className="d-flex flex-column align-items-center w-100">
@@ -142,18 +221,83 @@ const DashboardScreen: React.FC = () => {
                 <Card.Title>{topCyclist?.name}</Card.Title>
                 <br></br>
                 <Card.Text className="mb-0">
-                  Country: {topCyclist?.nationalityName}
+                  <b>Country:</b>&nbsp;{topCyclist?.nationalityName}
                 </Card.Text>
                 <Card.Text className="mb-0">
-                  Current Rank: {topCyclist?.currentRank}
+                  <b>Current Rank:</b>&nbsp;{topCyclist?.currentRank}
                 </Card.Text>
                 <Card.Text className="mb-0">
+                  <b>Specialty:</b> &nbsp;
                   {topCyclist?.mainSpecialty}
                 </Card.Text>
               </Card.Body>
             </Col>
           </Card>
-          <h5 className="mt-2 mb-2">{team?.teamName}'s Specialty Breakdown</h5>
+          <h5 className="mt-2 mb-2">{team?.teamName}'s Riders per Specialty</h5>
+          <Card className="w-100">
+            <Card.Body>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart
+                  // margin={{top: 20, right: 40, bottom: 20, left: 0}}
+                  width={150}
+                  height={300}
+                  data={bardata}
+                  margin={{
+                    top: 20,
+                    right: 50,
+                    left: 0,
+                    bottom: 5,
+                  }}
+                >
+                  <XAxis dataKey="lName" />
+                  <YAxis />
+                  <Tooltip />
+
+                  <Bar dataKey="count">
+                    {bardata.map((item, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % 20]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+              <Card.Text>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: "20px",
+                    maxWidth: "100%",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {bardata.map((entry, index) => (
+                    <div
+                      key={`legend-${index}`}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginRight: "20px",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: COLORS[index % 20],
+                          width: "16px",
+                          height: "16px",
+                          marginRight: "5px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                      <span>{entry.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+          <h5 className="mt-2 mb-2">{team?.teamName}'s Points Breakdown</h5>
           <Card className="w-100">
             <Card.Body>
               <PieChartComponent specialties={specialties} />
@@ -169,13 +313,13 @@ const DashboardScreen: React.FC = () => {
                 <Card.Title>{bestValue?.name}</Card.Title>
                 <br></br>
                 <Card.Text className="mb-0">
-                  Country: {bestValue?.nationalityName}
+                  <b>Country:</b>&nbsp;{bestValue?.nationalityName}
                 </Card.Text>
                 <Card.Text className="mb-0">
-                  Current Rank: {bestValue?.currentRank}
+                  <b>Current Rank:</b>&nbsp;{bestValue?.currentRank}
                 </Card.Text>
                 <Card.Text className="mb-0">
-                  {bestValue?.mainSpecialty}
+                  <b>Specialty:</b>&nbsp;{bestValue?.mainSpecialty}
                 </Card.Text>
               </Card.Body>
             </Col>
@@ -223,7 +367,7 @@ const DashboardScreen: React.FC = () => {
                       <LinkContainer to={`/fantasyteams/${team._id}`}>
                         <td className="link-styles">{team.teamName}</td>
                       </LinkContainer>
-                      <td>{team.totalPoints}</td>
+                      <td>{Math.floor(Number(team.totalPoints))}</td>
                     </tr>
                   ))}
                 </tbody>
