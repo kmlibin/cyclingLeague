@@ -13,7 +13,7 @@ interface TeamItemProps {
     _id: string;
     teamName: string;
     owner: { name: string; _id: string };
-    cyclists: Cyclist[]
+    cyclists: Cyclist[];
   };
   onDelete?: (id: string) => void;
   onAddToLeague?: (
@@ -23,6 +23,7 @@ interface TeamItemProps {
   ) => void;
   isAddedToLeague?: boolean;
   teamName: string;
+  fantasyLeagueScreen?: boolean;
 }
 
 const TeamList: React.FC<TeamItemProps> = ({
@@ -31,12 +32,13 @@ const TeamList: React.FC<TeamItemProps> = ({
   onAddToLeague,
   isAddedToLeague,
   teamName,
+  fantasyLeagueScreen
 }) => {
   const eightRiders = team.cyclists.slice(0, 8);
 
   //teamslist doesn't always have an ondelete or onaddtoleague passed in, so this helps to get around
   //TS complaining that they  might be undefined. i'd just called these directly and passed in the necessary info in the conditional
-  //render, but then, as i said, TS complained. 
+  //render, but then, as i said, TS complained.
   const handleDelete = () => {
     if (onDelete) {
       onDelete(team._id);
@@ -52,7 +54,8 @@ const TeamList: React.FC<TeamItemProps> = ({
     <ListGroup.Item
       key={team._id}
       as="li"
-      className="d-flex justify-content-between align-items-center mt-2"
+      style={{ width: " 70%" }}
+      className="d-flex align-items-center mt-2"
     >
       <div className="ms-2 me-auto">
         <Link to={`/fantasyteams/${team._id}`}>
@@ -75,24 +78,28 @@ const TeamList: React.FC<TeamItemProps> = ({
         . . . {team.cyclists.length}
       </Badge>
 
-      {isAddedToLeague ? (
-  <Button
-    style={{ marginLeft: "1rem" }}
-    size="sm"
-    variant="danger"
-    onClick={handleDelete}
-  >
-    <IoMdRemove style={{ fontSize: "1.9rem", color: "black" }} />
-  </Button>
-) : (
-  <Button
-    variant="success"
-    onClick={handleAddToLeague}
-    style={{ marginLeft: "1rem" }}
-  >
-    <GrAdd style={{ fontSize: "1.7rem", color: "green" }} />
-  </Button>
-)}
+     {/* Conditionally render buttons based on the screen */}
+     {fantasyLeagueScreen ? (
+        // Buttons for FantasyTeamsListScreen
+        isAddedToLeague ? (
+          <Button
+            style={{ marginLeft: "1rem" }}
+            size="sm"
+            variant="danger"
+            onClick={handleDelete}
+          >
+            <IoMdRemove style={{ fontSize: "1.9rem", color: "black" }} />
+          </Button>
+        ) : (
+          <Button
+            variant="success"
+            onClick={handleAddToLeague}
+            style={{ marginLeft: "1rem" }}
+          >
+            <GrAdd style={{ fontSize: "1.7rem", color: "green" }} />
+          </Button>
+        )
+      ) : null}
     </ListGroup.Item>
   );
 };

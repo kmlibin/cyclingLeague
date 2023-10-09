@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+
 import ListGroup from "react-bootstrap/ListGroup";
-import Badge from "react-bootstrap/Badge";
+
 import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
 import Container from "react-bootstrap/Container";
@@ -9,13 +9,12 @@ import {
   useGetAllFantasyTeamsQuery,
   useCreateLeagueMutation,
 } from "../slices/fantasyTeamApiSlice";
-import { GrAdd } from "react-icons/gr";
+
 import { IoMdRemove } from "react-icons/io";
-import { FantasyTeam } from "../interfaces/Cyclist";
+
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import { ImCheckmark } from "react-icons/im";
-import { User } from "../interfaces/Cyclist";
+
 import { useAppSelector } from "../hooks/hooks";
 import { useNavigate } from "react-router-dom";
 import TeamList from "../components/TeamList";
@@ -212,7 +211,7 @@ const FantasyTeamsListScreen = () => {
           </Accordion.Item>
         </Accordion>
       )}
-      <ListGroup as="ol">
+      <ListGroup as="ol" className="d-flex align-items-center">
         <Row className="text-center m-2">
           <h2>Fantasy Teams</h2>
         </Row>
@@ -227,6 +226,7 @@ const FantasyTeamsListScreen = () => {
               (leagueTeam) => leagueTeam.id === team._id
             )}
             onDelete={deleteFromLeague}
+            fantasyLeagueScreen={true}
           />
         ))}
       </ListGroup>
