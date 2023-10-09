@@ -275,6 +275,7 @@ const DashboardScreen: React.FC = () => {
                     <div
                       key={`legend-${index}`}
                       style={{
+                        color: COLORS[index % 20],
                         display: "flex",
                         alignItems: "center",
                         marginRight: "20px",
