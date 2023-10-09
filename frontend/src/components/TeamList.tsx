@@ -24,6 +24,7 @@ interface TeamItemProps {
   isAddedToLeague?: boolean;
   teamName: string;
   fantasyLeagueScreen?: boolean;
+  url: string;
 }
 
 const TeamList: React.FC<TeamItemProps> = ({
@@ -32,7 +33,8 @@ const TeamList: React.FC<TeamItemProps> = ({
   onAddToLeague,
   isAddedToLeague,
   teamName,
-  fantasyLeagueScreen
+  fantasyLeagueScreen,
+  url
 }) => {
   const eightRiders = team.cyclists.slice(0, 8);
 
@@ -58,7 +60,7 @@ const TeamList: React.FC<TeamItemProps> = ({
       className="d-flex align-items-center mt-2"
     >
       <div className="ms-2 me-auto">
-        <Link to={`/fantasyteams/${team._id}`}>
+        <Link to={`${url}`}>
           <div className="fw-bold">{teamName}</div>
         </Link>
       </div>
@@ -74,8 +76,9 @@ const TeamList: React.FC<TeamItemProps> = ({
           />
         ))}
       </div>
+      . . . &nbsp;
       <Badge bg="primary" pill className="mr-4">
-        . . . {team.cyclists.length}
+       {team.cyclists.length}
       </Badge>
 
      {/* Conditionally render buttons based on the screen */}
