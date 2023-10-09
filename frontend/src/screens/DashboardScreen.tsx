@@ -23,17 +23,17 @@ type SpecialtyData = {
 };
 const DashboardScreen: React.FC = () => {
   const { id } = useParams();
- 
+
   const { data: team } = useGetSingleFantasyTeamQuery(id);
   const { data: league, refetch }: any = useGetLeagueQuery(id);
   const [topCyclist, setTopCyclist] = useState<Cyclist>();
   const [bestValue, setBestValue] = useState<Cyclist>();
   const [specialties, setSpecialties] = useState<SpecialtyData[]>();
-  const [sortedTeams, setSortedTeams] = useState<any[]>()
+  const [sortedTeams, setSortedTeams] = useState<any[]>();
   console.log(league);
   const { userInfo } = useAppSelector((state) => state.auth);
 
-  console.log(league)
+  console.log(league);
 
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
   //to fetch once it mounts. not ideal, but it's a fine patch until i can figure out why the behavior happens.
@@ -106,22 +106,22 @@ const DashboardScreen: React.FC = () => {
     setSpecialties(data);
   };
 
-
   const leagueSort = () => {
-    if(league) {
-      const sort = [...league.teamIds].sort((a, b) => b.totalPoints - a.totalPoints)
-      setSortedTeams(sort)
+    if (league) {
+      const sort = [...league.teamIds].sort(
+        (a, b) => b.totalPoints - a.totalPoints
+      );
+      setSortedTeams(sort);
     }
-    console.log(sortedTeams)
-  }
+    console.log(sortedTeams);
+  };
 
   useEffect(() => {
     highScore();
     bestValueCyclist();
     teamSpecialties();
-    leagueSort()
+    leagueSort();
   }, [team, league]);
-
 
   return (
     <Container
@@ -134,7 +134,7 @@ const DashboardScreen: React.FC = () => {
         style={{ backgroundColor: "yellow" }}
       >
         <Col className="d-flex flex-column align-items-center w-100">
-        <h5 className="mt-2 mb-2">{team?.teamName}'s Highest Scorer</h5>
+          <h5 className="mt-2 mb-2">{team?.teamName}'s Highest Scorer</h5>
           <Card className="d-flex flex-row justify-content-center w-100">
             <Col>
               <Card.Img src={topCyclist?.imageSrc} />
@@ -208,18 +208,24 @@ const DashboardScreen: React.FC = () => {
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th style={{display: "flex", justifyContent: "flex-start"}}>Team Name</th>
-                    <th >Score</th>
+                    <th className="left">User</th>
+                    <th
+                      style={{ display: "flex", justifyContent: "flex-start" }}
+                    >
+                      Team Name
+                    </th>
+                    <th>Score</th>
                   </tr>
                 </thead>
                 <tbody>
                   {sortedTeams?.map((team: any, index) => (
                     <tr key={team._id}>
-                      <td>{index +1}</td>
-                      <LinkContainer to={`/fantasyteams/${team._id}`}><td className="link-styles">{team.teamName}</td></LinkContainer>
-                      <td>
-                        {team.totalPoints}
-                      </td>
+                      <td>{index + 1}</td>
+                      <td className="left">{team.owner.name}</td>
+                      <LinkContainer to={`/fantasyteams/${team._id}`}>
+                        <td className="link-styles">{team.teamName}</td>
+                      </LinkContainer>
+                      <td>{team.totalPoints}</td>
                     </tr>
                   ))}
                 </tbody>

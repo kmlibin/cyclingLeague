@@ -59,3 +59,8 @@ code {
   display: flex;
   align-items: flex-end;
 }
+
+
+.left {
+  text-align: left;
+}
