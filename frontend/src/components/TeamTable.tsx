@@ -34,7 +34,7 @@ const TeamTable: React.FC<Props> = ({ data }) => {
       name: "Rank",
       sortable: true,
       selector: (row) => {
-        return row.currentRank === "n/a" ? 0 : Number(row.currentRank)
+        return row.currentRank === "n/a" ? "n/a" : Number(row.currentRank)
       }
     },
 
