@@ -26,7 +26,7 @@ const PieChartComponent = ({ specialties }) => {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Legend verticalAlign="bottom" iconType="circle" height={36} />
+        <Legend verticalAlign="bottom" iconType="circle" height={50} />
       </PieChart>
     </ResponsiveContainer>
   );
