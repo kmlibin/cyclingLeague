@@ -12,6 +12,7 @@ import { updateTeam } from "../slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import calculatePrice from "../utils/calculatePoints";
 import { useCreateTeamMutation } from "../slices/fantasyTeamApiSlice";
+import mapNationalityName from "../utils/findNationalityName";
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
 
@@ -98,7 +99,9 @@ const Roster: React.FC = () => {
     {
       name: "Rank",
       maxWidth: "7%",
-      selector: (row) => row.prevYearRank,
+      selector: (row) => {
+        return row.prevYearRank === "n/a" ? 0 : Number(row.prevYearRank)
+      },
       sortable: true,
     },
     {
@@ -108,7 +111,9 @@ const Roster: React.FC = () => {
       format: (row) => (
         <>
           <CountryFlag
-            countryCode={getCode(row.nationalityName) || "none"}
+            countryCode={
+              getCode(mapNationalityName(row.nationalityName)) || "none"
+            }
             svg
           />
           &nbsp;
@@ -123,7 +128,7 @@ const Roster: React.FC = () => {
     {
       name: "Points",
       maxWidth: "10%",
-      selector: (row) => row.yearEndUciPoints,
+      selector: (row) => Number(row.yearEndUciPoints),
       sortable: true,
     },
     {
