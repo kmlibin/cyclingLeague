@@ -31,7 +31,8 @@ const TeamTable: React.FC<Props> = ({ data }) => {
     },
     {
       name: "Rank",
-      selector: (row) => row.currentRank,
+      sortable: true,
+      selector: (row) => Number(row.currentRank),
     },
 
     {
@@ -58,6 +59,7 @@ const TeamTable: React.FC<Props> = ({ data }) => {
     {
       name: "Price",
       right: true,
+      sortable: true,
       selector: (row) => calculatePrice(row.yearEndUciPoints),
     },
     {
@@ -71,6 +73,7 @@ const TeamTable: React.FC<Props> = ({ data }) => {
   return (
     <DataTable
       // title={data?.teamName}
+      defaultSortFieldId={2}
       columns={columns}
       data={data?.cyclists || []}
       dense
@@ -78,7 +81,7 @@ const TeamTable: React.FC<Props> = ({ data }) => {
       highlightOnHover
       responsive
       fixedHeader
-      paginationPerPage={10}
+      paginationPerPage={25}
     />
   );
 };
