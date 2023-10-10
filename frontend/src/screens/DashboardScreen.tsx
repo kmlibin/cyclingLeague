@@ -11,21 +11,11 @@ import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
 import { Cyclist } from "../interfaces/Cyclist";
+import { LeagueData } from "../interfaces/League";
 import calculatePrice from "../utils/calculatePoints";
 import TeamTable from "../components/TeamTable";
 import PieChartComponent from "../components/PieChartComponent";
 import { LinkContainer } from "react-router-bootstrap";
-
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Cell,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 import SpecialtyBarChart from "../components/SpecialtyBarChart";
 import CyclistMiniData from "../components/CyclistMiniData";
 
@@ -40,9 +30,10 @@ const DashboardScreen: React.FC = () => {
   const { data: team } = useGetSingleFantasyTeamQuery(id);
   const { data: league, refetch }: any = useGetLeagueQuery(id);
   const [topCyclist, setTopCyclist] = useState<Cyclist | null>(null);
+  const [worstValue, setWorstValue] = useState<Cyclist | null>(null)
   const [bestValue, setBestValue] = useState<Cyclist>();
   const [specialties, setSpecialties] = useState<SpecialtyData[]>();
-  const [sortedTeams, setSortedTeams] = useState<any[]>();
+  const [sortedTeams, setSortedTeams] = useState<LeagueData[]>();
   const [cyclistCounts, setCyclistCounts] = useState({
     sprinters: 0,
     climbers: 0,
@@ -105,7 +96,6 @@ const DashboardScreen: React.FC = () => {
     return null;
   };
 
-  console.log(topCyclist);
   //find best value cyclist on team
   const bestValueCyclist = () => {
     if (team) {
@@ -122,6 +112,28 @@ const DashboardScreen: React.FC = () => {
         if (value > bestValue) {
           bestValue = value;
           setBestValue(cyclist);
+        }
+      }
+    }
+    return null;
+  };
+
+  const worstValueCyclist = () => {
+    if (team) {
+      // Grab cyclists
+      const { cyclists } = team;
+      let worstValue = Infinity; // Initialize worstValue with a very high value
+  
+      for (const cyclist of cyclists) {
+        // Calculate how much they cost the user to put on the team
+        const price = calculatePrice(cyclist.yearEndUciPoints);
+        // Find the ratio of how many points they've earned so far vs how much they cost
+        const value = cyclist.currentUciPoints / price;
+        // Check if this cyclist has a worse value than the current worstValue
+        if (value < worstValue) {
+          worstValue = value;
+          console.log(cyclist)
+          setWorstValue(cyclist);
         }
       }
     }
@@ -172,6 +184,7 @@ const DashboardScreen: React.FC = () => {
     teamSpecialties();
     cyclistsPerSpecialty();
     leagueSort();
+    worstValueCyclist()
   }, [team, league]);
 
   const bardata = [
@@ -198,6 +211,7 @@ const DashboardScreen: React.FC = () => {
   ];
 
   const COLORS = ["#009900", "#ffa500", "#51d5eb", "#cc0000"];
+
   return (
     <Container
       className="d-flex flex-row justify-content-center"
@@ -206,18 +220,21 @@ const DashboardScreen: React.FC = () => {
       {/* holds the stats bar on the left */}
       <Row
         md={3}
-        className="d-flex justify-content-center item-margin"
+        className="d-flex justify-content-center item-margin pb-4"
         style={{ backgroundColor: "yellow" }}
       >
         <Col
           className="d-flex flex-column align-items-center justify-content-center"
           style={{ width: "90%" }}
         >
-          <h5 className="mt-2 mb-2">{team?.teamName}'s Best Value</h5>
+          <h5 className="mt-2 mb-2">Best Value Cyclist</h5>
           <CyclistMiniData cyclistData={bestValue ? bestValue : null} />
 
-          <h5 className="mt-2 mb-2">{team?.teamName}'s Highest Scorer</h5>
+          <h5 className="mt-2 mb-2">Highest Scoring Cyclist</h5>
           <CyclistMiniData cyclistData={topCyclist ? topCyclist : null} />
+
+          <h5 className="mt-2 mb-2">Least Cost Effective Cyclist</h5>
+          <CyclistMiniData cyclistData={worstValue ? worstValue : null} />
 
           <h5 className="mt-2 mb-2 text-center">
             {team?.teamName}'s Riders per Specialty
@@ -252,7 +269,7 @@ const DashboardScreen: React.FC = () => {
                 <TeamTable data={team} />
               </Col>
             </Row>
-            
+
             <Row className="mt-4 mb-4 text-center">
               <h2>
                 My League: <b>{league?.name}</b>
