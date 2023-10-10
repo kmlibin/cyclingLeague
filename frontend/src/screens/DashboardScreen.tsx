@@ -27,6 +27,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import SpecialtyBarChart from "../components/SpecialtyBarChart";
+import CyclistMiniData from "../components/CyclistMiniData";
 
 type SpecialtyData = {
   specialty: string;
@@ -178,25 +179,21 @@ const DashboardScreen: React.FC = () => {
       name: "Sprinters",
       lName: "S",
       count: cyclistCounts.sprinters,
-      color: "#cc0000",
     },
     {
       name: "Climbers",
       lName: "C",
       count: cyclistCounts.climbers,
-      color: "#6751eb",
     },
     {
       name: "Time Trial",
       lName: "TT",
       count: cyclistCounts.timetrial,
-      color: "#51d5eb",
     },
     {
       name: "One Day Specialists",
       lName: "O",
       count: cyclistCounts.oneday,
-      color: "#ffa500",
     },
   ];
 
@@ -206,6 +203,7 @@ const DashboardScreen: React.FC = () => {
       className="d-flex flex-row justify-content-center"
       style={{ backgroundColor: "black" }}
     >
+      {/* holds the stats bar on the left */}
       <Row
         md={3}
         className="d-flex justify-content-center item-margin"
@@ -215,63 +213,31 @@ const DashboardScreen: React.FC = () => {
           className="d-flex flex-column align-items-center justify-content-center"
           style={{ width: "90%" }}
         >
+          <h5 className="mt-2 mb-2">{team?.teamName}'s Best Value</h5>
+          <CyclistMiniData cyclistData={bestValue ? bestValue : null} />
+
           <h5 className="mt-2 mb-2">{team?.teamName}'s Highest Scorer</h5>
-          <Card className="d-flex flex-row justify-content-center w-100">
-            <Col>
-              <Card.Img src={topCyclist?.imageSrc} />
-            </Col>
-            <Col>
-              <Card.Body>
-                <Card.Title>{topCyclist?.name}</Card.Title>
-                <br></br>
-                <Card.Text className="mb-0">
-                  <b>Country:</b>&nbsp;{topCyclist?.nationalityName}
-                </Card.Text>
-                <Card.Text className="mb-0">
-                  <b>Current Rank:</b>&nbsp;{topCyclist?.currentRank}
-                </Card.Text>
-                <Card.Text className="mb-0">
-                  <b>Specialty:</b> &nbsp;
-                  {topCyclist?.mainSpecialty}
-                </Card.Text>
-              </Card.Body>
-            </Col>
-          </Card>
-          <h5 className="mt-2 mb-2 text-center">{team?.teamName}'s Riders per Specialty</h5>
+          <CyclistMiniData cyclistData={topCyclist ? topCyclist : null} />
+
+          <h5 className="mt-2 mb-2 text-center">
+            {team?.teamName}'s Riders per Specialty
+          </h5>
           <Card className="w-100">
             <Card.Body>
               <SpecialtyBarChart bardata={bardata} colors={COLORS} />
             </Card.Body>
           </Card>
+
           <h5 className="mt-2 mb-2">{team?.teamName}'s Points Breakdown</h5>
           <Card className="w-100">
             <Card.Body>
               <PieChartComponent specialties={specialties} />
             </Card.Body>
           </Card>
-          <h5 className="mt-2 mb-2">{team?.teamName}'s Best Value</h5>
-          <Card className="d-flex flex-row justify-content-center w-100 mb-2">
-            <Col>
-              <Card.Img src={bestValue?.imageSrc} />
-            </Col>
-            <Col>
-              <Card.Body>
-                <Card.Title>{bestValue?.name}</Card.Title>
-                <br></br>
-                <Card.Text className="mb-0">
-                  <b>Country:</b>&nbsp;{bestValue?.nationalityName}
-                </Card.Text>
-                <Card.Text className="mb-0">
-                  <b>Current Rank:</b>&nbsp;{bestValue?.currentRank}
-                </Card.Text>
-                <Card.Text className="mb-0">
-                  <b>Specialty:</b>&nbsp;{bestValue?.mainSpecialty}
-                </Card.Text>
-              </Card.Body>
-            </Col>
-          </Card>
         </Col>
       </Row>
+
+      {/* holds the fantasy team chart and league beneath */}
       <Row
         className="d-flex flex-row text-center"
         style={{ backgroundColor: "pink" }}
@@ -286,6 +252,7 @@ const DashboardScreen: React.FC = () => {
                 <TeamTable data={team} />
               </Col>
             </Row>
+            
             <Row className="mt-4 mb-4 text-center">
               <h2>
                 My League: <b>{league?.name}</b>
