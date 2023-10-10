@@ -4,6 +4,7 @@ import { FantasyTeam } from "../interfaces/Cyclist";
 import DataTable, { TableColumn } from "react-data-table-component";
 import getColorCircle from "../utils/circleColor";
 import calculatePrice from "../utils/calculatePoints";
+import mapNationalityName from "../utils/findNationalityName";
 import { getCode } from "country-list";
 import CountryFlag from "react-country-flag";
 type Props = {
@@ -32,7 +33,9 @@ const TeamTable: React.FC<Props> = ({ data }) => {
     {
       name: "Rank",
       sortable: true,
-      selector: (row) => Number(row.currentRank),
+      selector: (row) => {
+        return row.currentRank === "n/a" ? 0 : Number(row.currentRank)
+      }
     },
 
     {
@@ -43,7 +46,7 @@ const TeamTable: React.FC<Props> = ({ data }) => {
       format: (row) => (
         <>
           <CountryFlag
-            countryCode={getCode(row.nationalityName) || "none"}
+            countryCode={getCode(mapNationalityName(row.nationalityName)) || "none"}
             svg
           />
           &nbsp;
@@ -72,7 +75,6 @@ const TeamTable: React.FC<Props> = ({ data }) => {
 
   return (
     <DataTable
-      // title={data?.teamName}
       defaultSortFieldId={2}
       columns={columns}
       data={data?.cyclists || []}
