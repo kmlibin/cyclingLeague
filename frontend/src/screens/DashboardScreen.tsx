@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAppSelector } from "../hooks/hooks";
+import { useAppSelector, useAppDispatch } from "../hooks/hooks";
 import {
   useGetLeagueQuery,
   useGetSingleFantasyTeamQuery,
@@ -18,7 +18,8 @@ import PieChartComponent from "../components/PieChartComponent";
 import { LinkContainer } from "react-router-bootstrap";
 import SpecialtyBarChart from "../components/SpecialtyBarChart";
 import CyclistMiniData from "../components/CyclistMiniData";
-
+import { FantasyTeam } from "../interfaces/FantasyTeam";
+import { addSharedRiders } from "../slices/cyclistSlice";
 type SpecialtyData = {
   specialty: string;
   points: number;
@@ -30,23 +31,71 @@ const DashboardScreen: React.FC = () => {
   const { data: team } = useGetSingleFantasyTeamQuery(id);
   const { data: league, refetch }: any = useGetLeagueQuery(id);
   const [topCyclist, setTopCyclist] = useState<Cyclist | null>(null);
-  const [worstValue, setWorstValue] = useState<Cyclist | null>(null)
+  const [worstValue, setWorstValue] = useState<Cyclist | null>(null);
   const [bestValue, setBestValue] = useState<Cyclist>();
   const [specialties, setSpecialties] = useState<SpecialtyData[]>();
-  const [sortedTeams, setSortedTeams] = useState<LeagueData[]>();
+  const [sortedTeams, setSortedTeams] = useState<FantasyTeam[]>();
+  const [sharedCyclists, setSharedCyclists] = useState<Cyclist[]>([])
+  const dispatch = useAppDispatch();
   const [cyclistCounts, setCyclistCounts] = useState({
     sprinters: 0,
     climbers: 0,
     timetrial: 0,
     oneday: 0,
   });
+
+  console.log(league)
   const { userInfo } = useAppSelector((state) => state.auth);
+  const { sharedRiders } = useAppSelector((state) =>state.sharedRiders)
 
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
   //to fetch once it mounts. not ideal, but it's a fine patch until i can figure out why the behavior happens.
   useEffect(() => {
     refetch();
   }, []);
+
+
+  const findSharedRiders = () => {
+    if (team && league) {
+      //find users team id
+      const usersTeamId = team._id;
+      //get cyclists ids from users team
+      const teamCyclistIds = team.cyclists.map((cyclist: Cyclist) => cyclist._id);
+  
+      // grab index of the logged-in user's team within league.teamIds, need to exclude it for calculation
+      const usersTeamIndex = league.teamIds.findIndex(
+        (teamData: LeagueData) => teamData._id === usersTeamId 
+     
+      );
+      
+      // create a copy of league.teamIds without the user's team
+      const filteredLeagueTeamIds = [
+        ...league.teamIds.slice(0, usersTeamIndex),
+        ...league.teamIds.slice(usersTeamIndex + 1),
+      ];
+  
+      // grab cyclist _ids from the remaining teams in the league
+      const leagueCyclistIds = filteredLeagueTeamIds
+        .flatMap((teamData: any) => teamData.cyclists)
+        //gets ids
+        .map((cyclistId: string) => cyclistId);
+  
+      const sharedCyclistIds = teamCyclistIds.filter((teamCyclistId: any) =>
+        leagueCyclistIds.includes(teamCyclistId)
+      );
+
+      //shared cyclist _ids excluding the logged-in user's team
+      const sharedCyclists = team.cyclists.filter((cyclist: any) =>
+        sharedCyclistIds.includes(cyclist._id)
+      );
+      dispatch(addSharedRiders(sharedCyclists))
+      setSharedCyclists(sharedCyclists);
+    }
+
+
+  }
+
+
 
   const cyclistsPerSpecialty = () => {
     const counts = {
@@ -123,17 +172,18 @@ const DashboardScreen: React.FC = () => {
       // Grab cyclists
       const { cyclists } = team;
       let worstValue = Infinity; // Initialize worstValue with a very high value
-  
+
       for (const cyclist of cyclists) {
         // Calculate how much they cost the user to put on the team
         const price = calculatePrice(cyclist.yearEndUciPoints);
-        // Find the ratio of how many points they've earned so far vs how much they cost
-        const value = cyclist.currentUciPoints / price;
-        // Check if this cyclist has a worse value than the current worstValue
-        if (value < worstValue) {
-          worstValue = value;
-          console.log(cyclist)
-          setWorstValue(cyclist);
+        if (price != 1) {
+          // Find the ratio of how many points they've earned so far vs how much they cost
+          const value = cyclist.currentUciPoints / price;
+          // Check if this cyclist has a worse value than the current worstValue
+          if (value < worstValue) {
+            worstValue = value;
+            setWorstValue(cyclist);
+          }
         }
       }
     }
@@ -151,7 +201,6 @@ const DashboardScreen: React.FC = () => {
 
     if (team) {
       const { cyclists } = team;
-
       for (const cyclist of cyclists) {
         for (const specialtyObject of cyclist.riderSpecialties) {
           //find the right object in the data and update its points
@@ -184,7 +233,8 @@ const DashboardScreen: React.FC = () => {
     teamSpecialties();
     cyclistsPerSpecialty();
     leagueSort();
-    worstValueCyclist()
+    worstValueCyclist();
+    findSharedRiders()
   }, [team, league]);
 
   const bardata = [
