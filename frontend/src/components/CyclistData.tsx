@@ -3,23 +3,28 @@ import { Link } from "react-router-dom";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
+import mapNationalityName from "../utils/findNationalityName";
 import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
 import { Cyclist } from "../interfaces/Cyclist";
-
+import { BsStarFill } from "react-icons/bs";
 import PieChartComponent from "../components/PieChartComponent";
 import SocialMedia from "../components/SocialMedia";
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
-
+import { LinkContainer } from "react-router-bootstrap";
 type Props = {
   cyclistData: Cyclist;
+  sharedRiders?: Cyclist[];
 };
 
-const CyclistData: React.FC<Props> = ({ cyclistData: rider }) => {
-  const countryCode = getCode(rider.nationalityName);
-  console.log(countryCode);
+const CyclistData: React.FC<Props> = ({ cyclistData: rider, sharedRiders }) => {
+  const countryCode = getCode(mapNationalityName(rider.nationalityName))
+  const shared = sharedRiders?.some(
+    (sharedRider) => sharedRider._id === rider._id
+  );
+
+
 
   return (
     <Card bg="light" className="m-1" style={{ width: "30%" }}>
@@ -30,7 +35,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider }) => {
         <Card.Text className="text-center pb-2 d-flex align-items-center justify-content-center">
           <strong>Country:&nbsp;</strong>
           {rider.nationalityName}&nbsp;
-          <CountryFlag countryCode={countryCode ? countryCode : "none"} svg />
+          <CountryFlag countryCode= {countryCode ? countryCode : "none"} svg />
         </Card.Text>
         <div
           className="d-flex justify-content-center align-items-center mb-4"
@@ -42,6 +47,14 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider }) => {
           />
         </div>
         <ListGroup>
+          {shared && (
+            <ListGroup.Item className="d-flex justify-content-center align-items-center" style={{backgroundColor: 'lightskyblue'}}>
+              <span className="d-flex justify-content-start align-items-center">
+                <BsStarFill style={{ color: "purple" }} /> &nbsp;
+                On My Team
+              </span>
+            </ListGroup.Item>
+          )}
           <ListGroup.Item>
             <Row>
               <Col>
