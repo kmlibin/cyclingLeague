@@ -15,6 +15,7 @@ import calculatePrice from "../utils/calculatePoints";
 import TeamTable from "../components/TeamTable";
 import PieChartComponent from "../components/PieChartComponent";
 import { LinkContainer } from "react-router-bootstrap";
+
 import {
   BarChart,
   Bar,
@@ -25,6 +26,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import SpecialtyBarChart from "../components/SpecialtyBarChart";
 
 type SpecialtyData = {
   specialty: string;
@@ -199,18 +201,20 @@ const DashboardScreen: React.FC = () => {
   ];
 
   const COLORS = ["#009900", "#ffa500", "#51d5eb", "#cc0000"];
-
   return (
     <Container
-      className="d-flex flex-row justify-content-center "
+      className="d-flex flex-row justify-content-center"
       style={{ backgroundColor: "black" }}
     >
       <Row
         md={3}
-        className="item-margin align-items-start"
+        className="d-flex justify-content-center item-margin"
         style={{ backgroundColor: "yellow" }}
       >
-        <Col className="d-flex flex-column align-items-center w-100">
+        <Col
+          className="d-flex flex-column align-items-center justify-content-center"
+          style={{ width: "90%" }}
+        >
           <h5 className="mt-2 mb-2">{team?.teamName}'s Highest Scorer</h5>
           <Card className="d-flex flex-row justify-content-center w-100">
             <Col>
@@ -233,69 +237,10 @@ const DashboardScreen: React.FC = () => {
               </Card.Body>
             </Col>
           </Card>
-          <h5 className="mt-2 mb-2">{team?.teamName}'s Riders per Specialty</h5>
+          <h5 className="mt-2 mb-2 text-center">{team?.teamName}'s Riders per Specialty</h5>
           <Card className="w-100">
             <Card.Body>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart
-                  // margin={{top: 20, right: 40, bottom: 20, left: 0}}
-                  width={150}
-                  height={300}
-                  data={bardata}
-                  margin={{
-                    top: 20,
-                    right: 50,
-                    left: 0,
-                    bottom: 5,
-                  }}
-                >
-                  <XAxis dataKey="lName" />
-                  <YAxis />
-                  <Tooltip />
-
-                  <Bar dataKey="count">
-                    {bardata.map((item, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % 20]} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-              <Card.Text>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: "20px",
-                    maxWidth: "100%",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {bardata.map((entry, index) => (
-                    <div
-                      key={`legend-${index}`}
-                      style={{
-                        color: COLORS[index % 20],
-                        display: "flex",
-                        alignItems: "center",
-                        marginRight: "20px",
-                        marginBottom: "10px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          backgroundColor: COLORS[index % 20],
-                          width: "16px",
-                          height: "16px",
-                          marginRight: "5px",
-                          borderRadius: "50%",
-                        }}
-                      />
-                      <span>{entry.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </Card.Text>
+              <SpecialtyBarChart bardata={bardata} colors={COLORS} />
             </Card.Body>
           </Card>
           <h5 className="mt-2 mb-2">{team?.teamName}'s Points Breakdown</h5>
