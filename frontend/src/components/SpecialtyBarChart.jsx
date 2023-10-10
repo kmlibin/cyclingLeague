@@ -6,12 +6,11 @@ import {
   YAxis,
   Tooltip,
   Cell,
-  Legend,
+  CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
 
 const SpecialtyBarChart = ({ bardata, colors }) => {
-  const COLORS = ["#009900", "#ffa500", "#51d5eb", "#cc0000"];
   return (
     <ResponsiveContainer
       width="100%"
@@ -33,10 +32,11 @@ const SpecialtyBarChart = ({ bardata, colors }) => {
           <XAxis dataKey="lName" />
           <YAxis />
           <Tooltip />
+          <CartesianGrid strokeDasharray="3 3" />
 
           <Bar dataKey="count">
             {bardata.map((item, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % 20]} />
+              <Cell key={`cell-${index}`} fill={colors[index % 20]} />
             ))}
           </Bar>
         </BarChart>
@@ -51,14 +51,14 @@ const SpecialtyBarChart = ({ bardata, colors }) => {
             <div className="d-flex align-items-center m-1">
               <span
                 style={{
-                  backgroundColor: COLORS[index % 20],
+                  backgroundColor: colors[index % 20],
                   width: "16px",
                   height: "16px",
                   marginRight: "5px",
                   borderRadius: "50%",
                 }}
               />
-              <span style={{ color: COLORS[index % 20] }}>{spec.name}</span>
+              <span style={{ color: colors[index % 20] }}>{spec.name}</span>
             </div>
           ))}
         </div>
