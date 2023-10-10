@@ -12,7 +12,13 @@ const CyclistMiniData: React.FC<CyclistMiniDataProps> = ({ cyclistData }) => {
     <Card className="d-flex flex-row justify-content-center align-items-center w-100">
       <Col className="d-flex justify-content-center align-items-center">
         <Card.Img
-          style={{ height: "175px", width: "125px", borderRadius: "50%", marginTop: "1rem", marginBottom: "1rem" }}
+          style={{
+            height: "175px",
+            width: "125px",
+            borderRadius: "50%",
+            marginTop: "1rem",
+            marginBottom: "1rem",
+          }}
           src={cyclistData?.imageSrc}
         />
       </Col>
@@ -24,11 +30,15 @@ const CyclistMiniData: React.FC<CyclistMiniDataProps> = ({ cyclistData }) => {
             <b>Country:</b>&nbsp;{cyclistData?.nationalityName}
           </Card.Text>
           <Card.Text className="mb-1">
-            <b>Current Rank:</b>&nbsp;{cyclistData?.currentRank}
-          </Card.Text>
-          <Card.Text className="mb-1">
             <b>Specialty:</b> &nbsp;
             {cyclistData?.mainSpecialty}
+          </Card.Text>
+          <Card.Text className="mb-1">
+            <b>Rank:</b>&nbsp;{cyclistData?.currentRank}
+          </Card.Text>
+          <Card.Text className="mb-1">
+            <b>Points:</b> &nbsp;
+            {cyclistData?.currentUciPoints}
           </Card.Text>
         </Card.Body>
       </Col>
