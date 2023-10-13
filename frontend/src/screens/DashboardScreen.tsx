@@ -35,7 +35,8 @@ const DashboardScreen: React.FC = () => {
   const [bestValue, setBestValue] = useState<Cyclist>();
   const [specialties, setSpecialties] = useState<SpecialtyData[]>();
   const [sortedTeams, setSortedTeams] = useState<FantasyTeam[]>();
-  const [sharedCyclists, setSharedCyclists] = useState<Cyclist[]>([])
+ 
+
   const dispatch = useAppDispatch();
   const [cyclistCounts, setCyclistCounts] = useState({
     sprinters: 0,
@@ -44,14 +45,15 @@ const DashboardScreen: React.FC = () => {
     oneday: 0,
   });
 
-  console.log(league)
   const { userInfo } = useAppSelector((state) => state.auth);
-  const { sharedRiders } = useAppSelector((state) =>state.sharedRiders)
+  const {user} = useAppSelector((state) =>state.sharedRiders);
 
+  const userId = typeof userInfo === "object" ? userInfo._id : null
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
   //to fetch once it mounts. not ideal, but it's a fine patch until i can figure out why the behavior happens.
   useEffect(() => {
     refetch();
+   
   }, []);
 
 
@@ -88,13 +90,11 @@ const DashboardScreen: React.FC = () => {
       const sharedCyclists = team.cyclists.filter((cyclist: any) =>
         sharedCyclistIds.includes(cyclist._id)
       );
-      dispatch(addSharedRiders(sharedCyclists))
-      setSharedCyclists(sharedCyclists);
+      dispatch(addSharedRiders({user: userId, sharedRiders: sharedCyclists}))
+
     }
 
-
   }
-
 
 
   const cyclistsPerSpecialty = () => {
@@ -236,6 +236,7 @@ const DashboardScreen: React.FC = () => {
     worstValueCyclist();
     findSharedRiders()
   }, [team, league]);
+
 
   const bardata = [
     {
