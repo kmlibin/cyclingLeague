@@ -43,6 +43,7 @@ const authSlice = createSlice({
     logout: (state, action) => {
       state.userInfo = "";
       localStorage.removeItem("userInfo");
+      localStorage.removeItem("sharedRiders");
     },
   },
 });
