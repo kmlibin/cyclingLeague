@@ -12,19 +12,37 @@ import PieChartComponent from "../components/PieChartComponent";
 import SocialMedia from "../components/SocialMedia";
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
+import { useAppSelector } from "../hooks/hooks";
 import { LinkContainer } from "react-router-bootstrap";
 type Props = {
-  cyclistData: Cyclist;
-  sharedRiders?: Cyclist[];
+  cyclistData: Cyclist | any;
+  isMyTeam?: boolean;
+
 };
 
-const CyclistData: React.FC<Props> = ({ cyclistData: rider, sharedRiders }) => {
-  const countryCode = getCode(mapNationalityName(rider.nationalityName))
-  const shared = sharedRiders?.some(
-    (sharedRider) => sharedRider._id === rider._id
+type SharedRiders = {
+  sharedRiders : Cyclist[],
+  user: string;
+}
+
+
+
+const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
+  const { sharedRiders } = useAppSelector((state): SharedRiders => state.sharedRiders);
+
+  const countryCode = getCode(mapNationalityName(rider.nationalityName));
+
+
+  const sharedCyclists = sharedRiders || [];
+  console.log(sharedCyclists)
+  //check if the current rider is in the shared cyclists array by comparing their ids. if so, will conditionally render 
+  //"on my team" below
+  const shared = sharedCyclists.some(
+    (sharedRider: Cyclist) => sharedRider._id === rider._id
   );
+  console.log(shared)
 
-
+  
 
   return (
     <Card bg="light" className="m-1" style={{ width: "30%" }}>
@@ -35,7 +53,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, sharedRiders }) => {
         <Card.Text className="text-center pb-2 d-flex align-items-center justify-content-center">
           <strong>Country:&nbsp;</strong>
           {rider.nationalityName}&nbsp;
-          <CountryFlag countryCode= {countryCode ? countryCode : "none"} svg />
+          <CountryFlag countryCode={countryCode ? countryCode : "none"} svg />
         </Card.Text>
         <div
           className="d-flex justify-content-center align-items-center mb-4"
@@ -47,11 +65,13 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, sharedRiders }) => {
           />
         </div>
         <ListGroup>
-          {shared && (
-            <ListGroup.Item className="d-flex justify-content-center align-items-center" style={{backgroundColor: 'lightskyblue'}}>
+          {!isMyTeam && shared && (
+            <ListGroup.Item
+              className="d-flex justify-content-center align-items-center"
+              style={{ backgroundColor: "lightskyblue" }}
+            >
               <span className="d-flex justify-content-start align-items-center">
-                <BsStarFill style={{ color: "purple" }} /> &nbsp;
-                On My Team
+                <BsStarFill style={{ color: "purple" }} /> &nbsp; On My Team
               </span>
             </ListGroup.Item>
           )}

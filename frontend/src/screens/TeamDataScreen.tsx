@@ -11,8 +11,6 @@ const TeamDataScreen: React.FC = () => {
   const { teamId } = useParams();
   const { name } = useParams();
   const location = useLocation();
-
-
   const { data: fantasyTeam, refetch: fantasyRefetch } =
     useGetSingleFantasyTeamByIdQuery(name || "");
   const { data: team, refetch: teamRefetch } = useGetSingleTeamQuery(
@@ -20,18 +18,25 @@ const TeamDataScreen: React.FC = () => {
   );
 
   //need to determine the route - there was a bug when you'd click from fantasy team to a trade team b/c both team and fantasyteam
-  //are present. 
+  //are present.
   const isFantasyTeamRoute = location.pathname.startsWith("/fantasyteams");
 
   const cyclists = isFantasyTeamRoute
     ? fantasyTeam?.cyclists || []
     : team?.cyclists || [];
 
-  console.log(cyclists);
-  const { sharedRiders } = useAppSelector((state) => state.sharedRiders);
+  const state = useAppSelector((state: any) => state.sharedRiders);
+  const { user } = state;
+  //check to see if the shared riders are on the logged in users team...will use so that "on my team" will not
+  //render for every single person on their team.
+
+  const isMyTeam = fantasyTeam?.owner === user;
+  console.log(isMyTeam)
   return (
     <>
-      {!isFantasyTeamRoute && team && <h1 className="text-center mt-2 mb-5">{team._id}</h1>}
+      {!isFantasyTeamRoute && team && (
+        <h1 className="text-center mt-2 mb-5">{team._id}</h1>
+      )}
       {isFantasyTeamRoute && fantasyTeam && (
         <h1 className="text-center mt-2 mb-5">{fantasyTeam.teamName}</h1>
       )}
@@ -44,7 +49,7 @@ const TeamDataScreen: React.FC = () => {
           <CyclistData
             key={rider._id}
             cyclistData={rider}
-            sharedRiders={sharedRiders}
+            isMyTeam={isMyTeam}
           />
         ))}
       </Container>
