@@ -19,20 +19,3 @@ export interface Cyclist {
   currentRank: string
 }
 
-export interface FantasyTeam {
-  _id: string;
-  teamName: string;
-  owner: string;
-  cyclists: Cyclist[];
-}
-
-export interface User {
-  name: string;
-  email: string;
-  _id: string;
-  isAdmin: boolean;
-  fantasyTeam: {
-    cyclists: string[];
-    teamName: string;
-  };
-}
