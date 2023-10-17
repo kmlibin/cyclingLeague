@@ -10,8 +10,18 @@ const createTeam = async (req, res) => {
   const { cyclistIds, teamName } = req.body;
   const owner = req.user._id;
 
-  //if team is not 25 ids, throw error
-  //no name, throw error
+  //check that there are 25 cyclists
+  if (cyclistIds.length != 25) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "team must contain 25 cyclists" });
+  }
+  //make sure there is a team name
+  if (!teamName || teamName.trim() === "") {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "team name cannot be empty" });
+  }
 
   try {
     const totalPoints = await calculateTotalPoints(cyclistIds);
@@ -35,14 +45,12 @@ const createTeam = async (req, res) => {
     await User.findByIdAndUpdate(owner, { myTeam: createdTeam._id });
     res.status(StatusCodes.CREATED).json({ createdTeam });
   } catch (error) {
-    console.log("error creating team");
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Failed to create team" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+    throw new Error("failed to create team");
   }
 };
 
-//@desc fetch single teams
+//@desc fetch single teams by userId
 //@route GET /api/fantasyteam/:userId
 //@access Public
 
