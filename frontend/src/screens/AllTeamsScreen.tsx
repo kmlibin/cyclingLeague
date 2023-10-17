@@ -1,16 +1,22 @@
 import React from "react";
-import ListGroup from "react-bootstrap/ListGroup";
-import { useGetTeamsQuery } from "../slices/cyclistApiSlice";
-import { Link, useParams } from "react-router-dom";
-import TeamList from "../components/TeamList";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Paginate from "../components/Paginate";
-import worldTourTeams from "../assets/worldTourTeams.json";
-import Card from "react-bootstrap/Card";
+import { useParams } from "react-router-dom";
+//libraries
 import { getCode } from "country-list";
 import CountryFlag from "react-country-flag";
+//bootstrap
+import ListGroup from "react-bootstrap/ListGroup";
+import Row from "react-bootstrap/Row";
+import Card from "react-bootstrap/Card";
 import { LinkContainer } from "react-router-bootstrap";
+//api and redux
+import { useGetTeamsQuery } from "../slices/cyclistApiSlice";
+//components
+import TeamList from "../components/TeamList";
+import Paginate from "../components/Paginate";
+//data for team badges
+import worldTourTeams from "../assets/worldTourTeams.json";
+
+
 
 const AllTeamsScreen = () => {
   const { pageNumber } = useParams();
