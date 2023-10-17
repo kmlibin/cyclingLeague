@@ -14,10 +14,13 @@ import { IoMdRemove } from "react-icons/io";
 
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Form from "react-bootstrap/Form";
+import Badge from "react-bootstrap/Badge";
 
 import { useAppSelector } from "../hooks/hooks";
 import { useNavigate } from "react-router-dom";
 import TeamList from "../components/TeamList";
+import { MdGroupOff } from "react-icons/md";
 
 type League = {
   teamName: string;
@@ -31,20 +34,18 @@ const FantasyTeamsListScreen = () => {
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const { data: team } = useGetAllFantasyTeamsQuery({});
   const [league, setLeague] = useState<League[]>([]);
-  const [edit, setEdit] = useState(false);
+  const [editing, setEditing] = useState(true);
   const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
-  const [leagueName, setLeagueName] = useState("Click to Edit League Name");
+  const [leagueName, setLeagueName] = useState<string>();
   const [createLeague, { isLoading, error }] = useCreateLeagueMutation();
   const navigate = useNavigate();
 
-  console.log(team);
   //find logged in user's fantasy team so that it will always show in leagues, and cannot be deleted from league or ids
   useEffect(() => {
     if (team) {
       for (const t of team) {
         if (typeof userInfo === "object") {
           if (t.owner._id === userInfo._id) {
-            console.log(t);
             setUserFantasyTeam({
               teamName: t.teamName,
               owner: { _id: t._id, name: t.owner.name },
@@ -98,10 +99,6 @@ const FantasyTeamsListScreen = () => {
       console.log("cannot delete");
       return;
     }
-    // let ids: string[] = [];
-    // const leagueIds = league.map((team) => {
-    //   ids.push(team.id);
-    // });
 
     const newLeague = league.filter((team) => team.id !== idToDelete);
     setLeague(newLeague);
@@ -133,6 +130,15 @@ const FantasyTeamsListScreen = () => {
     }
   };
 
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setEditing(false);
+  };
+
+  const editHandler = () => {
+    setEditing(true);
+  };
+
   useEffect(() => {
     console.log(league, teamIds);
   });
@@ -151,62 +157,91 @@ const FantasyTeamsListScreen = () => {
       )}
 
       {showCreateLeague && (
-        <Accordion>
+        <Accordion defaultActiveKey="0">
           <Accordion.Item eventKey="0">
             <Accordion.Header>
-              {edit ? (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setEdit(false);
-                  }}
-                >
-                  <input
-                    type="text"
-                    placeholder="League Name"
-                    value={leagueName}
-                    onChange={(e) => setLeagueName(e.target.value)}
-                  />
-                  {/* <button type="submit">Save</button> */}
-                </form>
-              ) : (
-                <div onClick={() => setEdit(true)}>{leagueName}</div>
-              )}
+              <p>{leagueName}</p>
             </Accordion.Header>
             <Accordion.Body>
-              {league?.map((team) => (
-                <ListGroup.Item
-                  key={team.id}
-                  as="li"
-                  className="d-flex justify-content-between align-items-center mt-2"
-                >
-                  <div className="ms-2 me-auto">
-                    <div className="fw-bold">{team.teamName}</div>
-                    {team.owner.name}
-                  </div>
-                  <div></div>
-                  <Button
-                    style={{ marginLeft: "1rem" }}
-                    size="sm"
-                    variant="danger"
-                    onClick={() => deleteFromLeague(team.id)}
-                  >
-                    <IoMdRemove
-                      style={{ fontSize: "1.9rem", color: "black" }}
-                    />
-                  </Button>
-                </ListGroup.Item>
-              ))}
+              <ListGroup>
+                <Row className="mb-3">Explain rules for league</Row>
+                {league?.map((team) => (
+                  <ListGroup.Item key={team.id} className="w-100">
+                    <Row className="d-flex align-items-center">
+                      <Col xs={2}>Owner: {team.owner.name}</Col>
+                      <Col xs={2} className="fw-bold ">
+                        {team.teamName}
+                      </Col>
 
-              <ListGroup.Item className="d-flex justify-content-center align-items-end flex-column mt-2">
-                <Row>
-                  <Col>
-                    <Button variant="info" onClick={createLeagueHandler}>
-                      Finalize Team
-                    </Button>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
+                      <Col xs={8} className="text-end">
+                        <Button
+                          size="sm"
+                          variant="outline-danger"
+                          style={{ marginLeft: "1rem" }}
+                          onClick={() => deleteFromLeague(team.id)}
+                        >
+                          <MdGroupOff
+                            style={{
+                              fontSize: "1.5rem",
+                            }}
+                          />
+                        </Button>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                ))}
+
+                <ListGroup.Item className="text-end">
+                  <Row>
+                    {editing ? (
+                      <Col xs={8}>
+                        <Form onSubmit={submitHandler} className="d-flex">
+                          <Form.Group style={{ marginRight: "10px" }}>
+                            <Form.Control
+                              type="text"
+                              placeholder="Enter Your League Name"
+                              value={leagueName}
+                              onChange={(e) => setLeagueName(e.target.value)}
+                            ></Form.Control>
+                          </Form.Group>
+                          <Button variant="info" type="submit">
+                            Submit Team Name
+                          </Button>
+                        </Form>
+                      </Col>
+                    ) : (
+                      <Col className="d-flex">
+                        <Badge
+                          bg="dark"
+                          className="d-flex align-items-center justify-content-center"
+                          style={{
+                            marginRight: "10px",
+                            minWidth: "20%",
+                            fontSize: "18px",
+                          }}
+                        >
+                          {leagueName}
+                        </Badge>
+                        {leagueName ? (
+                          <Button variant="info" onClick={editHandler}>
+                            Edit Team Name
+                          </Button>
+                        ) : (
+                          <Button variant="info" onClick={editHandler}>
+                            Submit Team Name
+                          </Button>
+                        )}
+                      </Col>
+                    )}
+
+                    <Col xs={4}>
+                      <Button variant="info" onClick={createLeagueHandler}>
+                        Finalize Team
+                      </Button>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              </ListGroup>
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
