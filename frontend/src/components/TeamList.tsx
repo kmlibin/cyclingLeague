@@ -85,22 +85,14 @@ const TeamList: React.FC<TeamItemProps> = ({
      {fantasyLeagueScreen ? (
         // Buttons for FantasyTeamsListScreen
         isAddedToLeague ? (
-          <Button
-            style={{ marginLeft: "1rem" }}
-            size="sm"
-            variant="danger"
-            onClick={handleDelete}
-          >
-            <IoMdRemove style={{ fontSize: "1.9rem", color: "black" }} />
-          </Button>
+           <ImCheckmark style={{ color: "green", fontSize: "1.7em", marginLeft: "1rem" }} />
         ) : (
-          <Button
-            variant="success"
+          <button
             onClick={handleAddToLeague}
             style={{ marginLeft: "1rem" }}
           >
-            <GrAdd style={{ fontSize: "1.7rem", color: "green" }} />
-          </Button>
+            <GrAdd style={{ fontSize: "1.7rem", backgroundColor: "white" }} />
+          </button>
         )
       ) : null}
     </ListGroup.Item>
