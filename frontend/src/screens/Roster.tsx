@@ -15,6 +15,7 @@ import { useCreateTeamMutation } from "../slices/fantasyTeamApiSlice";
 import mapNationalityName from "../utils/findNationalityName";
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
+import Spinner from "react-bootstrap/Spinner";
 
 import DataTable, { TableColumn } from "react-data-table-component";
 
@@ -43,12 +44,21 @@ const HideSelectionSummary = styled.div`
   }
 `;
 
+type TeamError = {
+  alreadyOnTeam?: string | undefined;
+  teamLength?: string | undefined;
+  teamName?: string | undefined;
+  pointsUsed?: string | undefined;
+  serverError?: string | undefined;
+};
+
 const Roster: React.FC = () => {
+  const [teamError, setTeamError] = useState<TeamError>();
   const [team, setTeam] = useState<DataRow[]>([]);
   const [teamName, setTeamName] = useState<string>("");
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [pointsRemaining, setPointsRemaining] = useState<number>(150);
-  const [createTeam, { isLoading, error }] = useCreateTeamMutation();
+  const [createTeam, { error }] = useCreateTeamMutation();
   const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -59,21 +69,29 @@ const Roster: React.FC = () => {
   };
 
   //all doesn't have a value in the db, so pass back an empty object if 'all' in order to get all riders
-  const { data: cyclists, refetch } = useGetCyclistsQuery(searchObject);
-  console.log(userInfo);
+  const {
+    data: cyclists,
+    refetch,
+    isLoading,
+  } = useGetCyclistsQuery(searchObject);
+
   const addToTeam = (row: DataRow) => {
     if (team.includes(row)) {
+      setTeamError({ alreadyOnTeam: "cyclist already on team", ...teamError });
       return team;
-      //send error
     }
     if (team.length >= 25) {
+      setTeamError({
+        teamLength: "Team Is Full",
+        ...teamError,
+      });
       return team;
-      //send error
     }
     if (pointsRemaining - calculatePrice(row.yearEndUciPoints) < 0) {
-      return pointsRemaining;
-      //send error
+      setTeamError({ pointsUsed: "Not enough points available", ...teamError });
+      return team;
     } else {
+      setTeamError(undefined);
       setTeam([...team, row]);
       setTeamIds([...teamIds, row._id]);
       //I don't have a 'price' on my data, so i have to access year end uci points and put it through calculate Price
@@ -85,6 +103,7 @@ const Roster: React.FC = () => {
 
   const deleteFromTeam = (row: DataRow) => {
     const newTeam = team.filter((rider) => rider.name !== row.name);
+    setTeamError(undefined);
     setTeam(newTeam);
     setPointsRemaining(pointsRemaining + calculatePrice(row.yearEndUciPoints));
   };
@@ -100,7 +119,7 @@ const Roster: React.FC = () => {
       name: "Rank",
       maxWidth: "7%",
       selector: (row) => {
-        return row.prevYearRank === "n/a" ? 0 : Number(row.prevYearRank)
+        return row.prevYearRank === "n/a" ? 0 : Number(row.prevYearRank);
       },
       sortable: true,
     },
@@ -163,9 +182,21 @@ const Roster: React.FC = () => {
       "Finalize team? You'll no longer be able to edit..."
     );
     if (confirmed) {
+      //check for teamname
+      if (!teamName) {
+        setTeamError({
+          ...teamError,
+          teamName: "Please submit a name for your team",
+        });
+        return;
+      }
+      //make sure team has 25 people
+      if (team.length != 25) {
+        setTeamError({ ...teamError, teamLength: "Must have 25 riders" });
+        return;
+      }
       try {
         const cyclistIds: string[] = teamIds;
-        console.log(cyclistIds);
         const res = await createTeam({
           cyclistIds,
           teamName,
@@ -179,6 +210,7 @@ const Roster: React.FC = () => {
             teamName,
           };
           dispatch(updateTeam(updatedTeamInfo));
+          setTeamError(undefined);
           navigate(`/users/${userInfo._id}/dashboard`);
         }
       } catch (error) {
@@ -190,11 +222,6 @@ const Roster: React.FC = () => {
     refetch();
   }, [tab, refetch]);
 
-  useEffect(() => {
-    // Log the updated team state when it changes
-    console.log("Updated Team:", team, teamIds);
-  }, [team, pointsRemaining]);
-
   return (
     <>
       <TabsComponent />
@@ -205,9 +232,15 @@ const Roster: React.FC = () => {
         createTeamHandler={createTeamHandler}
         teamName={teamName}
         setTeamName={setTeamName}
+        teamError={teamError}
       />
       <SearchBar />
       <HideSelectionSummary>
+        {isLoading && (
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        )}
         <DataTable
           title="League Roster"
           columns={columns}
