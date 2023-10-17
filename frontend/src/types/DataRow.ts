@@ -4,8 +4,10 @@ export type DataRow = {
     name: string;
     team: string;
     yearEndUciPoints: number;
-    price: number;
+    price?: number;
     _id: string;
     nationalityName: string;
-    prevYearRank: string;
+    prevYearRank?: string;
+    currentRank: string;
+    currentUciPoints: number;
   };
