@@ -9,15 +9,23 @@ import getColorCircle from "../utils/circleColor";
 import { MdPerson, MdPersonRemove } from "react-icons/md";
 import calculatePrice from "../utils/calculatePoints";
 import Form from "react-bootstrap/Form";
-import Badge from 'react-bootstrap/Badge'
+import Badge from "react-bootstrap/Badge";
+
+type TeamError = {
+  alreadyOnTeam?: string | undefined;
+  teamLength?: string | undefined;
+  teamName?: string | undefined;
+  pointsUsed?: string | undefined;
+};
 
 type Props = {
   team: DataRow[];
   points: Number;
   deleteFromTeam: (row: DataRow) => void;
   createTeamHandler: () => Promise<void>;
-  teamName: string
-  setTeamName:React.Dispatch<React.SetStateAction<string>>
+  teamName: string;
+  setTeamName: React.Dispatch<React.SetStateAction<string>>;
+  teamError: TeamError | undefined;
 };
 
 const MyTeamDropdown: React.FC<Props> = ({
@@ -26,15 +34,16 @@ const MyTeamDropdown: React.FC<Props> = ({
   deleteFromTeam,
   createTeamHandler,
   teamName,
-  setTeamName
+  setTeamName,
+  teamError,
 }) => {
   const pointsValue = points.valueOf();
   const [editing, setEditing] = useState(true);
+  console.log(teamError);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setEditing(false);
-    console.log(teamName);
   };
 
   const editHandler = () => {
@@ -42,11 +51,11 @@ const MyTeamDropdown: React.FC<Props> = ({
   };
 
   return (
-    <Accordion>
+    <Accordion defaultActiveKey="0">
       <Accordion.Item eventKey="0">
         <Accordion.Header className="text-xs">
           <div className="header-content">
-            <p>My Team</p>
+            <p>{teamName}</p>
             <div className="info">
               <p>{150 - pointsValue}/150 points</p>
               <p>{team.length} riders </p>
@@ -88,9 +97,8 @@ const MyTeamDropdown: React.FC<Props> = ({
             </ListGroup.Item>
             <ListGroup.Item className="text-end">
               <Row>
-                
-                  {editing ? (
-                  <Col xs={8} >
+                {editing ? (
+                  <Col xs={8}>
                     <Form onSubmit={submitHandler} className="d-flex">
                       <Form.Group style={{ marginRight: "10px" }}>
                         <Form.Control
@@ -100,27 +108,42 @@ const MyTeamDropdown: React.FC<Props> = ({
                           onChange={(e) => setTeamName(e.target.value)}
                         ></Form.Control>
                       </Form.Group>
-                      <Button variant="info" type="submit">
-                        Submit Team Name
-                      </Button>
-                    </Form>
-                    </Col>
-                  ) : (
-                   
-                    <Col className="d-flex">
-                      <Badge bg="dark" className="d-flex align-items-center" style={{marginRight: '10px', minWidth: "20%", fontSize: '18px'}}>{teamName}</Badge>
-                      {teamName ? (
-                        <Button variant="info" onClick={editHandler}>
-                          Edit Team Name
+                      {teamError?.teamName ? (
+                        <Button variant="danger" type="submit">
+                          Submit Team Name
                         </Button>
                       ) : (
-                        <Button variant="info" onClick={editHandler}>
+                        <Button variant="info" type="submit">
                           Submit Team Name
                         </Button>
                       )}
-                    </Col>
-                  )}
-                
+                    </Form>
+                  </Col>
+                ) : (
+                  <Col className="d-flex">
+                    <Badge
+                      bg="dark"
+                      className="d-flex align-items-center justify-content-center"
+                      style={{
+                        marginRight: "10px",
+                        minWidth: "20%",
+                        fontSize: "18px",
+                      }}
+                    >
+                      {teamName}
+                    </Badge>
+                    {teamName ? (
+                      <Button variant="info" onClick={editHandler}>
+                        Edit Team Name
+                      </Button>
+                    ) : (
+                      <Button variant="info" onClick={editHandler}>
+                        Submit Team Name
+                      </Button>
+                    )}
+                  </Col>
+                )}
+
                 <Col xs={4}>
                   <Button variant="info" onClick={createTeamHandler}>
                     Finalize Team
@@ -128,6 +151,20 @@ const MyTeamDropdown: React.FC<Props> = ({
                 </Col>
               </Row>
             </ListGroup.Item>
+
+            {teamError && (
+              <ListGroup.Item>
+                <Row className="w-100 d-flex justify-content-end error">
+                  {teamError.pointsUsed}
+                </Row>
+                <Row className="w-100 d-flex justify-content-end error ">
+                  {teamError.alreadyOnTeam}
+                </Row>
+                <Row className="w-100 d-flex justify-content-end error ">
+                  {teamError.teamLength}
+                </Row>
+              </ListGroup.Item>
+            )}
           </ListGroup>
         </Accordion.Body>
       </Accordion.Item>
