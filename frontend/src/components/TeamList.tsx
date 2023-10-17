@@ -29,7 +29,7 @@ interface TeamItemProps {
 
 const TeamList: React.FC<TeamItemProps> = ({
   team,
-  onDelete,
+  
   onAddToLeague,
   isAddedToLeague,
   teamName,
@@ -38,14 +38,9 @@ const TeamList: React.FC<TeamItemProps> = ({
 }) => {
   const eightRiders = team.cyclists.slice(0, 8);
 
-  //teamslist doesn't always have an ondelete or onaddtoleague passed in, so this helps to get around
+  //teamslist doesn't always have an  onaddtoleague passed in, so this helps to get around
   //TS complaining that they  might be undefined. i'd just called these directly and passed in the necessary info in the conditional
   //render, but then, as i said, TS complained.
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete(team._id);
-    }
-  };
 
   const handleAddToLeague = () => {
     if (onAddToLeague) {
