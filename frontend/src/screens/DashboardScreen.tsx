@@ -12,14 +12,17 @@ import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
 import { Cyclist } from "../interfaces/Cyclist";
 import { LeagueData } from "../interfaces/League";
-import calculatePrice from "../utils/calculatePoints";
-import TeamTable from "../components/TeamTable";
+import {bestValueCyclist, calculatePrice} from "../utils/calculateStats";
+import TeamTable from "../components/MyFantastyTeamTable";
 import PieChartComponent from "../components/PieChartComponent";
 import { LinkContainer } from "react-router-bootstrap";
 import SpecialtyBarChart from "../components/SpecialtyBarChart";
 import CyclistMiniData from "../components/CyclistMiniData";
 import { FantasyTeam } from "../interfaces/FantasyTeam";
 import { addSharedRiders } from "../slices/cyclistSlice";
+import { findSharedRiders } from "../utils/calculateStats";
+import { cyclistsPerSpecialty, highScore, worstValueCyclist, teamSpecialties } from "../utils/calculateStats";
+
 type SpecialtyData = {
   specialty: string;
   points: number;
@@ -27,7 +30,6 @@ type SpecialtyData = {
 
 const DashboardScreen: React.FC = () => {
   const { id } = useParams();
-
   const { data: team } = useGetSingleFantasyTeamQuery(id);
   const { data: league, refetch }: any = useGetLeagueQuery(id);
   const [topCyclist, setTopCyclist] = useState<Cyclist | null>(null);
@@ -46,175 +48,13 @@ const DashboardScreen: React.FC = () => {
   });
 
   const { userInfo } = useAppSelector((state) => state.auth);
-  const {user} = useAppSelector((state) =>state.sharedRiders);
 
   const userId = typeof userInfo === "object" ? userInfo._id : null
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
   //to fetch once it mounts. not ideal, but it's a fine patch until i can figure out why the behavior happens.
   useEffect(() => {
     refetch();
-   
   }, []);
-
-
-  const findSharedRiders = () => {
-    if (team && league) {
-      //find users team id
-      const usersTeamId = team._id;
-      //get cyclists ids from users team
-      const teamCyclistIds = team.cyclists.map((cyclist: Cyclist) => cyclist._id);
-  
-      // grab index of the logged-in user's team within league.teamIds, need to exclude it for calculation
-      const usersTeamIndex = league.teamIds.findIndex(
-        (teamData: LeagueData) => teamData._id === usersTeamId 
-     
-      );
-      
-      // create a copy of league.teamIds without the user's team
-      const filteredLeagueTeamIds = [
-        ...league.teamIds.slice(0, usersTeamIndex),
-        ...league.teamIds.slice(usersTeamIndex + 1),
-      ];
-  
-      // grab cyclist _ids from the remaining teams in the league
-      const leagueCyclistIds = filteredLeagueTeamIds
-        .flatMap((teamData: any) => teamData.cyclists)
-        //gets ids
-        .map((cyclistId: string) => cyclistId);
-  
-      const sharedCyclistIds = teamCyclistIds.filter((teamCyclistId: any) =>
-        leagueCyclistIds.includes(teamCyclistId)
-      );
-
-      //shared cyclist _ids excluding the logged-in user's team
-      const sharedCyclists = team.cyclists.filter((cyclist: any) =>
-        sharedCyclistIds.includes(cyclist._id)
-      );
-      dispatch(addSharedRiders({user: userId, sharedRiders: sharedCyclists}))
-
-    }
-
-  }
-
-
-  const cyclistsPerSpecialty = () => {
-    const counts = {
-      sprinters: 0,
-      climbers: 0,
-      timetrial: 0,
-      oneday: 0,
-    };
-    if (team) {
-      const { cyclists } = team;
-
-      cyclists.forEach((cyclist: Cyclist) => {
-        switch (cyclist.mainSpecialty) {
-          case "Sprint":
-            counts.sprinters++;
-            break;
-          case "Climber":
-            counts.climbers++;
-            break;
-          case "Time trial":
-            counts.timetrial++;
-            break;
-          case "One day races":
-            counts.oneday++;
-        }
-      });
-      setCyclistCounts(counts);
-    }
-  };
-
-  //find highest scorer on team
-  const highScore = () => {
-    if (team) {
-      const { cyclists } = team;
-
-      let score = 0;
-      let topCyclist: Cyclist | null = null;
-      //check the current uci points of each cyclist, store highest one in state
-      for (const cyclist of cyclists) {
-        if (Math.floor(cyclist.currentUciPoints) > Math.floor(score)) {
-          score = cyclist.currentUciPoints;
-          topCyclist = cyclist;
-        }
-      }
-      setTopCyclist(topCyclist);
-    }
-    return null;
-  };
-
-  //find best value cyclist on team
-  const bestValueCyclist = () => {
-    if (team) {
-      //grab cyclists
-      const { cyclists } = team;
-      let bestValue = 0;
-
-      for (const cyclist of cyclists) {
-        //calculate how much they cost the user to put on team
-        const price = calculatePrice(cyclist.yearEndUciPoints);
-        //find ratio of how many points they've so far vs how much they cost
-        const value = cyclist.currentUciPoints / price;
-        //will put the cyclist with highest value in state
-        if (value > bestValue) {
-          bestValue = value;
-          setBestValue(cyclist);
-        }
-      }
-    }
-    return null;
-  };
-
-  const worstValueCyclist = () => {
-    if (team) {
-      // Grab cyclists
-      const { cyclists } = team;
-      let worstValue = Infinity; // Initialize worstValue with a very high value
-
-      for (const cyclist of cyclists) {
-        // Calculate how much they cost the user to put on the team
-        const price = calculatePrice(cyclist.yearEndUciPoints);
-        if (price != 1) {
-          // Find the ratio of how many points they've earned so far vs how much they cost
-          const value = cyclist.currentUciPoints / price;
-          // Check if this cyclist has a worse value than the current worstValue
-          if (value < worstValue) {
-            worstValue = value;
-            setWorstValue(cyclist);
-          }
-        }
-      }
-    }
-    return null;
-  };
-
-  const teamSpecialties = () => {
-    let data: SpecialtyData[] = [
-      { specialty: "One day races", points: 0 },
-      { specialty: "GC", points: 0 },
-      { specialty: "Time trial", points: 0 },
-      { specialty: "Sprint", points: 0 },
-      { specialty: "Climber", points: 0 },
-    ];
-
-    if (team) {
-      const { cyclists } = team;
-      for (const cyclist of cyclists) {
-        for (const specialtyObject of cyclist.riderSpecialties) {
-          //find the right object in the data and update its points
-          const matchingSpecialty = data.find(
-            (item) => item.specialty === specialtyObject.specialty
-          );
-          if (matchingSpecialty) {
-            matchingSpecialty.points += specialtyObject.points;
-          }
-        }
-      }
-    }
-    setSpecialties(data);
-  };
 
   //make sure league is sorted by total points score
   const leagueSort = () => {
@@ -228,13 +68,19 @@ const DashboardScreen: React.FC = () => {
 
   //call functions that calculate the data for stats
   useEffect(() => {
-    highScore();
-    bestValueCyclist();
-    teamSpecialties();
-    cyclistsPerSpecialty();
+    //find highest scoring cyclist
+    setTopCyclist(highScore(team));
+    //find best value cyclist
+    setBestValue(bestValueCyclist(team))
+    //sort out team specialties and points for each specialty
+    setSpecialties(teamSpecialties(team));
+    //how many cyclists are which specialty
+    setCyclistCounts(cyclistsPerSpecialty(team));
+    //least cost effective rider
+    setWorstValue(worstValueCyclist(team));
+    //figure out how many shared riders there are between leagues
+    findSharedRiders(dispatch, team, league, userId)
     leagueSort();
-    worstValueCyclist();
-    findSharedRiders()
   }, [team, league]);
 
 
