@@ -15,6 +15,8 @@ import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Spinner from "react-bootstrap/Spinner";
+import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
 
 //components
 import SpecialtyTabs from "../components/SpecialtyTabs";
@@ -23,14 +25,12 @@ import CreateTeamDropdown from "../components/CreateTeamDropdown";
 
 //utils
 import getColorCircle from "../utils/circleColor";
-import {calculatePrice} from "../utils/calculateStats";
+import { calculatePrice } from "../utils/calculateStats";
 import mapNationalityName from "../utils/findNationalityName";
 
 //types
 import { DataRow } from "../types/DataRow";
 import { TeamError } from "../types/TeamError";
-
-
 
 //override some of the styling of react data table
 const HideSelectionSummary = styled.div`
@@ -45,9 +45,9 @@ const HideSelectionSummary = styled.div`
   }
 `;
 
-
 const CreateFantasyTeam: React.FC = () => {
   const [teamError, setTeamError] = useState<TeamError>();
+  const [showCreateTeam, setShowCreateTeam] = useState<boolean>(false);
   const [team, setTeam] = useState<DataRow[]>([]);
   const [teamName, setTeamName] = useState<string>("");
   const [teamIds, setTeamIds] = useState<string[]>([]);
@@ -217,7 +217,6 @@ const CreateFantasyTeam: React.FC = () => {
     },
   ];
 
-
   useEffect(() => {
     refetch();
   }, [tab, refetch]);
@@ -225,15 +224,29 @@ const CreateFantasyTeam: React.FC = () => {
   return (
     <>
       <SpecialtyTabs />
-      <CreateTeamDropdown
-        team={team}
-        points={pointsRemaining}
-        deleteFromTeam={deleteFromTeam}
-        createTeamHandler={createTeamHandler}
-        teamName={teamName}
-        setTeamName={setTeamName}
-        teamError={teamError}
-      />
+  
+      {!showCreateTeam && (
+        <Row className="w-100 d-flex justify-content-end m-2">
+          <Button
+            style={{ width: "15%" }}
+            onClick={() => setShowCreateTeam(true)}
+          >
+            Create New Team
+          </Button>
+        </Row>
+      )}
+      {showCreateTeam && (
+        <CreateTeamDropdown
+          team={team}
+          points={pointsRemaining}
+          deleteFromTeam={deleteFromTeam}
+          createTeamHandler={createTeamHandler}
+          teamName={teamName}
+          setTeamName={setTeamName}
+          teamError={teamError}
+        />
+      )}
+
       <SearchBar />
       <HideSelectionSummary>
         {isLoading && (
