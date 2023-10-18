@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
 //libraries
@@ -12,11 +12,11 @@ import { useGetSingleTeamQuery } from "../slices/cyclistApiSlice";
 //components
 import CyclistData from "./CyclistDataScreen/CyclistData";
 
-
 //interfaces
 import { Cyclist } from "../interfaces/Cyclist";
 
 const TeamDataScreen: React.FC = () => {
+  const [sortedCyclists, setSortedCyclists] = useState<any>();
   const { teamId } = useParams();
   const { name } = useParams();
   const location = useLocation();
@@ -40,7 +40,31 @@ const TeamDataScreen: React.FC = () => {
   //render for every single person on their team.
 
   const isMyTeam = fantasyTeam?.owner === user;
+  console.log(fantasyTeam);
 
+  const sortCyclists = () => {
+    if (cyclists) {
+      const sortedCyclists = [...cyclists].sort((a, b) => {
+        //in case points are missing
+        const pointsA = Number(a.currentUciPoints) || 0;
+        const pointsB = Number(b.currentUciPoints) || 0;
+        return Number(pointsB - pointsA);
+      });
+      setSortedCyclists(sortedCyclists);
+    }
+  };
+
+
+
+  useEffect(() => {
+    sortCyclists();
+   
+  }, [cyclists]);
+
+
+  useEffect(() => {
+    console.log(sortedCyclists)
+  })
   return (
     <>
       {!isFantasyTeamRoute && team && (
@@ -54,7 +78,7 @@ const TeamDataScreen: React.FC = () => {
         className="d-flex flex-wrap justify-content-evenly"
         style={{ backgroundColor: "pink" }}
       >
-        {cyclists.map((rider: Cyclist) => (
+        {sortedCyclists?.map((rider: Cyclist) => (
           <CyclistData
             key={rider._id}
             cyclistData={rider}
