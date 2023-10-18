@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation  } from "react-router-dom";
 
 //api and redux
 import { useGetCyclistsQuery } from "../../slices/cyclistApiSlice";
@@ -17,7 +17,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import Spinner from "react-bootstrap/Spinner";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
-import Container from 'react-bootstrap/Container'
+
 
 //components
 import SpecialtyTabs from "./SpecialtyTabs";
@@ -48,6 +48,7 @@ const HideSelectionSummary = styled.div`
 
 const CreateFantasyTeam: React.FC = () => {
   const [teamError, setTeamError] = useState<TeamError>();
+  const [onCreateTeamPage, setOnCreateTeamPage] = useState<boolean>(true)
   const [showCreateTeam, setShowCreateTeam] = useState<boolean>(false);
   const [team, setTeam] = useState<DataRow[]>([]);
   const [teamName, setTeamName] = useState<string>("");
@@ -57,11 +58,17 @@ const CreateFantasyTeam: React.FC = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation()
+
+  const createRoute = location.pathname === "/create"
+
   const { tab, keyword } = useParams();
   const searchObject = {
     tab: tab === "all" ? {} : tab,
     keyword: keyword ? keyword : {},
   };
+
+  console.log(searchObject)
 
   //all doesn't have a value in the db, so pass back an empty object if 'all' in order to get all riders
   const {
@@ -225,7 +232,7 @@ const CreateFantasyTeam: React.FC = () => {
   return (
     <>
       <SpecialtyTabs />
-      {!showCreateTeam && (
+      {createRoute && !showCreateTeam && (
         <Row className="w-100 d-flex justify-content-end mt-2">
           <Button
             style={{ width: "15%" }}
