@@ -22,6 +22,7 @@ interface TeamItemProps {
     id: string
   ) => void;
   isAddedToLeague?: boolean;
+  createRoute?: boolean;
   teamName: string;
   fantasyLeagueScreen?: boolean;
   url: string;
@@ -29,12 +30,12 @@ interface TeamItemProps {
 
 const TeamList: React.FC<TeamItemProps> = ({
   team,
-  
   onAddToLeague,
   isAddedToLeague,
   teamName,
   fantasyLeagueScreen,
-  url
+  url,
+  createRoute,
 }) => {
   const eightRiders = team.cyclists.slice(0, 8);
 
@@ -59,7 +60,6 @@ const TeamList: React.FC<TeamItemProps> = ({
           <div className="fw-bold">{teamName}</div>
         </Link>
       </div>
-
       <div className="d-flex">
         {eightRiders.map((rider: any) => (
           <img
@@ -73,19 +73,17 @@ const TeamList: React.FC<TeamItemProps> = ({
       </div>
       . . . &nbsp;
       <Badge bg="primary" pill className="mr-4">
-       {team.cyclists.length}
+        {team.cyclists.length}
       </Badge>
-
-     {/* Conditionally render buttons based on the screen */}
-     {fantasyLeagueScreen ? (
+      {/* Conditionally render buttons based on the screen */}
+      {fantasyLeagueScreen && createRoute ? (
         // Buttons for FantasyTeamsListScreen
         isAddedToLeague ? (
-           <ImCheckmark style={{ color: "green", fontSize: "1.7em", marginLeft: "1rem" }} />
+          <ImCheckmark
+            style={{ color: "green", fontSize: "1.7em", marginLeft: "1rem" }}
+          />
         ) : (
-          <button
-            onClick={handleAddToLeague}
-            style={{ marginLeft: "1rem" }}
-          >
+          <button onClick={handleAddToLeague} style={{ marginLeft: "1rem" }}>
             <GrAdd style={{ fontSize: "1.7rem", backgroundColor: "white" }} />
           </button>
         )

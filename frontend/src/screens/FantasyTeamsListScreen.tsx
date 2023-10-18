@@ -10,15 +10,13 @@ import {
   useCreateLeagueMutation,
 } from "../slices/fantasyTeamApiSlice";
 
-import { IoMdRemove } from "react-icons/io";
-
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Badge from "react-bootstrap/Badge";
 
 import { useAppSelector } from "../hooks/hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TeamList from "../components/TeamList";
 import { MdGroupOff } from "react-icons/md";
 
@@ -39,6 +37,9 @@ const FantasyTeamsListScreen = () => {
   const [leagueName, setLeagueName] = useState<string>();
   const [createLeague, { isLoading, error }] = useCreateLeagueMutation();
   const navigate = useNavigate();
+  const location = useLocation()
+
+  const createRoute = location.pathname === "/createleague"
 
   //find logged in user's fantasy team so that it will always show in leagues, and cannot be deleted from league or ids
   useEffect(() => {
@@ -143,9 +144,11 @@ const FantasyTeamsListScreen = () => {
     console.log(league, teamIds);
   });
 
+
+
   return (
     <Container className="d-flex flex-column">
-      {!showCreateLeague && (
+      {createRoute && !showCreateLeague && (
         <Row className="w-100 d-flex justify-content-end mb-2">
           <Button
             style={{ width: "15%" }}
@@ -256,10 +259,11 @@ const FantasyTeamsListScreen = () => {
             team={team}
             teamName={team.teamName}
             onAddToLeague={addToLeague}
+            createRoute = {createRoute}
             //checks if the team has been added to the league
-            isAddedToLeague={league.some(
+            isAddedToLeague={(league.some(
               (leagueTeam) => leagueTeam.id === team._id
-            )}
+            ))}
             fantasyLeagueScreen={true}
             url={`/fantasyteams/${team._id}`}
           />
