@@ -26,7 +26,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index={true} path="/" element={<CreateFantasyTeam />} />
-      <Route path="/create" element={<CreateFantasyTeam />} />  
+      <Route path="/createteam" element={<CreateFantasyTeam />} />  
       <Route path="/search/:keyword" element={<CreateFantasyTeam />} />
       <Route path="/riders" element={<CreateFantasyTeam />} />      
       <Route path="/riders/:tab/search/:keyword" element={<CreateFantasyTeam />} />
@@ -38,6 +38,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
       <Route path="/users/:id/dashboard" element={<DashboardScreen />} />
+      <Route path="/createleague" element={<FantasyTeamsListScreen />} />
       <Route path="/fantasyteams" element={<FantasyTeamsListScreen />} />
       <Route path="/fantasyteams/:name" element={<TeamDataScreen />} />
     </Route>
