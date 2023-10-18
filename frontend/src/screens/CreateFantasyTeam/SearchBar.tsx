@@ -3,22 +3,24 @@ import { useParams, useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-
 type Props = {};
 
 const SearchBar: React.FC<Props> = () => {
   const navigate = useNavigate();
-  const { keyword: search} = useParams();
-  const [keyword, setKeyword] = useState(search || '');
-
+  const { keyword: search, tab } = useParams();
+  const [keyword, setKeyword] = useState(search || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (keyword.trim()) {
-      navigate(`/search/${keyword}`);
+      const route = tab
+        ? `/riders/${tab}/search/${keyword}`
+        : `/search/${keyword}`;
+      navigate(route);
       setKeyword("");
     } else {
-      navigate("/");
+      const route = tab ? `/riders/${tab}` : "/";
+      navigate(route);
     }
   };
   return (
