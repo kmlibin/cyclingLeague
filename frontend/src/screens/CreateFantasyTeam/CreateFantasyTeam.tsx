@@ -60,7 +60,7 @@ const CreateFantasyTeam: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation()
 
-  const createRoute = location.pathname === "/create"
+  const createRoute = location.pathname === "/createteam"
 
   const { tab, keyword } = useParams();
   const searchObject = {
