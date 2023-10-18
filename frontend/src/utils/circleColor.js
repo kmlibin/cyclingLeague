@@ -11,17 +11,16 @@
 
     switch (mainSpecialty) {
       case "One day races":
-        circleStyle.backgroundColor = "#ffa500";
+        circleStyle.backgroundColor = "#cc0000";
         break;
       case "Sprint":
         circleStyle.backgroundColor = "#009900";
         break;
-      // Add more cases for other specialties if needed
       case "Time trial":
         circleStyle.backgroundColor = "#51d5eb";
         break;
       case "Climber":
-        circleStyle.backgroundColor = "#cc0000";
+        circleStyle.backgroundColor = "#ffa500";
         break;
 
       default:

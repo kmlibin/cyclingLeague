@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
-import { DataRow } from "../types/DataRow";
+import { DataRow } from "../../types/DataRow";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import getColorCircle from "../utils/circleColor";
+import getColorCircle from "../../utils/circleColor";
 import { MdPerson, MdPersonRemove } from "react-icons/md";
-import{ calculatePrice} from "../utils/calculateStats";
+import{ calculatePrice} from "../../utils/calculateStats";
 import Form from "react-bootstrap/Form";
 import Badge from "react-bootstrap/Badge";
 

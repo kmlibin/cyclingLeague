@@ -1,10 +1,10 @@
 import React from "react";
-import { DataRow } from "../types/DataRow";
-import { FantasyTeam } from "../interfaces/FantasyTeam";
+import { DataRow } from "../../types/DataRow";
+import { FantasyTeam } from "../../interfaces/FantasyTeam";
 import DataTable, { TableColumn } from "react-data-table-component";
-import getColorCircle from "../utils/circleColor";
-import {calculatePrice} from "../utils/calculateStats";
-import mapNationalityName from "../utils/findNationalityName";
+import getColorCircle from "../../utils/circleColor";
+import {calculatePrice} from "../../utils/calculateStats";
+import mapNationalityName from "../../utils/findNationalityName";
 import { getCode } from "country-list";
 import CountryFlag from "react-country-flag";
 

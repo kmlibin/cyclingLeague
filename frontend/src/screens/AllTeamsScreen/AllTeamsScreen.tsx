@@ -9,12 +9,12 @@ import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import { LinkContainer } from "react-router-bootstrap";
 //api and redux
-import { useGetTeamsQuery } from "../slices/cyclistApiSlice";
+import { useGetTeamsQuery } from "../../slices/cyclistApiSlice";
 //components
-import TeamList from "../components/TeamList";
-import Paginate from "../components/Paginate";
+import TeamList from "../../components/TeamList";
+import Paginate from "../../components/Paginate";
 //data for team badges
-import worldTourTeams from "../assets/worldTourTeams.json";
+import worldTourTeams from "./worldTourTeams.json";
 
 
 

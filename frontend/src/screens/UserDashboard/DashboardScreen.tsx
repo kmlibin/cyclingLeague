@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../hooks/hooks";
+import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
 import {
   useGetLeagueQuery,
   useGetSingleFantasyTeamQuery,
-} from "../slices/fantasyTeamApiSlice";
+} from "../../slices/fantasyTeamApiSlice";
 import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
-import { Cyclist } from "../interfaces/Cyclist";
-import { LeagueData } from "../interfaces/League";
-import {bestValueCyclist, calculatePrice} from "../utils/calculateStats";
-import TeamTable from "../components/MyFantastyTeamTable";
-import PieChartComponent from "../components/PieChartComponent";
+import { Cyclist } from "../../interfaces/Cyclist";
+import { LeagueData } from "../../interfaces/League";
+import {bestValueCyclist, calculatePrice} from "../../utils/calculateStats";
+import TeamTable from "./MyFantastyTeamTable";
+import PieChartComponent from "../../components/PieChartComponent";
 import { LinkContainer } from "react-router-bootstrap";
-import SpecialtyBarChart from "../components/SpecialtyBarChart";
-import CyclistMiniData from "../components/CyclistMiniData";
-import { FantasyTeam } from "../interfaces/FantasyTeam";
-import { addSharedRiders } from "../slices/cyclistSlice";
-import { findSharedRiders } from "../utils/calculateStats";
-import { cyclistsPerSpecialty, highScore, worstValueCyclist, teamSpecialties } from "../utils/calculateStats";
+import SpecialtyBarChart from "./SpecialtyBarChart";
+import CyclistMiniData from "./CyclistMiniData";
+import { FantasyTeam } from "../../interfaces/FantasyTeam";
+import { addSharedRiders } from "../../slices/cyclistSlice";
+import { findSharedRiders } from "../../utils/calculateStats";
+import { cyclistsPerSpecialty, highScore, worstValueCyclist, teamSpecialties } from "../../utils/calculateStats";
 
 type SpecialtyData = {
   specialty: string;

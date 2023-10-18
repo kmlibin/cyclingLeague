@@ -3,46 +3,42 @@ import { Link } from "react-router-dom";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import mapNationalityName from "../utils/findNationalityName";
+import mapNationalityName from "../../utils/findNationalityName";
 import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
-import { Cyclist } from "../interfaces/Cyclist";
+import { Cyclist } from "../../interfaces/Cyclist";
 import { BsStarFill } from "react-icons/bs";
-import PieChartComponent from "../components/PieChartComponent";
-import SocialMedia from "../components/SocialMedia";
+import PieChartComponent from "../../components/PieChartComponent";
+import SocialMedia from "./SocialMedia";
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
-import { useAppSelector } from "../hooks/hooks";
-import { LinkContainer } from "react-router-bootstrap";
+import { useAppSelector } from "../../hooks/hooks";
+
 type Props = {
   cyclistData: Cyclist | any;
   isMyTeam?: boolean;
-
 };
 
 type SharedRiders = {
-  sharedRiders : Cyclist[],
+  sharedRiders: Cyclist[];
   user: string;
-}
-
-
+};
 
 const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
-  const { sharedRiders } = useAppSelector((state): SharedRiders => state.sharedRiders);
+  const { sharedRiders } = useAppSelector(
+    (state): SharedRiders => state.sharedRiders
+  );
 
   const countryCode = getCode(mapNationalityName(rider.nationalityName));
 
-
   const sharedCyclists = sharedRiders || [];
-  console.log(sharedCyclists)
-  //check if the current rider is in the shared cyclists array by comparing their ids. if so, will conditionally render 
+
+  //check if the current rider is in the shared cyclists array by comparing their ids. if so, will conditionally render
   //"on my team" below
   const shared = sharedCyclists.some(
     (sharedRider: Cyclist) => sharedRider._id === rider._id
   );
-  console.log(shared)
 
-  
 
   return (
     <Card bg="light" className="m-1" style={{ width: "30%" }}>

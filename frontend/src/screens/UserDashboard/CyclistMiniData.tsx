@@ -1,5 +1,5 @@
 import React from "react";
-import { Cyclist } from "../interfaces/Cyclist";
+import { Cyclist } from "../../interfaces/Cyclist";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 

@@ -1,10 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useParams, useLocation } from "react-router-dom";
+
+//libraries
 import Container from "react-bootstrap/Container";
+
+//api / redux
 import { useAppSelector } from "../hooks/hooks";
 import { useGetSingleFantasyTeamByIdQuery } from "../slices/fantasyTeamApiSlice";
 import { useGetSingleTeamQuery } from "../slices/cyclistApiSlice";
-import CyclistData from "../components/CyclistData";
+
+//components
+import CyclistData from "./CyclistDataScreen/CyclistData";
+
+
+//interfaces
 import { Cyclist } from "../interfaces/Cyclist";
 
 const TeamDataScreen: React.FC = () => {
@@ -31,7 +40,7 @@ const TeamDataScreen: React.FC = () => {
   //render for every single person on their team.
 
   const isMyTeam = fantasyTeam?.owner === user;
-  console.log(isMyTeam)
+
   return (
     <>
       {!isFantasyTeamRoute && team && (

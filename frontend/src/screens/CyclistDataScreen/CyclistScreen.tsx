@@ -2,10 +2,10 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 //api
-import { useGetSingleCyclistQuery } from "../slices/cyclistApiSlice";
+import { useGetSingleCyclistQuery } from "../../slices/cyclistApiSlice";
 
 //components
-import CyclistData from "../components/CyclistData";
+import CyclistData from "./CyclistData";
 
 const CyclistScreen: React.FC = () => {
   const { name } = useParams();
