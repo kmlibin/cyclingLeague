@@ -146,7 +146,7 @@ const FantasyTeamsListScreen = () => {
   return (
     <Container className="d-flex flex-column">
       {!showCreateLeague && (
-        <Row className="button-container w-100 d-flex justify-content-end mb-2">
+        <Row className="w-100 d-flex justify-content-end mb-2">
           <Button
             style={{ width: "15%" }}
             onClick={() => setShowCreateLeague(true)}
@@ -260,7 +260,6 @@ const FantasyTeamsListScreen = () => {
             isAddedToLeague={league.some(
               (leagueTeam) => leagueTeam.id === team._id
             )}
-            onDelete={deleteFromLeague}
             fantasyLeagueScreen={true}
             url={`/fantasyteams/${team._id}`}
           />
