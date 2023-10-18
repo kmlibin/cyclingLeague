@@ -17,7 +17,7 @@ import Badge from "react-bootstrap/Badge";
 
 import { useAppSelector } from "../hooks/hooks";
 import { useNavigate, useLocation } from "react-router-dom";
-import TeamList from "../components/TeamList";
+import ListOfTeams from "../components/ListOfTeams";
 import { MdGroupOff } from "react-icons/md";
 
 type League = {
@@ -254,7 +254,7 @@ const FantasyTeamsListScreen = () => {
           <h2>Fantasy Teams</h2>
         </Row>
         {team?.map((team: any) => (
-          <TeamList
+          <ListOfTeams
             key={team._id}
             team={team}
             teamName={team.teamName}

@@ -28,7 +28,7 @@ interface TeamItemProps {
   url: string;
 }
 
-const TeamList: React.FC<TeamItemProps> = ({
+const ListOfTeams: React.FC<TeamItemProps> = ({
   team,
   onAddToLeague,
   isAddedToLeague,
@@ -92,4 +92,4 @@ const TeamList: React.FC<TeamItemProps> = ({
   );
 };
 
-export default TeamList;
+export default ListOfTeams;

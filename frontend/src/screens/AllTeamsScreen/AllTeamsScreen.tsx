@@ -11,7 +11,7 @@ import { LinkContainer } from "react-router-bootstrap";
 //api and redux
 import { useGetTeamsQuery } from "../../slices/cyclistApiSlice";
 //components
-import TeamList from "../../components/TeamList";
+import ListOfTeams from "../../components/ListOfTeams";
 import Paginate from "../../components/Paginate";
 //data for team badges
 import worldTourTeams from "./worldTourTeams.json";
@@ -58,7 +58,7 @@ const AllTeamsScreen = () => {
           <h2>2022 Teams</h2>
         </Row>
         {data?.teamRoster?.map((team: any) => (
-          <TeamList
+          <ListOfTeams
             key={team._id}
             team={team}
             teamName={team._id}
