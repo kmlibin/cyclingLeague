@@ -237,6 +237,7 @@ const CreateFantasyTeam: React.FC = () => {
           <Button
             style={{ width: "15%" }}
             onClick={() => setShowCreateTeam(true)}
+            variant = "dark"
           >
             Create New Team
           </Button>
@@ -262,7 +263,7 @@ const CreateFantasyTeam: React.FC = () => {
           </Spinner>
         )}
         <DataTable
-          title="League Roster"
+          title="Top 900 UCI Riders"
           columns={columns}
           data={cyclists || []}
           dense
