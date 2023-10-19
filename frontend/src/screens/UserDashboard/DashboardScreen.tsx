@@ -112,13 +112,12 @@ const DashboardScreen: React.FC = () => {
   return (
     <Container
       className="d-flex flex-row justify-content-center"
-      style={{ backgroundColor: "black" }}
+      style={{backgroundColor: "#FBF4D4"}}
     >
       {/* holds the stats bar on the left */}
       <Row
         md={3}
         className="d-flex justify-content-center item-margin pb-4"
-        style={{ backgroundColor: "yellow" }}
       >
         <Col
           className="d-flex flex-column align-items-center justify-content-center"
@@ -136,7 +135,7 @@ const DashboardScreen: React.FC = () => {
           <h5 className="mt-2 mb-2 text-center">
             {team?.teamName}'s Riders per Specialty
           </h5>
-          <Card className="w-100">
+          <Card className="w-100 shadow">
             <Card.Body>
               <SpecialtyBarChart bardata={bardata} colors={COLORS} />
             </Card.Body>
@@ -154,7 +153,7 @@ const DashboardScreen: React.FC = () => {
       {/* holds the fantasy team chart and league beneath */}
       <Row
         className="d-flex flex-row text-center"
-        style={{ backgroundColor: "pink" }}
+       
       >
         <Col>
           <Container fluid className="d-flex flex-column">
