@@ -7,7 +7,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import getColorCircle from "../../utils/circleColor";
 import { MdPerson, MdPersonRemove } from "react-icons/md";
-import{ calculatePrice} from "../../utils/calculateStats";
+import { calculatePrice } from "../../utils/calculateStats";
 import Form from "react-bootstrap/Form";
 import Badge from "react-bootstrap/Badge";
 
@@ -51,7 +51,7 @@ const CreateTeamDropdown: React.FC<Props> = ({
   };
 
   return (
-    <Accordion defaultActiveKey="0">
+    <Accordion defaultActiveKey="0" className="mt-2">
       <Accordion.Item eventKey="0">
         <Accordion.Header className="text-xs">
           <div className="header-content">
@@ -64,7 +64,16 @@ const CreateTeamDropdown: React.FC<Props> = ({
         </Accordion.Header>
         <Accordion.Body>
           <ListGroup>
-            <Row className="mb-3">Explain rules for league</Row>
+            <ListGroup.Item>
+              <Row className="mb-3">
+                <li>
+                  Each user can only have <b>one</b> team
+                </li>
+                <li>You must have 25 riders</li>
+                <li>You must submit a teamname</li>
+                <li>You cannot use more than 150 points</li>
+              </Row>
+            </ListGroup.Item>
             {team?.map((rider) => (
               <ListGroup.Item className="w-100" key={rider.name}>
                 <Row className="d-flex align-items-center">
