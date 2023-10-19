@@ -233,7 +233,6 @@ export const scrapeAndUpdateRank = async (riderUrlsToScrape) => {
     const page = await browser.newPage();
 
     for (let url of riderUrlsToScrape) {
-      // console.log(url)
       //grab values from return of scrapeTable function
       const rank = url.rank || "";
       const individualURL = url.name || "none";
@@ -307,11 +306,13 @@ export const scrapePointsAndRank = async (riderUrlsToScrape) => {
         );
         if (rankings) {
           // Get all <li> elements within the rankings element
-          const rankingItems = rankings.querySelectorAll("li");
-          if (rankingItems.length > 0) {
+          const firstLi = rankings.querySelector("li");
+          if (firstLi) {
             // Grab the second div element inside the first li element
-            const secondDiv = rankingItems[0].querySelectorAll("div")[1];
-            currentRank = secondDiv ? secondDiv.textContent.trim() : "n/a";
+            const secondDiv = firstLi.querySelector("div.rnk")
+            if(secondDiv) {
+              currentRank = secondDiv?  secondDiv.textContent.trim() : "n/a"
+            }
           }
         }
         // get uci score
@@ -323,7 +324,6 @@ export const scrapePointsAndRank = async (riderUrlsToScrape) => {
             currentPoints = boldElements[2].textContent.trim();
           }
         }
-
         return {
           name: normalizedName,
           currentRank: currentRank || "n/a",
