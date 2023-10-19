@@ -72,7 +72,7 @@ const ListOfTeams: React.FC<TeamItemProps> = ({
         ))}
       </div>
       . . . &nbsp;
-      <Badge bg="primary" pill className="mr-4">
+      <Badge bg="dark" pill className="mr-4">
         {team.cyclists.length}
       </Badge>
       {/* Conditionally render buttons based on the screen */}
