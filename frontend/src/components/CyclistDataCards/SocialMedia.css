@@ -8,9 +8,9 @@
 .socials a {
     padding: 0.25em 0.5em 0.25em 0.5em;
     text-decoration: none;
-    color: #212529
+    color: black;
 }
 
 .socials a:hover {
-    color: lightblue;
+    color: grey;
 }

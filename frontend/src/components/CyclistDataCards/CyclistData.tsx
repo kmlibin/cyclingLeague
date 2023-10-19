@@ -8,7 +8,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
 import { Cyclist } from "../../interfaces/Cyclist";
 import { BsStarFill } from "react-icons/bs";
-import PieChartComponent from "../../components/PieChartComponent";
+import PieChartComponent from "../PieChartComponent";
 import SocialMedia from "./SocialMedia";
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
@@ -41,7 +41,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
 
 
   return (
-    <Card bg="light" className="m-1" style={{ width: "30%" }}>
+    <Card className="m-1" style={{ width: "30%", backgroundColor: "#FBF4D4"}}>
       <Card.Body>
         <Card.Title className="text-center">
           <h2>{rider.name}</h2>
@@ -53,7 +53,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
         </Card.Text>
         <div
           className="d-flex justify-content-center align-items-center mb-4"
-          style={{ backgroundColor: "lightgrey", borderRadius: "5px" }}
+          style={{ backgroundColor: "#FBF4D4", borderRadius: "5px" }}
         >
           <Card.Img
             style={{ width: "45%", height: "auto" }}
@@ -64,14 +64,22 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
           {!isMyTeam && shared && (
             <ListGroup.Item
               className="d-flex justify-content-center align-items-center"
-              style={{ backgroundColor: "lightskyblue" }}
+              style={{ backgroundColor: "#84D2E0" }}
             >
               <span className="d-flex justify-content-start align-items-center">
-                <BsStarFill style={{ color: "purple" }} /> &nbsp; On My Team
+                <BsStarFill style={{ color: "#A14FE0" }} /> &nbsp; On My Team &nbsp;<BsStarFill style={{ color: "#A14FE0" }} />
               </span>
             </ListGroup.Item>
           )}
-          <ListGroup.Item>
+             <ListGroup.Item style={{backgroundColor: "#DCA281"}}>
+            <Row>
+              <Col>
+                <strong>Current UCI Rank: </strong>
+              </Col>
+              <Col>{rider.currentRank}</Col>
+            </Row>
+          </ListGroup.Item>
+          <ListGroup.Item style={{backgroundColor: "#E1B595"}}>
             <Row>
               <Col>
                 <strong>Main Specialty: </strong>
@@ -80,7 +88,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
             </Row>
           </ListGroup.Item>
 
-          <ListGroup.Item>
+          <ListGroup.Item style={{backgroundColor: "#E6C8AA"}}>
             <Row>
               <Col>
                 <strong>Team: </strong>
@@ -98,7 +106,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
             <PieChartComponent specialties={rider.riderSpecialties} />
           </ListGroup.Item>
 
-          <ListGroup.Item>
+          <ListGroup.Item style={{backgroundColor: " #F0DAB9"}}>
             <Row>
               <SocialMedia socialUrls={rider.socialUrls} />
             </Row>
