@@ -7,7 +7,9 @@ type CyclistMiniDataProps = {
   cyclistData: Cyclist | null;
 };
 
+
 const CyclistMiniData: React.FC<CyclistMiniDataProps> = ({ cyclistData }) => {
+  console.log(cyclistData)
   return (
     <Card className="d-flex flex-row justify-content-center align-items-center w-100">
       <Col className="d-flex justify-content-center align-items-center">
@@ -24,19 +26,18 @@ const CyclistMiniData: React.FC<CyclistMiniDataProps> = ({ cyclistData }) => {
       </Col>
       <Col>
         <Card.Body>
-          <Card.Title>{cyclistData?.name}</Card.Title>
-          <br></br>
-          <Card.Text className="mb-1">
+          <Card.Title className="mb-1 p-1" style={{backgroundColor: "#D17C58"}}>{cyclistData?.name}</Card.Title>
+          <Card.Text className="mb-1 p-1" style={{backgroundColor: "#D68F6D"}}>
             <b>Country:</b>&nbsp;{cyclistData?.nationalityName}
           </Card.Text>
-          <Card.Text className="mb-1">
+          <Card.Text className="mb-1 p-1" style={{backgroundColor: "#DCA281"}}>
             <b>Specialty:</b> &nbsp;
             {cyclistData?.mainSpecialty}
           </Card.Text>
-          <Card.Text className="mb-1">
+          <Card.Text className="mb-1 p-1" style={{backgroundColor: "#E1B595"}}>
             <b>Rank:</b>&nbsp;{cyclistData?.currentRank}
           </Card.Text>
-          <Card.Text className="mb-1">
+          <Card.Text className="mb-1 p-1" style={{backgroundColor: "#E6C8AA"}}>
             <b>Points:</b> &nbsp;
             {cyclistData?.currentUciPoints}
           </Card.Text>
