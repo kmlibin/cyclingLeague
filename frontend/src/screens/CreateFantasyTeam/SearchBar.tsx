@@ -24,16 +24,16 @@ const SearchBar: React.FC<Props> = () => {
     }
   };
   return (
-    <Form onSubmit={handleSubmit} className="pt-4 d-flex  w-50">
+    <Form onSubmit={handleSubmit} className="pt-4 d-flex  w-50 mb-2">
       <Form.Control
         type="text"
         name="keyword"
         onChange={(e) => setKeyword(e.target.value)}
         value={keyword}
-        placeholder={"Search Riders"}
-        className="h-25"
+        placeholder="Search Riders"
+        
       ></Form.Control>
-      <Button type="submit" size="sm">
+      <Button type="submit" size="sm" style={{marginLeft: "5px"}}>
         Search
       </Button>
     </Form>
