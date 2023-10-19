@@ -153,6 +153,7 @@ const FantasyTeamsListScreen = () => {
           <Button
             style={{ width: "15%" }}
             onClick={() => setShowCreateLeague(true)}
+            variant = "dark"
           >
             Create New League
           </Button>
@@ -167,7 +168,18 @@ const FantasyTeamsListScreen = () => {
             </Accordion.Header>
             <Accordion.Body>
               <ListGroup>
-                <Row className="mb-3">Explain rules for league</Row>
+                <ListGroup.Item>
+                <Row className="mb-3">        <li>
+                Each user can only have <b>one</b> league
+              </li>
+              <li>
+                You may have no more than 10 fantasy teams in your league
+              </li>
+              <li>
+                You must submit a league name
+              </li>
+             </Row>
+                </ListGroup.Item>
                 {league?.map((team) => (
                   <ListGroup.Item key={team.id} className="w-100">
                     <Row className="d-flex align-items-center">
