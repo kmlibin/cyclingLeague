@@ -37,11 +37,14 @@ const NavBar = () => {
             <LinkContainer to="/">
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/roster">
+            <LinkContainer to="/riders">
               <Nav.Link>Cyclists</Nav.Link>
             </LinkContainer>
             <LinkContainer to="/teams">
               <Nav.Link>Teams</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/fantasyteams">
+              <Nav.Link>Fantasy Teams</Nav.Link>
             </LinkContainer>
 
             {userInfo && (
@@ -53,11 +56,11 @@ const NavBar = () => {
                   <NavDropdown.Item>Dashboard</NavDropdown.Item>
                 </LinkContainer>
 
-                <LinkContainer to={`/`}>
+                <LinkContainer to={`/createteam`}>
                   <NavDropdown.Item>Build Fantasy Team</NavDropdown.Item>
                 </LinkContainer>
 
-                <LinkContainer to={`/fantasyteams`}>
+                <LinkContainer to={`/createleague`}>
                   <NavDropdown.Item>Build Fantasy League</NavDropdown.Item>
                 </LinkContainer>
 
