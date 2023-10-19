@@ -17,7 +17,7 @@ const SpecialtyBarChart = ({ bardata, colors }) => {
       height={420}
       className="d-flex justify-content-center align-items-center"
     >
-      <div className="d-flex flex-column align-items-center justify-content-center wrap">
+      <div className="d-flex flex-column align-items-center justify-content-center wrap" >
         <BarChart
           width={300}
           height={300}
