@@ -10,12 +10,12 @@ import { useGetSingleFantasyTeamByIdQuery } from "../slices/fantasyTeamApiSlice"
 import { useGetSingleTeamQuery } from "../slices/cyclistApiSlice";
 
 //components
-import CyclistData from "./CyclistDataScreen/CyclistData";
+import CyclistData from "../components/CyclistDataCards/CyclistData";
 
 //interfaces
 import { Cyclist } from "../interfaces/Cyclist";
 
-const TeamDataScreen: React.FC = () => {
+const RidersOnTeamScreen: React.FC = () => {
   const [sortedCyclists, setSortedCyclists] = useState<any>();
   const { teamId } = useParams();
   const { name } = useParams();
@@ -76,7 +76,6 @@ const TeamDataScreen: React.FC = () => {
       <Container
         fluid
         className="d-flex flex-wrap justify-content-evenly"
-        style={{ backgroundColor: "pink" }}
       >
         {sortedCyclists?.map((rider: Cyclist) => (
           <CyclistData
@@ -90,4 +89,4 @@ const TeamDataScreen: React.FC = () => {
   );
 };
 
-export default TeamDataScreen;
+export default RidersOnTeamScreen;
