@@ -13,7 +13,7 @@ const CyclistScreen: React.FC = () => {
   const decodedName = decodeURIComponent(name || "");
   const { data: cyclist } = useGetSingleCyclistQuery(decodedName);
 
-  return <>{cyclist && <CyclistData cyclistData={cyclist} />}</>;
+  return <div className="d-flex justify-content-center">{cyclist && <CyclistData cyclistData={cyclist} />}</div>;
 };
 
 export default CyclistScreen;
