@@ -116,7 +116,22 @@ const getAllFantasyTeams = async (req, res) => {
 //@access private eventually
 const createLeague = async (req, res) => {
   const { leagueName, teamIds } = req.body;
+  console.log(req.body)
   const owner = req.user._id;
+  console.log(owner)
+
+    //check that there are 25 cyclists
+    if (teamIds.length <=1 || teamIds.length > 10) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "league must have more than one but fewer than 10 teams" });
+    }
+    //make sure there is a team name
+    if (!leagueName || leagueName.trim() === "") {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "league name cannot be empty" });
+    }
 
   try {
     const updatedUser = await User.findByIdAndUpdate(owner, {
