@@ -19,6 +19,7 @@ import { useAppSelector } from "../hooks/hooks";
 import { useNavigate, useLocation } from "react-router-dom";
 import ListOfTeams from "../components/ListOfTeams";
 import { MdGroupOff } from "react-icons/md";
+import { TeamError } from "../types/TeamError";
 
 type League = {
   teamName: string;
@@ -35,11 +36,12 @@ const FantasyTeamsListScreen = () => {
   const [editing, setEditing] = useState(true);
   const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
   const [leagueName, setLeagueName] = useState<string>();
+  const [createError, setCreateError] = useState<TeamError | null>();
   const [createLeague, { isLoading, error }] = useCreateLeagueMutation();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
 
-  const createRoute = location.pathname === "/createleague"
+  const createRoute = location.pathname === "/createleague";
 
   //find logged in user's fantasy team so that it will always show in leagues, and cannot be deleted from league or ids
   useEffect(() => {
@@ -81,12 +83,18 @@ const FantasyTeamsListScreen = () => {
     });
 
     if (ids.includes(id)) {
+      setCreateError({
+        ...createError,
+        alreadyOnTeam: "Team is already in league",
+      });
       return league;
-      //send error
     }
     if (team.length >= 10) {
+      setCreateError({
+        ...createError,
+        teamLength: "Only 10 teams can be in the league",
+      });
       return league;
-      //send error
     } else {
       setLeague([...league, { teamName, owner, id }]);
       setTeamIds([...teamIds, id]);
@@ -112,6 +120,24 @@ const FantasyTeamsListScreen = () => {
       "Finalize league? You'll no longer be able to edit..."
     );
     if (confirmed) {
+      //check for league name
+      if (!leagueName) {
+        setCreateError({
+          ...createError,
+          teamName: "Please submit a name for your league",
+        });
+        return;
+      }
+
+      //must have more than 1 and less than 10 teams
+
+      if (league.length <= 1 || league.length > 10) {
+        setCreateError({
+          ...createError,
+          teamLength: "Must have more than one team, but less than ten teams",
+        });
+        return;
+      }
       try {
         //make sure userInfo exists
         if (typeof userInfo === "object") {
@@ -134,6 +160,7 @@ const FantasyTeamsListScreen = () => {
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setEditing(false);
+    setCreateError(null);
   };
 
   const editHandler = () => {
@@ -141,10 +168,8 @@ const FantasyTeamsListScreen = () => {
   };
 
   useEffect(() => {
-    console.log(league, teamIds);
+    console.log(createError, league.length);
   });
-
-
 
   return (
     <Container className="d-flex flex-column">
@@ -153,7 +178,7 @@ const FantasyTeamsListScreen = () => {
           <Button
             style={{ width: "15%" }}
             onClick={() => setShowCreateLeague(true)}
-            variant = "dark"
+            variant="dark"
           >
             Create New League
           </Button>
@@ -169,16 +194,16 @@ const FantasyTeamsListScreen = () => {
             <Accordion.Body>
               <ListGroup>
                 <ListGroup.Item>
-                <Row className="mb-3">        <li>
-                Each user can only have <b>one</b> league
-              </li>
-              <li>
-                You may have no more than 10 fantasy teams in your league
-              </li>
-              <li>
-                You must submit a league name
-              </li>
-             </Row>
+                  <Row className="mb-3">
+                    {" "}
+                    <li>
+                      Each user can only have <b>one</b> league
+                    </li>
+                    <li>
+                      You may have no more than 10 fantasy teams in your league
+                    </li>
+                    <li>You must submit a league name</li>
+                  </Row>
                 </ListGroup.Item>
                 {league?.map((team) => (
                   <ListGroup.Item key={team.id} className="w-100">
@@ -219,9 +244,15 @@ const FantasyTeamsListScreen = () => {
                               onChange={(e) => setLeagueName(e.target.value)}
                             ></Form.Control>
                           </Form.Group>
-                          <Button variant="info" type="submit">
-                            Submit Team Name
-                          </Button>
+                          {createError?.teamName ? (
+                            <Button variant="danger" type="submit">
+                              Submit League Name
+                            </Button>
+                          ) : (
+                            <Button variant="info" type="submit">
+                              Submit League Name
+                            </Button>
+                          )}
                         </Form>
                       </Col>
                     ) : (
@@ -256,6 +287,19 @@ const FantasyTeamsListScreen = () => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
+                {createError && (
+                  <ListGroup.Item>
+                    <Row className="w-100 d-flex justify-content-end error ">
+                      {createError.teamName}
+                    </Row>
+                    <Row className="w-100 d-flex justify-content-end error ">
+                      {createError.teamLength}
+                    </Row>
+                    <Row className="w-100 d-flex justify-content-end error ">
+                      {createError.alreadyOnTeam}
+                    </Row>
+                  </ListGroup.Item>
+                )}
               </ListGroup>
             </Accordion.Body>
           </Accordion.Item>
@@ -271,11 +315,11 @@ const FantasyTeamsListScreen = () => {
             team={team}
             teamName={team.teamName}
             onAddToLeague={addToLeague}
-            createRoute = {createRoute}
+            createRoute={createRoute}
             //checks if the team has been added to the league
-            isAddedToLeague={(league.some(
+            isAddedToLeague={league.some(
               (leagueTeam) => leagueTeam.id === team._id
-            ))}
+            )}
             fantasyLeagueScreen={true}
             url={`/fantasyteams/${team._id}`}
           />
