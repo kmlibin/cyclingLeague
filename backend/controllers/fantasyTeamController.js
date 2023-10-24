@@ -14,13 +14,13 @@ const createTeam = async (req, res) => {
   if (cyclistIds.length != 25) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "team must contain 25 cyclists" });
+      .json({ msg: "team must contain 25 cyclists" });
   }
   //make sure there is a team name
   if (!teamName || teamName.trim() === "") {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "team name cannot be empty" });
+      .json({ msg: "team name cannot be empty" });
   }
 
   try {
@@ -116,22 +116,20 @@ const getAllFantasyTeams = async (req, res) => {
 //@access private eventually
 const createLeague = async (req, res) => {
   const { leagueName, teamIds } = req.body;
-  console.log(req.body)
   const owner = req.user._id;
-  console.log(owner)
 
-    //check that there are 25 cyclists
-    if (teamIds.length <=1 || teamIds.length > 10) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "league must have more than one but fewer than 10 teams" });
-    }
-    //make sure there is a team name
-    if (!leagueName || leagueName.trim() === "") {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "league name cannot be empty" });
-    }
+  //check that there are 25 cyclists
+  if (teamIds.length <= 1 || teamIds.length > 10) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "league must have more than one but fewer than 10 teams" });
+  }
+  //make sure there is a team name
+  if (!leagueName || leagueName.trim() === "") {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "league name cannot be empty" });
+  }
 
   try {
     const updatedUser = await User.findByIdAndUpdate(owner, {
@@ -139,13 +137,10 @@ const createLeague = async (req, res) => {
     });
 
     if (!updatedUser) {
-      console.log("user not found");
-    } else {
-      console.log("league created");
+      return res.status(StatusCodes.NOT_FOUND).json({ msg: "no user found" });
     }
     res.status(StatusCodes.CREATED).json({ msg: "created" });
   } catch (error) {
-    console.log("error creating league");
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
