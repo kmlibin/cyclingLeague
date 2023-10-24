@@ -37,7 +37,8 @@ const FantasyTeamsListScreen = () => {
   const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
   const [leagueName, setLeagueName] = useState<string>();
   const [createError, setCreateError] = useState<TeamError | null>();
-  const [createLeague, { isLoading, error }] = useCreateLeagueMutation();
+  const [createLeague, { isLoading, error: leagueError }] =
+    useCreateLeagueMutation<any>();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -129,7 +130,7 @@ const FantasyTeamsListScreen = () => {
         return;
       }
 
-      //must have more than 1 and less than 10 teams
+      // must have more than 1 and less than 10 teams
 
       if (league.length <= 1 || league.length > 10) {
         setCreateError({
@@ -141,15 +142,18 @@ const FantasyTeamsListScreen = () => {
       try {
         //make sure userInfo exists
         if (typeof userInfo === "object") {
-          const res = await createLeague({
+          const res: any = await createLeague({
             id: userInfo._id,
             leagueDetails: {
               leagueName,
               teamIds,
             },
           });
-
-          navigate(`/users/${userInfo._id}/dashboard`);
+          if ("error" in res) {
+            return;
+          } else {
+            navigate(`/users/${userInfo._id}/dashboard`);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -168,7 +172,7 @@ const FantasyTeamsListScreen = () => {
   };
 
   useEffect(() => {
-    console.log(createError, league.length);
+    console.log(leagueError?.data?.msg);
   });
 
   return (
@@ -287,6 +291,13 @@ const FantasyTeamsListScreen = () => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
+                {leagueError && (
+                  <ListGroup.Item>
+                    <Row className="w-100 d-flex justify-content-end error ">
+                      {leagueError?.data.msg}
+                    </Row>
+                  </ListGroup.Item>
+                )}
                 {createError && (
                   <ListGroup.Item>
                     <Row className="w-100 d-flex justify-content-end error ">
@@ -322,6 +333,7 @@ const FantasyTeamsListScreen = () => {
             )}
             fantasyLeagueScreen={true}
             url={`/fantasyteams/${team._id}`}
+            show = {showCreateLeague}
           />
         ))}
       </ListGroup>
