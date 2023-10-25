@@ -10,13 +10,7 @@ import { MdPerson, MdPersonRemove } from "react-icons/md";
 import { calculatePrice } from "../../utils/calculateStats";
 import Form from "react-bootstrap/Form";
 import Badge from "react-bootstrap/Badge";
-
-type TeamError = {
-  alreadyOnTeam?: string | undefined;
-  teamLength?: string | undefined;
-  teamName?: string | undefined;
-  pointsUsed?: string | undefined;
-};
+import { TeamError } from "../../types/TeamError";
 
 type Props = {
   team: DataRow[];
@@ -26,6 +20,7 @@ type Props = {
   teamName: string;
   setTeamName: React.Dispatch<React.SetStateAction<string>>;
   teamError: TeamError | undefined;
+  createError: any;
 };
 
 const CreateTeamDropdown: React.FC<Props> = ({
@@ -36,10 +31,10 @@ const CreateTeamDropdown: React.FC<Props> = ({
   teamName,
   setTeamName,
   teamError,
+  createError,
 }) => {
   const pointsValue = points.valueOf();
   const [editing, setEditing] = useState(true);
-  console.log(teamError);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,6 +45,7 @@ const CreateTeamDropdown: React.FC<Props> = ({
     setEditing(true);
   };
 
+  console.log(createError);
   return (
     <Accordion defaultActiveKey="0" className="mt-2">
       <Accordion.Item eventKey="0">
@@ -160,7 +156,13 @@ const CreateTeamDropdown: React.FC<Props> = ({
                 </Col>
               </Row>
             </ListGroup.Item>
-
+            {createError && (
+              <ListGroup.Item>
+                <Row className="w-100 d-flex justify-content-end error">
+                  {createError?.data.msg}
+                </Row>
+              </ListGroup.Item>
+            )}
             {teamError && (
               <ListGroup.Item>
                 <Row className="w-100 d-flex justify-content-end error">
