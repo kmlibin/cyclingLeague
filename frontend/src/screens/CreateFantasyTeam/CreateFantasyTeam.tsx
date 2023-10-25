@@ -11,10 +11,10 @@ import { useCreateTeamMutation } from "../../slices/fantasyTeamApiSlice";
 import styled from "styled-components";
 import { MdPersonAdd } from "react-icons/md";
 import { ImCheckmark } from "react-icons/im";
+import { MdOutlineDirectionsBike } from "react-icons/md";
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
 import DataTable, { TableColumn } from "react-data-table-component";
-import Spinner from "react-bootstrap/Spinner";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 
@@ -222,18 +222,22 @@ useEffect(() => {
       maxWidth: "15%",
       right: true,
       format: (row) => {
+        //show buttons only if user has clicked "create team"
+       if(showCreateTeam) {
         if (team.includes(row)) {
           return <ImCheckmark style={{ color: "green", fontSize: "1.7em" }} />;
-        } else {
-          return (
-            <button
-              onClick={() => addToTeam(row)}
-              style={{ backgroundColor: "white" }}
-            >
-              <MdPersonAdd style={{ fontSize: "1.7em" }} />
-            </button>
-          );
         }
+       }else {
+        return <MdOutlineDirectionsBike />
+       }
+       return (
+        <button
+        onClick={() => addToTeam(row)}
+        style={{ backgroundColor: "white" }}
+      >
+        <MdPersonAdd style={{ fontSize: "1.7em" }} />
+      </button>
+       )
       },
     },
   ];
@@ -266,6 +270,7 @@ useEffect(() => {
           setTeamName={setTeamName}
           teamError={teamError}
           createError={createError}
+         
         />
       )}
 
