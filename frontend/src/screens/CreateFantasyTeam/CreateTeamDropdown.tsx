@@ -32,6 +32,7 @@ const CreateTeamDropdown: React.FC<Props> = ({
   setTeamName,
   teamError,
   createError,
+
 }) => {
   const pointsValue = points.valueOf();
   const [editing, setEditing] = useState(true);
@@ -45,7 +46,7 @@ const CreateTeamDropdown: React.FC<Props> = ({
     setEditing(true);
   };
 
-  console.log(createError);
+
   return (
     <Accordion defaultActiveKey="0" className="mt-2">
       <Accordion.Item eventKey="0">
