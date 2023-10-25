@@ -11,7 +11,6 @@ import { useCreateTeamMutation } from "../../slices/fantasyTeamApiSlice";
 import styled from "styled-components";
 import { MdPersonAdd } from "react-icons/md";
 import { ImCheckmark } from "react-icons/im";
-import { MdOutlineDirectionsBike } from "react-icons/md";
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
 import DataTable, { TableColumn } from "react-data-table-component";
@@ -219,7 +218,7 @@ useEffect(() => {
     {
       name: "",
       selector: (row) => row.mainSpecialty,
-      maxWidth: "15%",
+      maxWidth: "5%",
       right: true,
       format: (row) => {
         //show buttons only if user has clicked "create team"
@@ -228,7 +227,7 @@ useEffect(() => {
           return <ImCheckmark style={{ color: "green", fontSize: "1.7em" }} />;
         }
        }else {
-        return <MdOutlineDirectionsBike />
+        return null
        }
        return (
         <button
