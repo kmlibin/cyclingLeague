@@ -41,7 +41,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
 
 
   return (
-    <Card className="m-1" style={{ width: "30%", backgroundColor: "#FBF4D4"}}>
+    <Card className="col-12 col-md-4" style={{ backgroundColor: "#FBF4D4"}}>
       <Card.Body>
         <Card.Title className="text-center">
           <h2>{rider.name}</h2>
