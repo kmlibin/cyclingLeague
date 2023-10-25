@@ -9,7 +9,6 @@ type CyclistMiniDataProps = {
 
 
 const CyclistMiniData: React.FC<CyclistMiniDataProps> = ({ cyclistData }) => {
-  console.log(cyclistData)
   return (
     <Card className="d-flex flex-row justify-content-center align-items-center w-100" style={{boxShadow: "0 4px 6px rgba(0,0,0,.2"}}>
       <Col className="d-flex justify-content-center align-items-center">
