@@ -20,6 +20,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import ListOfTeams from "../components/ListOfTeams";
 import { MdGroupOff } from "react-icons/md";
 import { TeamError } from "../types/TeamError";
+import Loader from "../components/Loader";
 
 type League = {
   teamName: string;
@@ -31,7 +32,7 @@ const FantasyTeamsListScreen = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
   const [showCreateLeague, setShowCreateLeague] = useState(false);
   const [teamIds, setTeamIds] = useState<string[]>([]);
-  const { data: team } = useGetAllFantasyTeamsQuery({});
+  const { data: team, isLoading: dataLoading, error: dataError} = useGetAllFantasyTeamsQuery<any>({});
   const [league, setLeague] = useState<League[]>([]);
   const [editing, setEditing] = useState(true);
   const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
@@ -176,7 +177,16 @@ const FantasyTeamsListScreen = () => {
   });
 
   return (
-    <Container className="d-flex flex-column">
+<>
+    {dataLoading && <Loader />}
+    {dataError && (
+      <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
+        {dataError?.data.msg}
+      </div>
+    )}
+
+    {team && (
+<Container className="d-flex flex-column">
       {createRoute && !showCreateLeague && (
         <Row className="w-100 d-flex justify-content-end mb-2">
           <Button
@@ -338,6 +348,10 @@ const FantasyTeamsListScreen = () => {
         ))}
       </ListGroup>
     </Container>
+
+    )}
+    
+    </>
   );
 };
 
