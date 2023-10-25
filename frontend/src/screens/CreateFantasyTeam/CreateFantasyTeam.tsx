@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation  } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 //api and redux
 import { useGetCyclistsQuery } from "../../slices/cyclistApiSlice";
@@ -18,7 +18,6 @@ import Spinner from "react-bootstrap/Spinner";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 
-
 //components
 import SpecialtyTabs from "./SpecialtyTabs";
 import SearchBar from "./SearchBar";
@@ -32,6 +31,7 @@ import mapNationalityName from "../../utils/findNationalityName";
 //types
 import { DataRow } from "../../types/DataRow";
 import { TeamError } from "../../types/TeamError";
+import Loader from "../../components/Loader";
 
 //override some of the styling of react data table
 const HideSelectionSummary = styled.div`
@@ -48,19 +48,18 @@ const HideSelectionSummary = styled.div`
 
 const CreateFantasyTeam: React.FC = () => {
   const [teamError, setTeamError] = useState<TeamError>();
-  const [onCreateTeamPage, setOnCreateTeamPage] = useState<boolean>(true)
   const [showCreateTeam, setShowCreateTeam] = useState<boolean>(false);
   const [team, setTeam] = useState<DataRow[]>([]);
   const [teamName, setTeamName] = useState<string>("");
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [pointsRemaining, setPointsRemaining] = useState<number>(150);
-  const [createTeam, { error }] = useCreateTeamMutation();
+  const [createTeam, { error: createError }] = useCreateTeamMutation<any>();
   const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
 
-  const createRoute = location.pathname === "/createteam"
+  const createRoute = location.pathname === "/createteam";
 
   const { tab, keyword } = useParams();
   const searchObject = {
@@ -68,14 +67,13 @@ const CreateFantasyTeam: React.FC = () => {
     keyword: keyword ? keyword : {},
   };
 
-  console.log(searchObject)
-
   //all doesn't have a value in the db, so pass back an empty object if 'all' in order to get all riders
   const {
     data: cyclists,
     refetch,
     isLoading,
-  } = useGetCyclistsQuery(searchObject);
+    error: dataError,
+  } = useGetCyclistsQuery<any>(searchObject);
 
   //add rider to team
   const addToTeam = (row: DataRow) => {
@@ -108,7 +106,13 @@ const CreateFantasyTeam: React.FC = () => {
   const deleteFromTeam = (row: DataRow) => {
     const newTeam = team.filter((rider) => rider.name !== row.name);
     setTeamError(undefined);
+
+    //remove from team
     setTeam(newTeam);
+
+    //remove id from teamIds
+    const newTeamIds = teamIds.filter((id) => id !== row._id);
+    setTeamIds(newTeamIds)
     setPointsRemaining(pointsRemaining + calculatePrice(row.yearEndUciPoints));
   };
 
@@ -126,7 +130,7 @@ const CreateFantasyTeam: React.FC = () => {
         });
         return;
       }
-      //make sure team has 25 people
+      // make sure team has 25 people
       if (team.length != 25) {
         setTeamError({ ...teamError, teamLength: "Must have 25 riders" });
         return;
@@ -137,23 +141,32 @@ const CreateFantasyTeam: React.FC = () => {
           cyclistIds,
           teamName,
         });
+console.log(res)
+        if ("error" in res) {
+          return;
+        } else {
+          if (typeof userInfo === "object") {
+            const updatedTeamInfo = {
+              cyclists: cyclistIds,
+              teamName,
+            };
+            dispatch(updateTeam(updatedTeamInfo));
+            setTeamError(undefined);
+            navigate(`/users/${userInfo._id}/dashboard`);
+          }
+        }
 
         //save to local state
         //have to typecheck it for the reducer in authSlice (update team, either can have string or object)
-        if (typeof userInfo === "object") {
-          const updatedTeamInfo = {
-            cyclists: cyclistIds,
-            teamName,
-          };
-          dispatch(updateTeam(updatedTeamInfo));
-          setTeamError(undefined);
-          navigate(`/users/${userInfo._id}/dashboard`);
-        }
       } catch (error) {
         console.log(error);
       }
     }
   };
+
+useEffect(() => {
+  console.log(teamIds.length, team.length)
+})
 
   //setting data to pass into RDT
   const columns: TableColumn<DataRow>[] = [
@@ -237,7 +250,7 @@ const CreateFantasyTeam: React.FC = () => {
           <Button
             style={{ width: "15%" }}
             onClick={() => setShowCreateTeam(true)}
-            variant = "dark"
+            variant="dark"
           >
             Create New Team
           </Button>
@@ -252,27 +265,31 @@ const CreateFantasyTeam: React.FC = () => {
           teamName={teamName}
           setTeamName={setTeamName}
           teamError={teamError}
+          createError={createError}
         />
       )}
 
       <SearchBar />
       <HideSelectionSummary>
-        {isLoading && (
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
+        {isLoading && <Loader />}
+        {dataError && (
+          <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
+            {dataError?.data.msg}
+          </div>
         )}
-        <DataTable
-          title="Top 900 UCI Riders"
-          columns={columns}
-          data={cyclists || []}
-          dense
-          pagination
-          highlightOnHover
-          responsive
-          fixedHeader
-          paginationPerPage={20}
-        />
+        {cyclists && (
+          <DataTable
+            title="Top 900 UCI Riders"
+            columns={columns}
+            data={cyclists || []}
+            dense
+            pagination
+            highlightOnHover
+            responsive
+            fixedHeader
+            paginationPerPage={20}
+          />
+        )}
       </HideSelectionSummary>
     </>
   );
