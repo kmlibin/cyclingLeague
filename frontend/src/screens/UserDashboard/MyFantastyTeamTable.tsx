@@ -13,7 +13,7 @@ type Props = {
 };
 
 
-const TeamTable: React.FC<Props> = ({ data }) => {
+const MyFantasyTeamTable: React.FC<Props> = ({ data }) => {
   const columns: TableColumn<DataRow>[] = [
     {
       name: "Specialty",
@@ -78,4 +78,4 @@ const TeamTable: React.FC<Props> = ({ data }) => {
   );
 };
 
-export default TeamTable;
+export default MyFantasyTeamTable;
