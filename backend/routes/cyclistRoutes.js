@@ -3,7 +3,7 @@ import express from "express";
 import {
   getAllRiders,
   getSingleRider,
-} from "../controllers/controllerList.js";
+} from "../controllers/cyclistController.js";
 
 const router = express.Router();
 

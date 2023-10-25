@@ -2,7 +2,7 @@ import express from "express";
 
 import {
   getAllTeams, getSingleTeam
-} from "../controllers/controllerList.js";
+} from "../controllers/cyclistController.js";
 
 const router = express.Router();
 
