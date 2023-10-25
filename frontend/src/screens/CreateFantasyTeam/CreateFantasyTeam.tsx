@@ -222,7 +222,7 @@ useEffect(() => {
       right: true,
       format: (row) => {
         //show buttons only if user has clicked "create team"
-       if(showCreateTeam) {
+       if(createRoute && showCreateTeam) {
         if (team.includes(row)) {
           return <ImCheckmark style={{ color: "green", fontSize: "1.7em" }} />;
         }
@@ -259,7 +259,7 @@ useEffect(() => {
           </Button>
         </Row>
       )}
-      {showCreateTeam && (
+      {createRoute && showCreateTeam && (
         <CreateTeamDropdown
           team={team}
           points={pointsRemaining}
