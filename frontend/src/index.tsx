@@ -24,26 +24,34 @@ import FantasyTeamsListScreen from "./screens/FantasyTeamsListScreen";
 import RidersOnTeamScreen from "./screens/RidersOnTeamScreen";
 import CreateFantasyTeam from "./screens/CreateFantasyTeam/CreateFantasyTeam";
 import LandingScreen from "./screens/LandingScreen";
+import PrivateRoute from "./components/PrivateRoute";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route index={true} path="/" element={<LandingScreen/>} />
-      <Route path="/createteam" element={<CreateFantasyTeam />} />  
+      <Route index={true} path="/" element={<LandingScreen />} />
+      <Route path="/createteam" element={<CreateFantasyTeam />} />
       <Route path="/search/:keyword" element={<CreateFantasyTeam />} />
-      <Route path="/cyclists" element={<CreateFantasyTeam />} />      
-      <Route path="/cyclists/:tab/search/:keyword" element={<CreateFantasyTeam />} />
-      <Route path="/cyclists/:tab" element={< CreateFantasyTeam/>} />
+      <Route path="/cyclists" element={<CreateFantasyTeam />} />
+      <Route
+        path="/cyclists/:tab/search/:keyword"
+        element={<CreateFantasyTeam />}
+      />
+      <Route path="/cyclists/:tab" element={<CreateFantasyTeam />} />
       <Route path="/cyclist/:name" element={<CyclistScreen />} />
       <Route path="/teams" element={<AllTeamsScreen />} />
       <Route path="/teams/page/:pageNumber" element={<AllTeamsScreen />} />
       <Route path="/teams/:teamId" element={<RidersOnTeamScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
-      <Route path="/users/:id/dashboard" element={<DashboardScreen />} />
-      <Route path="/createleague" element={<FantasyTeamsListScreen />} />
-      <Route path="/fantasyteams" element={<FantasyTeamsListScreen />} />
-      <Route path="/fantasyteams/:name" element={<RidersOnTeamScreen />} />
+      
+{/* private routes */}
+      <Route path="" element={<PrivateRoute />}>
+        <Route path="/users/:id/dashboard" element={<DashboardScreen />} />
+        <Route path="/createleague" element={<FantasyTeamsListScreen />} />
+        <Route path="/fantasyteams" element={<FantasyTeamsListScreen />} />
+        <Route path="/fantasyteams/:name" element={<RidersOnTeamScreen />} />
+      </Route>
     </Route>
   )
 );
