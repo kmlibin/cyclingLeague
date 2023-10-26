@@ -6,8 +6,6 @@ import NavBar from "./components/NavBar";
 
 
 const App = () => {
-
-  const navigate = useNavigate();
   const location = useLocation();
 
   const homeRoute = location.pathname === "/"
