@@ -13,7 +13,6 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
-
 const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -29,7 +28,7 @@ const NavBar = () => {
     try {
       await logoutApiCall(undefined).unwrap();
       dispatch(logout(undefined));
-      navigate("/login");
+      navigate("/");
     } catch (error) {}
   };
   return (
@@ -48,10 +47,11 @@ const NavBar = () => {
             <LinkContainer to="/teams">
               <Nav.Link>Teams</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/fantasyteams">
-              <Nav.Link>Fantasy Teams</Nav.Link>
-            </LinkContainer>
-
+            {userInfo && (
+              <LinkContainer to="/fantasyteams">
+                <Nav.Link>Fantasy Teams</Nav.Link>
+              </LinkContainer>
+            )}
             {userInfo && (
               <NavDropdown
                 title={`Welcome ${userName}`}
