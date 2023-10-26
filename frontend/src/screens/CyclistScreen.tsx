@@ -26,7 +26,10 @@ const CyclistScreen: React.FC = () => {
           {dataError?.data.msg}
         </div>
       )}
-      {cyclist && <CyclistData cyclistData={cyclist} />}
+      <div className="d-flex justify-content-center w-75">
+         {cyclist && <CyclistData cyclistData={cyclist} />}
+      </div>
+     
     </div>
   );
 };

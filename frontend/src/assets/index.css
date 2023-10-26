@@ -95,3 +95,27 @@ code {
   color: rgba(0, 0, 0, .5);
 }
 
+.responsive-cards {
+  background-color: #FBF4D4;
+  margin-top: 1rem;
+
+}
+  @media only screen and (max-width: 576px) {
+    .responsive-cards {
+      min-width: 100%;
+    }
+  }
+
+  @media screen and  (min-width: 577px) and (max-width: 992px) {
+    .responsive-cards {
+      min-width: 45%;
+    }
+  }
+
+  @media screen and (min-width: 993px) {
+    .responsive-cards {
+      width: 31%;
+    }
+  }
+
+

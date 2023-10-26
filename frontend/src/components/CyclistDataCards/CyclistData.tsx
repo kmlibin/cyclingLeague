@@ -39,9 +39,9 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
     (sharedRider: Cyclist) => sharedRider._id === rider._id
   );
 
-
+// className="col-12 col-md-4"
   return (
-    <Card className="col-12 col-md-4" style={{ backgroundColor: "#FBF4D4"}}>
+    <Card  className= "col-12 col-md-4 responsive-cards">
       <Card.Body>
         <Card.Title className="text-center">
           <h2>{rider.name}</h2>
@@ -56,7 +56,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
           style={{ backgroundColor: "#FBF4D4", borderRadius: "5px" }}
         >
           <Card.Img
-            style={{ width: "45%", height: "auto" }}
+            style={{ maxWidth: "45%", height: "auto" }}
             src={rider.imageSrc}
           />
         </div>
