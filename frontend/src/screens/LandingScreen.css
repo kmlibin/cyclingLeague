@@ -1,8 +1,12 @@
 .image-container {
   position: relative;
   overflow: hidden;
+  height: 100vh;
 }
 
+.image-container img {
+   padding-top: 1.5rem;
+}
 .overlay {
   position: absolute;
   top: 0;
@@ -16,6 +20,8 @@
   background-color: rgba(0, 0, 0, 0.95);
   padding-right: 3rem;
   padding-top: 3rem;
+  position: relative;
+  height: 100vh;
 }
 
 .text-color {
@@ -24,9 +30,49 @@
   background-clip: text;
   color: transparent;
   text-align: right;
-  font-size: 65px;
+  font-size: 70px;
+  position: relative;
+  right: -100%;
+  animation: slide 1s forwards;
 }
 
+@keyframes slide {
+    0% {
+        right: -100%
+    }
+    100% {
+        right: 0;
+    }
+}
+
+
+
 .text-content p {
-    color: white;
+    color: rgb(219, 213, 213) !important;
+    font-size: 17px;
+}
+
+.text-content .button-style {
+    background-color:rgb(14, 121, 213);
+    margin-bottom: 1rem;
+    transition: all .25s ease;
+    color: rgb(219, 213, 213) !important;
+    font-weight: bold;
+}
+
+.button-style:hover {
+    background-color: rgb(114, 216, 5);
+    color: rgb(14, 121, 213) !important;
+    font-weight: bold;
+}
+
+.bottom { 
+    color: rgb(219, 213, 213) !important;
+    position: absolute;
+    bottom: 3rem;
+    right: 3rem;
+}
+
+.bottom a:hover {
+    color:  rgb(114, 216, 5) !important;
 }
