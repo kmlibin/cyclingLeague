@@ -16,6 +16,7 @@ import { getCode } from "country-list";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
+import Container from 'react-bootstrap/Container'
 
 //components
 import SpecialtyTabs from "./SpecialtyTabs";
@@ -140,7 +141,7 @@ const CreateFantasyTeam: React.FC = () => {
           cyclistIds,
           teamName,
         });
-console.log(res)
+
         if ("error" in res) {
           return;
         } else {
@@ -246,7 +247,7 @@ useEffect(() => {
   }, [tab, refetch]);
 
   return (
-    <>
+    <Container className="mt-4">
       <SpecialtyTabs />
       {createRoute && !showCreateTeam && (
         <Row className="w-100 d-flex justify-content-end mt-2">
@@ -295,7 +296,7 @@ useEffect(() => {
           />
         )}
       </HideSelectionSummary>
-    </>
+    </Container>
   );
 };
 

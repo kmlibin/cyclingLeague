@@ -32,7 +32,11 @@ const FantasyTeamsListScreen = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
   const [showCreateLeague, setShowCreateLeague] = useState(false);
   const [teamIds, setTeamIds] = useState<string[]>([]);
-  const { data: team, isLoading: dataLoading, error: dataError} = useGetAllFantasyTeamsQuery<any>({});
+  const {
+    data: team,
+    isLoading: dataLoading,
+    error: dataError,
+  } = useGetAllFantasyTeamsQuery<any>({});
   const [league, setLeague] = useState<League[]>([]);
   const [editing, setEditing] = useState(true);
   const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
@@ -177,180 +181,181 @@ const FantasyTeamsListScreen = () => {
   });
 
   return (
-<>
-    {dataLoading && <Loader />}
-    {dataError && (
-      <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
-        {dataError?.data.msg}
-      </div>
-    )}
-
-    {team && (
-<Container className="d-flex flex-column">
-      {createRoute && !showCreateLeague && (
-        <Row className="w-100 d-flex justify-content-end mb-2">
-          <Button
-            style={{ width: "15%" }}
-            onClick={() => setShowCreateLeague(true)}
-            variant="dark"
-          >
-            Create New League
-          </Button>
-        </Row>
+    <>
+      {dataLoading && <Loader />}
+      {dataError && (
+        <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
+          {dataError?.data.msg}
+        </div>
       )}
 
-      {showCreateLeague && (
-        <Accordion defaultActiveKey="0">
-          <Accordion.Item eventKey="0">
-            <Accordion.Header>
-              <p>{leagueName}</p>
-            </Accordion.Header>
-            <Accordion.Body>
-              <ListGroup>
-                <ListGroup.Item>
-                  <Row className="mb-3">
-                    {" "}
-                    <li>
-                      Each user can only have <b>one</b> league
-                    </li>
-                    <li>
-                      You may have no more than 10 fantasy teams in your league
-                    </li>
-                    <li>You must submit a league name</li>
-                  </Row>
-                </ListGroup.Item>
-                {league?.map((team) => (
-                  <ListGroup.Item key={team.id} className="w-100">
-                    <Row className="d-flex align-items-center">
-                      <Col xs={2}>Owner: {team.owner.name}</Col>
-                      <Col xs={2} className="fw-bold ">
-                        {team.teamName}
-                      </Col>
+      {team && (
+        <Container className="d-flex flex-column mt-4">
+          {createRoute && !showCreateLeague && (
+            <Row className="w-100 d-flex justify-content-end mb-2">
+              <Button
+                style={{ width: "15%" }}
+                onClick={() => setShowCreateLeague(true)}
+                variant="dark"
+              >
+                Create New League
+              </Button>
+            </Row>
+          )}
 
-                      <Col xs={8} className="text-end">
-                        <Button
-                          size="sm"
-                          variant="outline-danger"
-                          style={{ marginLeft: "1rem" }}
-                          onClick={() => deleteFromLeague(team.id)}
-                        >
-                          <MdGroupOff
-                            style={{
-                              fontSize: "1.5rem",
-                            }}
-                          />
-                        </Button>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                ))}
+          {showCreateLeague && (
+            <Accordion defaultActiveKey="0">
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>
+                  <p>{leagueName}</p>
+                </Accordion.Header>
+                <Accordion.Body>
+                  <ListGroup>
+                    <ListGroup.Item>
+                      <Row className="mb-3">
+                        {" "}
+                        <li>
+                          Each user can only have <b>one</b> league
+                        </li>
+                        <li>
+                          You may have no more than 10 fantasy teams in your
+                          league
+                        </li>
+                        <li>You must submit a league name</li>
+                      </Row>
+                    </ListGroup.Item>
+                    {league?.map((team) => (
+                      <ListGroup.Item key={team.id} className="w-100">
+                        <Row className="d-flex align-items-center">
+                          <Col xs={2}>Owner: {team.owner.name}</Col>
+                          <Col xs={2} className="fw-bold ">
+                            {team.teamName}
+                          </Col>
 
-                <ListGroup.Item className="text-end">
-                  <Row>
-                    {editing ? (
-                      <Col xs={8}>
-                        <Form onSubmit={submitHandler} className="d-flex">
-                          <Form.Group style={{ marginRight: "10px" }}>
-                            <Form.Control
-                              type="text"
-                              placeholder="Enter Your League Name"
-                              value={leagueName}
-                              onChange={(e) => setLeagueName(e.target.value)}
-                            ></Form.Control>
-                          </Form.Group>
-                          {createError?.teamName ? (
-                            <Button variant="danger" type="submit">
-                              Submit League Name
+                          <Col xs={8} className="text-end">
+                            <Button
+                              size="sm"
+                              variant="outline-danger"
+                              style={{ marginLeft: "1rem" }}
+                              onClick={() => deleteFromLeague(team.id)}
+                            >
+                              <MdGroupOff
+                                style={{
+                                  fontSize: "1.5rem",
+                                }}
+                              />
                             </Button>
-                          ) : (
-                            <Button variant="info" type="submit">
-                              Submit League Name
-                            </Button>
-                          )}
-                        </Form>
-                      </Col>
-                    ) : (
-                      <Col className="d-flex">
-                        <Badge
-                          bg="dark"
-                          className="d-flex align-items-center justify-content-center"
-                          style={{
-                            marginRight: "10px",
-                            minWidth: "20%",
-                            fontSize: "18px",
-                          }}
-                        >
-                          {leagueName}
-                        </Badge>
-                        {leagueName ? (
-                          <Button variant="info" onClick={editHandler}>
-                            Edit Team Name
-                          </Button>
+                          </Col>
+                        </Row>
+                      </ListGroup.Item>
+                    ))}
+
+                    <ListGroup.Item className="text-end">
+                      <Row>
+                        {editing ? (
+                          <Col xs={8}>
+                            <Form onSubmit={submitHandler} className="d-flex">
+                              <Form.Group style={{ marginRight: "10px" }}>
+                                <Form.Control
+                                  type="text"
+                                  placeholder="Enter Your League Name"
+                                  value={leagueName}
+                                  onChange={(e) =>
+                                    setLeagueName(e.target.value)
+                                  }
+                                ></Form.Control>
+                              </Form.Group>
+                              {createError?.teamName ? (
+                                <Button variant="danger" type="submit">
+                                  Submit League Name
+                                </Button>
+                              ) : (
+                                <Button variant="info" type="submit">
+                                  Submit League Name
+                                </Button>
+                              )}
+                            </Form>
+                          </Col>
                         ) : (
-                          <Button variant="info" onClick={editHandler}>
-                            Submit Team Name
-                          </Button>
+                          <Col className="d-flex">
+                            <Badge
+                              bg="dark"
+                              className="d-flex align-items-center justify-content-center"
+                              style={{
+                                marginRight: "10px",
+                                minWidth: "20%",
+                                fontSize: "18px",
+                              }}
+                            >
+                              {leagueName}
+                            </Badge>
+                            {leagueName ? (
+                              <Button variant="info" onClick={editHandler}>
+                                Edit Team Name
+                              </Button>
+                            ) : (
+                              <Button variant="info" onClick={editHandler}>
+                                Submit Team Name
+                              </Button>
+                            )}
+                          </Col>
                         )}
-                      </Col>
+
+                        <Col xs={4}>
+                          <Button variant="info" onClick={createLeagueHandler}>
+                            Finalize Team
+                          </Button>
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                    {leagueError && (
+                      <ListGroup.Item>
+                        <Row className="w-100 d-flex justify-content-end error ">
+                          {leagueError?.data.msg}
+                        </Row>
+                      </ListGroup.Item>
                     )}
-
-                    <Col xs={4}>
-                      <Button variant="info" onClick={createLeagueHandler}>
-                        Finalize Team
-                      </Button>
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-                {leagueError && (
-                  <ListGroup.Item>
-                    <Row className="w-100 d-flex justify-content-end error ">
-                      {leagueError?.data.msg}
-                    </Row>
-                  </ListGroup.Item>
+                    {createError && (
+                      <ListGroup.Item>
+                        <Row className="w-100 d-flex justify-content-end error ">
+                          {createError.teamName}
+                        </Row>
+                        <Row className="w-100 d-flex justify-content-end error ">
+                          {createError.teamLength}
+                        </Row>
+                        <Row className="w-100 d-flex justify-content-end error ">
+                          {createError.alreadyOnTeam}
+                        </Row>
+                      </ListGroup.Item>
+                    )}
+                  </ListGroup>
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+          )}
+          <ListGroup as="ol" className="d-flex align-items-center">
+            <Row className="text-center m-2">
+              <h2>Fantasy Teams</h2>
+            </Row>
+            {team?.map((team: any) => (
+              <ListOfTeams
+                key={team._id}
+                team={team}
+                teamName={team.teamName}
+                onAddToLeague={addToLeague}
+                createRoute={createRoute}
+                //checks if the team has been added to the league
+                isAddedToLeague={league.some(
+                  (leagueTeam) => leagueTeam.id === team._id
                 )}
-                {createError && (
-                  <ListGroup.Item>
-                    <Row className="w-100 d-flex justify-content-end error ">
-                      {createError.teamName}
-                    </Row>
-                    <Row className="w-100 d-flex justify-content-end error ">
-                      {createError.teamLength}
-                    </Row>
-                    <Row className="w-100 d-flex justify-content-end error ">
-                      {createError.alreadyOnTeam}
-                    </Row>
-                  </ListGroup.Item>
-                )}
-              </ListGroup>
-            </Accordion.Body>
-          </Accordion.Item>
-        </Accordion>
+                fantasyLeagueScreen={true}
+                url={`/fantasyteams/${team._id}`}
+                show={showCreateLeague}
+              />
+            ))}
+          </ListGroup>
+        </Container>
       )}
-      <ListGroup as="ol" className="d-flex align-items-center">
-        <Row className="text-center m-2">
-          <h2>Fantasy Teams</h2>
-        </Row>
-        {team?.map((team: any) => (
-          <ListOfTeams
-            key={team._id}
-            team={team}
-            teamName={team.teamName}
-            onAddToLeague={addToLeague}
-            createRoute={createRoute}
-            //checks if the team has been added to the league
-            isAddedToLeague={league.some(
-              (leagueTeam) => leagueTeam.id === team._id
-            )}
-            fantasyLeagueScreen={true}
-            url={`/fantasyteams/${team._id}`}
-            show = {showCreateLeague}
-          />
-        ))}
-      </ListGroup>
-    </Container>
-
-    )}
-    
     </>
   );
 };

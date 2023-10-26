@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
 //libraries
 import { getCode } from "country-list";
 import CountryFlag from "react-country-flag";
@@ -7,7 +8,8 @@ import CountryFlag from "react-country-flag";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
-import { LinkContainer } from "react-router-bootstrap";
+import Container from 'react-bootstrap/Container'
+
 //api and redux
 import { useGetTeamsQuery } from "../../slices/cyclistApiSlice";
 //components
@@ -30,7 +32,7 @@ const AllTeamsScreen = () => {
           </div>
         )}
       {data && (
-        <>
+        <Container>
           <Row className="text-center m-4">
             <h2>2022 World Tour Teams</h2>
             <p className="attention">
@@ -81,7 +83,7 @@ const AllTeamsScreen = () => {
           <div className="d-flex justify-content-center mt-3">
             <Paginate pages={data?.pages} page={data?.page} />
           </div>
-        </>
+        </Container>
       )}
     </>
   );
