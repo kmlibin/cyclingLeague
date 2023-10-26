@@ -5,7 +5,7 @@
 }
 
 .image-container img {
-   padding-top: 1.5rem;
+  padding-top: 1.5rem;
 }
 .overlay {
   position: absolute;
@@ -24,6 +24,17 @@
   height: 100vh;
 }
 
+.dashboard {
+  position: absolute;
+  top: 2rem;
+  right: 3rem;
+}
+
+.dashboard a {
+  color: rgb(219, 213, 213) !important;
+}
+
+
 .text-color {
   background: linear-gradient(45deg, rgb(14, 121, 213), rgb(132, 255, 0));
   -webkit-background-clip: text;
@@ -37,42 +48,39 @@
 }
 
 @keyframes slide {
-    0% {
-        right: -100%
-    }
-    100% {
-        right: 0;
-    }
+  0% {
+    right: -100%;
+  }
+  100% {
+    right: 0;
+  }
 }
-
-
 
 .text-content p {
-    color: rgb(219, 213, 213) !important;
-    font-size: 17px;
+  color: rgb(219, 213, 213) !important;
+  font-size: 17px;
 }
 
-.text-content .button-style {
-    background-color:rgb(14, 121, 213);
-    margin-bottom: 1rem;
-    transition: all .25s ease;
-    color: rgb(219, 213, 213) !important;
-    font-weight: bold;
+.button-style {
+  background-color: rgb(14, 121, 213);
+  margin-bottom: 1rem;
+  transition: all 0.25s ease;
+  color: rgb(219, 213, 213) !important;
+  font-weight: bold;
 }
 
 .button-style:hover {
-    background-color: rgb(114, 216, 5);
-    color: rgb(14, 121, 213) !important;
-    font-weight: bold;
+  background-color: rgb(114, 216, 5);
+  color: rgb(14, 121, 213) !important;
+  font-weight: bold;
 }
 
-.bottom { 
-    color: rgb(219, 213, 213) !important;
-    position: absolute;
-    bottom: 3rem;
-    right: 3rem;
+.bottom {
+ color: rgb(219, 213, 213) !important;
+ margin-top: 3rem;
+ 
 }
 
 .bottom a:hover {
-    color:  rgb(114, 216, 5) !important;
+  color: rgb(114, 216, 5) !important;
 }
