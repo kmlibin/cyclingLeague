@@ -56,7 +56,7 @@ const RegisterScreen = () => {
   };
   return (
     <FormContainer>
-      <h1>Sign Up</h1>
+      <h1 style={{marginTop: "2rem"}}>Sign Up</h1>
 
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="name" className="my-3">
