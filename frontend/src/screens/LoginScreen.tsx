@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+//redux and api
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
-import FormContainer from "../components/FormContainer";
 
+//bootstrap
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+
+//components
+import FormContainer from "../components/FormContainer";
+import Loader from "../components/Loader";
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -28,7 +34,7 @@ const LoginScreen = () => {
    //if user info exists, we are going to navigate to the redirect
    useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      navigate("/cyclists");
     }
   }, [userInfo, navigate]);
 
@@ -75,7 +81,7 @@ const LoginScreen = () => {
       >
         Sign In
       </Button>
-      {/* {isLoading && <Loader />} */}
+      {isLoading && <Loader />}
     </Form>
     <Row className="py-3">
       <Col>

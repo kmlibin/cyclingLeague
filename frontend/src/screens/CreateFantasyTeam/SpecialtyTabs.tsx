@@ -8,7 +8,7 @@ function SpecialtyTabs() {
   const navigate = useNavigate();
 
   const handleClick = (tab: string | undefined) => {
-    navigate(`/riders/${tab}`);
+    navigate(`/cyclists/${tab}`);
   };
 
   return (

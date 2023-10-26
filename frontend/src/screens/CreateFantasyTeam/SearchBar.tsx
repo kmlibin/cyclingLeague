@@ -14,12 +14,12 @@ const SearchBar: React.FC<Props> = () => {
     e.preventDefault();
     if (keyword.trim()) {
       const route = tab
-        ? `/riders/${tab}/search/${keyword}`
+        ? `/cyclists/${tab}/search/${keyword}`
         : `/search/${keyword}`;
       navigate(route);
       setKeyword("");
     } else {
-      const route = tab ? `/riders/${tab}` : "/";
+      const route = tab ? `/cyclists/${tab}` : "/";
       navigate(route);
     }
   };
