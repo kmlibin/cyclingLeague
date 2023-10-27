@@ -66,6 +66,7 @@ const FantasyTeamsListScreen = () => {
       }
     }
   }, [team, userInfo]);
+  console.log(userFantasyTeam)
 
   //kept getting stuck in infinite loop if this wasn't in a useEffect. now set teamIds and leagues so that users fantasy league is inside
   useEffect(() => {
@@ -87,15 +88,15 @@ const FantasyTeamsListScreen = () => {
     const leagueIds = league.map((team) => {
       ids.push(team.id);
     });
-
     if (ids.includes(id)) {
       setCreateError({
         ...createError,
         alreadyOnTeam: "Team is already in league",
+        
       });
       return league;
     }
-    if (team.length >= 10) {
+    if (ids.length >= 10) {
       setCreateError({
         ...createError,
         teamLength: "Only 10 teams can be in the league",
@@ -191,7 +192,7 @@ const FantasyTeamsListScreen = () => {
 
       {team && (
         <Container className="d-flex flex-column mt-4">
-          {createRoute && !showCreateLeague && (
+          {createRoute && !showCreateLeague && userFantasyTeam && (
             <Row className="w-100 d-flex justify-content-end mb-2">
               <Button
                 style={{ width: "15%" }}
