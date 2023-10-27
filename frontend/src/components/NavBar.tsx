@@ -20,6 +20,7 @@ const NavBar = () => {
 
   const id = typeof userInfo === "object" ? userInfo._id : null;
   const userName = typeof userInfo === "object" ? userInfo.name : null;
+  const myTeam = typeof userInfo === "object" ? userInfo.fantasyTeam : null;
 
   console.log(userInfo);
   const [logoutApiCall] = useLogoutMutation();
@@ -65,9 +66,15 @@ const NavBar = () => {
                   <NavDropdown.Item>Build Fantasy Team</NavDropdown.Item>
                 </LinkContainer>
 
-                <LinkContainer to={`/createleague`}>
-                  <NavDropdown.Item>Build Fantasy League</NavDropdown.Item>
-                </LinkContainer>
+                {myTeam ? (
+                  <LinkContainer to="/createleague">
+                    <NavDropdown.Item>Build Fantasy League</NavDropdown.Item>
+                  </LinkContainer>
+                ) : (
+                  <NavDropdown.Item className="disabled-link" style={{color: "lightgrey"}}>
+                    Build Fantasy League
+                  </NavDropdown.Item>
+                )}
 
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={logoutHandler}>
