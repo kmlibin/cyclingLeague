@@ -25,7 +25,7 @@ const RegisterScreen = () => {
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
 
-  const redirect = sp.get("redirect") || "/";
+  const redirect = sp.get("redirect") || "/cyclists";
 
   const [register, { isLoading }] = useRegisterMutation();
   const { userInfo } = useAppSelector((state) => state.auth);
