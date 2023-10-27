@@ -12,6 +12,8 @@ import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
 import { Cyclist } from "../../interfaces/Cyclist";
 import Loader from "../../components/Loader";
+import Button from "react-bootstrap/Button";
+import Error from "../../components/Error";
 
 import MyFantasyTeamTable from "./MyFantastyTeamTable";
 import PieChartComponent from "../../components/PieChartComponent";
@@ -63,6 +65,7 @@ const DashboardScreen: React.FC = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
 
   const userId = typeof userInfo === "object" ? userInfo._id : null;
+  const myTeam = typeof userInfo === "object" ? userInfo.fantasyTeam : null;
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
   //to fetch once it mounts. not ideal, but it's a fine enough patch.
   useEffect(() => {
@@ -121,26 +124,49 @@ const DashboardScreen: React.FC = () => {
 
   const COLORS = ["#009900", "#ffa500", "#51d5eb", "#cc0000"];
 
+  //did these separately so that I could put them in their own containers for styling purposes
+  if (teamLoading) {
+    return (
+      <Container
+        className="d-flex flex-column justify-content-center flex-lg-row"
+        style={{ backgroundColor: "#FBF4D4", minHeight: "100vh" }}
+      >
+        <Loader />
+      </Container>
+    );
+  }
+
+  if (teamError && myTeam) {
+    return (
+      <Container
+        className="d-flex flex-column justify-content-center flex-lg-row"
+        style={{ backgroundColor: "#FBF4D4", minHeight: "100vh" }}
+      >
+        <Error error={teamError} />
+      </Container>
+    );
+  }
+console.log(league?.teamIds)
   return (
     <Container
       className="d-flex flex-column justify-content-center flex-lg-row"
-      style={{ backgroundColor: "#FBF4D4" }}
+      style={{ backgroundColor: "#FBF4D4", minHeight: "100vh" }}
     >
-      {teamLoading && <Loader />}
-      {teamError && (
-        <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
-          {teamError?.data.msg}
+      {!team ? (
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <h1>You don't have a fantasy team yet.</h1>
+          <h4 className="mt-3">Create one now!</h4>
+          <LinkContainer to="/createteam">
+            <Button className="mt-4">Build Your Team</Button>
+          </LinkContainer>
         </div>
-      )}
-      {team && (
+      ) : (
         <>
-        {/* column on left side of screen that shows various team stats */}
-          <Row
-            
-            className="d-flex justify-content-center item-margin pb-4"
-          >
+          {/* column on left side of screen that shows various team stats */}
+          <Row className="d-flex justify-content-center item-margin pb-4">
             <Col
-            sm={12} md={3}
+              sm={12}
+              md={3}
               className="d-flex flex-column align-items-center justify-content-center"
               style={{ width: "90%" }}
             >
@@ -170,10 +196,9 @@ const DashboardScreen: React.FC = () => {
               </Card>
             </Col>
           </Row>
-        
 
           {/* holds the fantasy team chart and league beneath */}
-       
+
           <Row className="d-flex flex-row text-center">
             <Col sm={12} md={12}>
               <Container fluid className="d-flex flex-column">
@@ -185,7 +210,8 @@ const DashboardScreen: React.FC = () => {
                     <MyFantasyTeamTable data={team} />
                   </Col>
                 </Row>
-                {league && (
+                {leagueError && <Error error={leagueError} />}
+                {league?.teamIds.length > 0 ? (
                   <>
                     <Row className="mt-4 mb-4 text-center">
                       <h2>
@@ -224,6 +250,14 @@ const DashboardScreen: React.FC = () => {
                       </Table>
                     </Container>
                   </>
+                ) : (
+                  <div className="d-flex flex-column justify-content-center align-items-center mt-5">
+                    <h1>You haven't created a league yet.</h1>
+                    <h4 className="mt-3">Create one now!</h4>
+                    <LinkContainer to="/createleague">
+                      <Button className="mt-4">Build Your League</Button>
+                    </LinkContainer>
+                  </div>
                 )}
               </Container>
             </Col>
