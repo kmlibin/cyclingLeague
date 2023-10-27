@@ -43,10 +43,11 @@ const createTeam = async (req, res) => {
 
     // update the user's myTeam field
     await User.findByIdAndUpdate(owner, { myTeam: createdTeam._id });
-    res.status(StatusCodes.CREATED).json({ createdTeam });
+    return res.status(StatusCodes.CREATED).json({ createdTeam });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR);
-    throw new Error("failed to create team");
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ msg: "internal server error" });
   }
 };
 
@@ -62,11 +63,13 @@ const getSingleFantasyTeam = async (req, res) => {
       "cyclists"
     );
     if (!fantasyTeam) {
-      res.status(StatusCodes.NOT_FOUND).json({ msg: "no team with that name" });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ msg: "no team with that name" });
     }
-    res.status(StatusCodes.OK).json(fantasyTeam);
+    return res.status(StatusCodes.OK).json(fantasyTeam);
   } catch (error) {
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
   }
@@ -81,11 +84,13 @@ const getSingleFantasyTeamById = async (req, res) => {
   try {
     const fantasyTeam = await FantasyTeam.findById(teamId).populate("cyclists");
     if (!fantasyTeam) {
-      res.status(StatusCodes.NOT_FOUND).json({ msg: "No team with that ID" });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ msg: "No team with that ID" });
     }
-    res.status(StatusCodes.OK).json(fantasyTeam);
+    return res.status(StatusCodes.OK).json(fantasyTeam);
   } catch (error) {
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "Internal server error" });
   }
@@ -101,11 +106,13 @@ const getAllFantasyTeams = async (req, res) => {
       .populate("cyclists")
       .populate({ path: "owner", select: "name" });
     if (!teams) {
-      res.status(StatusCodes.NOT_FOUND).json({ msg: "no teams available" });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ msg: "no teams available" });
     }
-    res.status(StatusCodes.OK).json(teams);
+    return res.status(StatusCodes.OK).json(teams);
   } catch (error) {
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
   }
@@ -139,9 +146,9 @@ const createLeague = async (req, res) => {
     if (!updatedUser) {
       return res.status(StatusCodes.NOT_FOUND).json({ msg: "no user found" });
     }
-    res.status(StatusCodes.CREATED).json({ msg: "created" });
+    return res.status(StatusCodes.CREATED).json({ msg: "created" });
   } catch (error) {
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
   }
@@ -152,8 +159,6 @@ const createLeague = async (req, res) => {
 //@access private eventually
 const getLeague = async (req, res) => {
   const { userId } = req.params;
-  console.log("fetched");
-  console.log(userId);
   try {
     const fantasyLeague = await User.findOne({ _id: userId }).populate({
       path: "myLeague.teamIds",
@@ -163,14 +168,14 @@ const getLeague = async (req, res) => {
       },
     });
     if (!fantasyLeague) {
-      res
+      return res
         .status(StatusCodes.NOT_FOUND)
         .json({ msg: "no league with that user" });
     }
     const { myLeague } = fantasyLeague;
-    res.status(StatusCodes.OK).json(myLeague);
+    return res.status(StatusCodes.OK).json(myLeague);
   } catch (error) {
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
   }
