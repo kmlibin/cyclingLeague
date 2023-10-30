@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { StatusCodes } from "http-status-codes";
 import generateToken from "../utils/generateToken.js";
 
 //@desc register user
@@ -9,8 +10,9 @@ const registerUser = async (req, res) => {
   //check if user exists
   const userExists = await User.findOne({ email });
   if (userExists) {
-    res.status(400);
-    throw new Error("user already exists");
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "User already exists" });
   }
 
   //first registered user is admin
@@ -33,8 +35,7 @@ const registerUser = async (req, res) => {
       isAdmin: user.isAdmin,
     });
   } else {
-    res.status(400);
-    throw new Error("invalid user data");
+    res.status(StatusCodes.BAD_REQUEST).json({ msg: "Invalid user data" });
   }
 };
 
@@ -58,7 +59,7 @@ const authUser = async (req, res) => {
       fantasyTeam: user.myTeam,
     });
   } else {
-    res.status(401).json({ msg: "invalid credentials" });
+    res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Invalid credentials" });
   }
 };
 
@@ -71,7 +72,7 @@ const logoutUser = async (req, res) => {
     httpOnly: true,
     expires: new Date(0),
   });
-  res.status(200).json({ msg: "logged out successfully" });
+  res.status(StatusCodes.OK).json({ msg: "Logged out successfully" });
 };
 
 export { registerUser, authUser, logoutUser };

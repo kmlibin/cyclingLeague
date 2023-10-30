@@ -1,11 +1,16 @@
+//models
 import FantasyTeam from "../models/FantasyTeam.js";
 import User from "../models/User.js";
+
+//libraries
 import { StatusCodes } from "http-status-codes";
+
+//utils
 import { calculateTotalPoints } from "../utils/index.js";
 
 //@desc create team
 //@route POST /api/fantasyteam
-//@access Public
+//@access private
 const createTeam = async (req, res) => {
   const { cyclistIds, teamName } = req.body;
   const owner = req.user._id;
@@ -14,24 +19,25 @@ const createTeam = async (req, res) => {
   if (cyclistIds.length != 25) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "team must contain 25 cyclists" });
+      .json({ msg: "Team must contain 25 cyclists" });
   }
   //make sure there is a team name
   if (!teamName || teamName.trim() === "") {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "team name cannot be empty" });
+      .json({ msg: "Team name cannot be empty" });
   }
 
   try {
+    //sums points of all riders
     const totalPoints = await calculateTotalPoints(cyclistIds);
-    //check if user already has a team, if so, delete.
+    //check if user already has a team, if so, delete. also delete associated league
     const existingTeam = await FantasyTeam.findOne({ owner });
     if (existingTeam) {
       await FantasyTeam.deleteMany({ owner });
       await User.findByIdAndUpdate(owner, { $unset: { myLeague: "" } });
     }
-
+    //create the fantasy team
     const team = new FantasyTeam({
       owner,
       cyclists: cyclistIds,
@@ -47,13 +53,13 @@ const createTeam = async (req, res) => {
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "internal server error" });
+      .json({ msg: "Internal server error" });
   }
 };
 
 //@desc fetch single teams by userId
 //@route GET /api/fantasyteam/:userId
-//@access Public
+//@access private
 
 const getSingleFantasyTeam = async (req, res) => {
   const { userId } = req.params;
@@ -65,19 +71,19 @@ const getSingleFantasyTeam = async (req, res) => {
     if (!fantasyTeam) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ msg: "no team with that name" });
+        .json({ msg: "No team with that name" });
     }
     return res.status(StatusCodes.OK).json(fantasyTeam);
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "internal server error" });
+      .json({ msg: "Internal server error" });
   }
 };
 
 //@desc fetch single teams BY THEIR IDS
 //@route GET /api/fantasyteam/teams/:teamId
-//@access Public
+//@access private
 
 const getSingleFantasyTeamById = async (req, res) => {
   const { teamId } = req.params;
@@ -96,9 +102,9 @@ const getSingleFantasyTeamById = async (req, res) => {
   }
 };
 
-//@desc fetch all teams
+//@desc fetch all fantasy teams
 //@route GET /api/fantasyteam
-//@access Public
+//@access private
 
 const getAllFantasyTeams = async (req, res) => {
   try {
@@ -108,19 +114,19 @@ const getAllFantasyTeams = async (req, res) => {
     if (!teams) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ msg: "no teams available" });
+        .json({ msg: "No teams available" });
     }
     return res.status(StatusCodes.OK).json(teams);
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "internal server error" });
+      .json({ msg: "Internal server error" });
   }
 };
 
 //@desc create fantasy league teams
 //@route PATCH /api/fantasyteam/:id/myleague
-//@access private eventually
+//@access private
 const createLeague = async (req, res) => {
   const { leagueName, teamIds } = req.body;
   const owner = req.user._id;
@@ -129,13 +135,13 @@ const createLeague = async (req, res) => {
   if (teamIds.length <= 1 || teamIds.length > 10) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "league must have more than one but fewer than 10 teams" });
+      .json({ msg: "League must have more than one but fewer than 10 teams" });
   }
   //make sure there is a team name
   if (!leagueName || leagueName.trim() === "") {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ msg: "league name cannot be empty" });
+      .json({ msg: "League name cannot be empty" });
   }
 
   try {
@@ -144,19 +150,19 @@ const createLeague = async (req, res) => {
     });
 
     if (!updatedUser) {
-      return res.status(StatusCodes.NOT_FOUND).json({ msg: "no user found" });
+      return res.status(StatusCodes.NOT_FOUND).json({ msg: "No user found" });
     }
-    return res.status(StatusCodes.CREATED).json({ msg: "created" });
+    return res.status(StatusCodes.CREATED).json({ msg: "Created" });
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "internal server error" });
+      .json({ msg: "Internal server error" });
   }
 };
 
 //@desc get list of teams in users' league
 //@route GET /api/fantasyteam/:id/myleague
-//@access private eventually
+//@access private
 const getLeague = async (req, res) => {
   const { userId } = req.params;
   try {
@@ -167,17 +173,19 @@ const getLeague = async (req, res) => {
         select: "name",
       },
     });
+  
     if (!fantasyLeague) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ msg: "no league with that user" });
+        .json({ msg: "No league associated with that user" });
     }
+   
     const { myLeague } = fantasyLeague;
     return res.status(StatusCodes.OK).json(myLeague);
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "internal server error" });
+      .json({ msg: "Internal server error" });
   }
 };
 

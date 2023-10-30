@@ -4,7 +4,7 @@ import Team from "../models/Team.js";
 //libraries
 import { StatusCodes } from "http-status-codes";
 
-//@desc    get all riders, enable searching through mainspecialty and name
+//@desc    get all riders, able to search through mainspecialty and name
 //@route   GET /api/cyclists
 //@access  public
 
@@ -19,11 +19,11 @@ const getAllRiders = async (req, res) => {
   try {
     const cyclists = await Cyclist.find({ ...tab, ...keyword });
     if (!cyclists) {
-      res.status(StatusCodes.NOT_FOUND).json({ msg: "no cyclists" });
+      return res.status(StatusCodes.NOT_FOUND).json({ msg: "No cyclists found" });
     }
-    res.status(StatusCodes.OK).json(cyclists);
+    return res.status(StatusCodes.OK).json(cyclists);
   } catch (error) {
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
   }
@@ -39,13 +39,13 @@ const getSingleRider = async (req, res) => {
   try {
     const singleRider = await Cyclist.findOne({ name: name });
     if (!singleRider) {
-      res
+      return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ msg: "no cyclist with that name" });
+        .json({ msg: "Cannot find cyclist with that name" });
     }
-    res.status(StatusCodes.OK).json(singleRider);
+   return res.status(StatusCodes.OK).json(singleRider);
   } catch (error) {
-    res
+   return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
   }
@@ -68,13 +68,13 @@ const getAllTeams = async (req, res) => {
       .limit(pageSize)
       .skip(pageSize * (page - 1));
     if (!teamRoster) {
-      res.status(StatusCodes.NOT_FOUND).json({ msg: "no teams found" });
+     return res.status(StatusCodes.NOT_FOUND).json({ msg: "No teams found" });
     }
-    res
+   return res
       .status(StatusCodes.OK)
       .json({ teamRoster, page, pages: Math.ceil(count / pageSize) });
   } catch (error) {
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
   }
@@ -82,6 +82,7 @@ const getAllTeams = async (req, res) => {
 //@desc    get single team
 //@route   GET /api/teams/:name
 //@access  public
+
 //by id (id is the teamname in this case)
 const getSingleTeam = async (req, res) => {
   const { name } = req.params;
@@ -89,11 +90,11 @@ const getSingleTeam = async (req, res) => {
   try {
     const teamRoster = await Team.findOne({ _id: name }).populate("cyclists");
     if (!teamRoster) {
-      res.status(StatusCodes.NOT_FOUND).json({ msg: "no team found" });
+      return res.status(StatusCodes.NOT_FOUND).json({ msg: "No team found with that name" });
     }
     res.status(StatusCodes.OK).json(teamRoster);
   } catch (error) {
-    res
+    return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ msg: "internal server error" });
   }

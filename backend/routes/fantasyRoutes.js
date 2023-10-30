@@ -7,7 +7,7 @@ import {
   createLeague,
   getSingleFantasyTeamById,
   getLeague,
-} from "../controllers/fantasyTeamController.js";
+} from "../controllers/fantasyController.js";
 
 import { protect } from "../middleware/authMiddleware.js";
 
