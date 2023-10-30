@@ -83,10 +83,10 @@ const RidersOnTeamScreen: React.FC = () => {
         </div>
       )}
       {!isFantasyTeamRoute && team && (
-        <h1 className="text-center mt-2 mb-5">{team._id}</h1>
+        <h1 className="text-center mt-5 mb-5">{team._id}</h1>
       )}
       {isFantasyTeamRoute && fantasyTeam && (
-        <h1 className="text-center mt-2 mb-5">{fantasyTeam.teamName}</h1>
+        <h1 className="text-center mt-5 mb-5">{fantasyTeam.teamName}</h1>
       )}
       <Container fluid className="d-flex flex-column flex-wrap justify-content-evenly flex-md-row w-75">
         {sortedCyclists?.map((rider: Cyclist) => (

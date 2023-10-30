@@ -191,10 +191,11 @@ const FantasyTeamsListScreen = () => {
       )}
 
       {team && (
-        <Container className="d-flex flex-column mt-4">
+        <Container className="d-flex flex-column mt-2 mb-2">
           {createRoute && !showCreateLeague && userFantasyTeam && (
             <Row className="w-100 d-flex justify-content-end mb-2">
               <Button
+              className="responsive-button"
                 style={{ width: "15%" }}
                 onClick={() => setShowCreateLeague(true)}
                 variant="dark"

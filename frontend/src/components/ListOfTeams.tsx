@@ -55,14 +55,14 @@ const ListOfTeams: React.FC<TeamItemProps> = ({
       key={team._id}
       as="li"
       style={{ width: " 70%" }}
-      className="d-flex align-items-center mt-2"
+      className="d-flex align-items-center mt-2 rider-list"
     >
       <div className="ms-2 me-auto">
         <Link to={`${url}`}>
           <div className="fw-bold">{teamName}</div>
         </Link>
       </div>
-      <div className="d-flex">
+      <div className="d-flex rider-images">
         {eightRiders.map((rider: any) => (
           <img
             key={rider._id}
