@@ -1,8 +1,7 @@
 import { addSharedRiders } from "../slices/cyclistSlice";
 import { LeagueData } from "../interfaces/League";
 import { Cyclist } from "../interfaces/Cyclist";
-import { useAppDispatch } from "../hooks/hooks";
-import { DataRow } from "../types/DataRow";
+
 
 export const calculatePrice = (prevPoints: number) => {
   const psRatio = 0.00816;
@@ -131,7 +130,7 @@ export const worstValueCyclist = (team: any) => {
     for (const cyclist of cyclists) {
       // Calculate how much they cost the user to put on the team
       const price = calculatePrice(cyclist.yearEndUciPoints);
-      if (price != 1) {
+      if (price !== 1) {
         // Find the ratio of how many points they've earned so far vs how much they cost
         const value = cyclist.currentUciPoints / price;
         // Check if this cyclist has a worse value than the current worstValue
