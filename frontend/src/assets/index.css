@@ -42,7 +42,7 @@ code {
     monospace;
 }
 
-
+/* createteamdropdown component */
 .header-content {
   display: flex;
   justify-content: space-between;
@@ -81,6 +81,7 @@ code {
   color: red;
 }
 
+/* tabs on cyclist table screen  */
 .navtabs {
   border-radius: 10px 10px 0 0;
 }
@@ -95,6 +96,7 @@ code {
   color: rgba(0, 0, 0, .5);
 }
 
+/* cyclist data cards */
 .responsive-cards {
   background-color: #FBF4D4;
   margin-top: 1rem;
@@ -118,4 +120,25 @@ code {
     }
   }
 
+  /* fantasy team list screen */
+
+  @media only screen and (max-width: 576px) {
+    .responsive-button {
+      min-width: 50%;
+    }
+  }
+  
+
+  /* list of riders component */
+  @media only screen and (max-width: 576px) {
+    .rider-images {
+     display: none !important;
+    }
+  }
+
+  @media only screen and (max-width: 950px) {
+    .rider-list{
+      min-width: 95% ;
+    }
+  }
 
