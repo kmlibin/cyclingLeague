@@ -28,14 +28,14 @@ const registerUser = async (req, res) => {
 
   if (user) {
     generateToken(res, user._id);
-    res.status(200).json({
+    return res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
     });
   } else {
-    res.status(StatusCodes.BAD_REQUEST).json({ msg: "Invalid user data" });
+   return  res.status(StatusCodes.BAD_REQUEST).json({ msg: "Invalid user data" });
   }
 };
 
