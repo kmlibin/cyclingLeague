@@ -14,7 +14,7 @@ import { Cyclist } from "../../interfaces/Cyclist";
 import Loader from "../../components/Loader";
 import Button from "react-bootstrap/Button";
 import Error from "../../components/Error";
-
+import { BsStarFill } from "react-icons/bs";
 import MyFantasyTeamTable from "./MyFantastyTeamTable";
 import PieChartComponent from "../../components/PieChartComponent";
 import { LinkContainer } from "react-router-bootstrap";
@@ -82,6 +82,7 @@ const DashboardScreen: React.FC = () => {
     }
   };
 
+  console.log(sortedTeams);
   //call functions that calculate the data for stats
   useEffect(() => {
     //find highest scoring cyclist
@@ -146,7 +147,7 @@ const DashboardScreen: React.FC = () => {
       </Container>
     );
   }
-console.log(league?.teamIds)
+  console.log(league?.teamIds);
   return (
     <Container
       className="d-flex flex-column justify-content-center flex-lg-row"
@@ -239,7 +240,14 @@ console.log(league?.teamIds)
                           {sortedTeams?.map((team: any, index) => (
                             <tr key={team._id}>
                               <td>{index + 1}</td>
-                              <td className="left">{team.owner.name}</td>
+                              <td className="left">
+                                <div className="d-flex align-items-center">
+                                {userId === team.owner._id ? (
+                                  <BsStarFill style={{marginRight: "5px", color: "#A14FE0"}}/>
+                                ) : null}
+                                {team.owner.name}
+                                </div>
+                              </td>
                               <LinkContainer to={`/fantasyteams/${team._id}`}>
                                 <td className="link-styles">{team.teamName}</td>
                               </LinkContainer>
