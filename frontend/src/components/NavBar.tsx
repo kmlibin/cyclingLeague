@@ -22,7 +22,7 @@ const NavBar = () => {
   const userName = typeof userInfo === "object" ? userInfo.name : null;
   const myTeam = typeof userInfo === "object" ? userInfo.fantasyTeam : null;
 
-  console.log(userInfo);
+  // console.log(userInfo);
   const [logoutApiCall] = useLogoutMutation();
 
   const logoutHandler = async () => {
@@ -48,6 +48,16 @@ const NavBar = () => {
             <LinkContainer to="/teams">
               <Nav.Link>Teams</Nav.Link>
             </LinkContainer>
+            {!userInfo && (
+               <LinkContainer to="/login">
+               <Nav.Link>Login</Nav.Link>
+             </LinkContainer>
+            )}
+            {!userInfo && (
+               <LinkContainer to="/register">
+               <Nav.Link>Register</Nav.Link>
+             </LinkContainer>
+            )}
             {userInfo && (
               <LinkContainer to="/fantasyteams">
                 <Nav.Link>Fantasy Teams</Nav.Link>
