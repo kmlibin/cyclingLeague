@@ -1,6 +1,12 @@
+//redux
 import { addSharedRiders } from "../slices/cyclistSlice";
-import { LeagueData } from "../interfaces/League";
+
+//interfaces and types
 import { Cyclist } from "../interfaces/Cyclist";
+import { FantasyTeam } from "../interfaces/FantasyTeam";
+import { AppDispatch } from "../store";
+import { SpecialtyData } from "../types/SpecialtyData";
+
 
 
 export const calculatePrice = (prevPoints: number) => {
@@ -10,14 +16,32 @@ export const calculatePrice = (prevPoints: number) => {
   return price;
 };
 
-//type these
+
+interface League {
+  name: string,
+  teamIds: [{
+    _id:string,
+    cyclists: string[],
+    owner: {
+      _id: string,
+      name: string,
+    },
+    teamName: string,
+    totalPoints: number
+  }]
+
+}
+
+
+
 export const findSharedRiders = (
-  dispatch: any,
-  team: any,
-  league: any,
+  dispatch: AppDispatch,
+  team: FantasyTeam,
+  league: League,
   userId: string | null
 ) => {
   if (team && league) {
+ 
     //find users team id
     const usersTeamId = team._id;
     //get cyclists ids from users team
@@ -25,7 +49,7 @@ export const findSharedRiders = (
 
     // grab index of the logged-in user's team within league.teamIds, need to exclude it for calculation
     const usersTeamIndex = league.teamIds.findIndex(
-      (teamData: LeagueData) => teamData._id === usersTeamId
+      (teamData) => teamData._id === usersTeamId
     );
 
     // create a copy of league.teamIds without the user's team
@@ -36,29 +60,31 @@ export const findSharedRiders = (
 
     // grab cyclist _ids from the remaining teams in the league
     const leagueCyclistIds = filteredLeagueTeamIds
-      .flatMap((teamData: any) => teamData.cyclists)
+      .flatMap((teamData) => teamData.cyclists)
       //gets ids
       .map((cyclistId: string) => cyclistId);
 
-    const sharedCyclistIds = teamCyclistIds.filter((teamCyclistId: any) =>
+    const sharedCyclistIds = teamCyclistIds.filter((teamCyclistId) =>
       leagueCyclistIds.includes(teamCyclistId)
     );
 
     //shared cyclist _ids excluding the logged-in user's team
-    const sharedCyclists = team.cyclists.filter((cyclist: any) =>
+    const sharedCyclists = team.cyclists.filter((cyclist) =>
       sharedCyclistIds.includes(cyclist._id)
     );
     dispatch(addSharedRiders({ user: userId, sharedRiders: sharedCyclists }));
   }
 };
 
-export const cyclistsPerSpecialty = (team: any) => {
+export const cyclistsPerSpecialty = (team: FantasyTeam) => {
   const counts = {
     sprinters: 0,
     climbers: 0,
     timetrial: 0,
     oneday: 0,
   };
+
+ 
   if (team) {
     const { cyclists } = team;
 
@@ -82,7 +108,7 @@ export const cyclistsPerSpecialty = (team: any) => {
   return counts;
 };
 
-export const highScore = (team: any) => {
+export const highScore = (team: FantasyTeam) => {
   if (team) {
     const { cyclists } = team;
 
@@ -100,12 +126,12 @@ export const highScore = (team: any) => {
   return null;
 };
 
-export const bestValueCyclist = (team: any) => {
+export const bestValueCyclist = (team: FantasyTeam) => {
   if (team) {
     //grab cyclists
     const { cyclists } = team;
     let bestValue = 0;
-    let bestValueCyclist = null;
+    let bestValueCyclist: Cyclist | null = null;
     for (const cyclist of cyclists) {
       //calculate how much they cost the user to put on team
       const price = calculatePrice(cyclist.yearEndUciPoints);
@@ -121,12 +147,12 @@ export const bestValueCyclist = (team: any) => {
   }
 };
 
-export const worstValueCyclist = (team: any) => {
+export const worstValueCyclist = (team: FantasyTeam) => {
   if (team) {
     // Grab cyclists
     const { cyclists } = team;
     let worstValue = Infinity; // Initialize worstValue with a very high value
-    let worstValueCyclist = null;
+    let worstValueCyclist: Cyclist | null = null;
     for (const cyclist of cyclists) {
       // Calculate how much they cost the user to put on the team
       const price = calculatePrice(cyclist.yearEndUciPoints);
@@ -144,12 +170,8 @@ export const worstValueCyclist = (team: any) => {
   }
 };
 
-type SpecialtyData = {
-  specialty: string;
-  points: number;
-};
 
-export const teamSpecialties = (team: any) => {
+export const teamSpecialties = (team: FantasyTeam) => {
   let data: SpecialtyData[] = [
     { specialty: "One day races", points: 0 },
     { specialty: "GC", points: 0 },
