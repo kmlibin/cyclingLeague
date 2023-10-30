@@ -13,7 +13,7 @@ import connectDB from "./config/db.js";
 import cyclistRoutes from "./routes/cyclistRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import fantasyTeamRoutes from "./routes/fantasyTeamRoutes.js";
+import fantasyTeamRoutes from "./routes/fantasyRoutes.js";
 
 //port variable
 const port = process.env.PORT || 5000;
@@ -39,6 +39,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/fantasyteam", fantasyTeamRoutes);
 
 try {
-  // await createTeamData()
   app.listen(port, () => console.log(`server running on port ${port}`));
-} catch (error) {}
+} catch (error) {
+  console.log(error)
+}
