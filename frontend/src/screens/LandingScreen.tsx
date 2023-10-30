@@ -23,7 +23,7 @@ const LandingScreen = () => {
 
   return (
     <Container fluid>
-      <Row>
+      <Row className="responsive">
         <Col md={7} className="image-container">
           <img src="/images/table2.png" alt="Your Image" />
           <div className="overlay"></div>

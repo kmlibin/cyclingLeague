@@ -1,7 +1,19 @@
+@media only screen and (max-width: 576px) {
+  .responsive {
+    display: flex;
+  }
+}
+
 .image-container {
   position: relative;
   overflow: hidden;
   height: 100vh;
+}
+
+@media only screen and (max-width: 576px) {
+  .image-container {
+    display: none;
+  }
 }
 
 .image-container img {
@@ -21,8 +33,11 @@
   padding-right: 3rem;
   padding-top: 3rem;
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
 }
+
+
+
 
 .dashboard {
   position: absolute;
@@ -30,10 +45,17 @@
   right: 3rem;
 }
 
+@media only screen and (max-width: 576px) {
+  .dashboard {
+    position: inherit;
+    right: 0;
+    margin-bottom: 1rem;
+  }
+}
+
 .dashboard a {
   color: rgb(219, 213, 213) !important;
 }
-
 
 .text-color {
   background: linear-gradient(45deg, rgb(14, 121, 213), rgb(132, 255, 0));
@@ -76,9 +98,8 @@
 }
 
 .bottom {
- color: rgb(219, 213, 213) !important;
- margin-top: 3rem;
- 
+  color: rgb(219, 213, 213) !important;
+  margin-top: 3rem;
 }
 
 .bottom a:hover {
