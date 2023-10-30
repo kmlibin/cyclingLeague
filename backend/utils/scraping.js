@@ -267,7 +267,6 @@ export const scrapeAndUpdateRank = async (riderUrlsToScrape) => {
       }
     }
 
-    console.log("after the loop");
   } catch (error) {
     console.log(error);
   }
