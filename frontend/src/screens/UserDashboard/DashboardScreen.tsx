@@ -1,28 +1,38 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+
+//redux and api
 import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
 import {
   useGetLeagueQuery,
   useGetSingleFantasyTeamQuery,
 } from "../../slices/fantasyTeamApiSlice";
-import { useParams } from "react-router-dom";
+
+//libraries
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
-import { Cyclist } from "../../interfaces/Cyclist";
-import Loader from "../../components/Loader";
 import Button from "react-bootstrap/Button";
-import Error from "../../components/Error";
 import { BsStarFill } from "react-icons/bs";
+import { LinkContainer } from "react-router-bootstrap";
+
+//interfaces and types
+import { Cyclist } from "../../interfaces/Cyclist";
+import { SpecialtyData } from "../../types/SpecialtyData";
+
+//components
+import Loader from "../../components/Loader";
+import Error from "../../components/Error";
 import MyFantasyTeamTable from "./MyFantastyTeamTable";
 import PieChartComponent from "../../components/PieChartComponent";
-import { LinkContainer } from "react-router-bootstrap";
 import SpecialtyBarChart from "./SpecialtyBarChart";
 import CyclistMiniData from "./CyclistMiniData";
-import { FantasyTeam } from "../../interfaces/FantasyTeam";
-import { findSharedRiders } from "../../utils/calculateStats";
+
+//utils
 import {
+  findSharedRiders,
   cyclistsPerSpecialty,
   highScore,
   worstValueCyclist,
@@ -30,10 +40,15 @@ import {
   bestValueCyclist,
 } from "../../utils/calculateStats";
 
-type SpecialtyData = {
-  specialty: string;
-  points: number;
-};
+
+
+interface SortedTeam {
+  cyclists: string[];
+  owner: { name: string; _id: string };
+  teamName: string;
+  totalPoints: number;
+  _id: string;
+}
 
 const DashboardScreen: React.FC = () => {
   const { id } = useParams();
@@ -49,10 +64,10 @@ const DashboardScreen: React.FC = () => {
     error: leagueError,
   }: any = useGetLeagueQuery<any>(id);
   const [topCyclist, setTopCyclist] = useState<Cyclist | null>(null);
-  const [worstValue, setWorstValue] = useState<Cyclist | null>(null);
-  const [bestValue, setBestValue] = useState<Cyclist>();
+  const [worstValue, setWorstValue] = useState<Cyclist | null>();
+  const [bestValue, setBestValue] = useState<Cyclist | null>();
   const [specialties, setSpecialties] = useState<SpecialtyData[]>();
-  const [sortedTeams, setSortedTeams] = useState<FantasyTeam[]>();
+  const [sortedTeams, setSortedTeams] = useState<SortedTeam[]>();
 
   const dispatch = useAppDispatch();
   const [cyclistCounts, setCyclistCounts] = useState({
@@ -66,6 +81,7 @@ const DashboardScreen: React.FC = () => {
 
   const userId = typeof userInfo === "object" ? userInfo._id : null;
   const myTeam = typeof userInfo === "object" ? userInfo.fantasyTeam : null;
+
   //can't figure out why, but getleaguequery isn't hitting the backend on navigate, only does so if i refresh the page. this forces it
   //to fetch once it mounts. not ideal, but it's a fine enough patch.
   useEffect(() => {
@@ -82,7 +98,7 @@ const DashboardScreen: React.FC = () => {
     }
   };
 
-  console.log(sortedTeams);
+
   //call functions that calculate the data for stats
   useEffect(() => {
     //find highest scoring cyclist
@@ -147,7 +163,7 @@ const DashboardScreen: React.FC = () => {
       </Container>
     );
   }
-  console.log(league?.teamIds);
+
   return (
     <Container
       className="d-flex flex-column justify-content-center flex-lg-row"
@@ -237,15 +253,20 @@ const DashboardScreen: React.FC = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {sortedTeams?.map((team: any, index) => (
+                          {sortedTeams?.map((team: SortedTeam, index) => (
                             <tr key={team._id}>
                               <td>{index + 1}</td>
                               <td className="left">
                                 <div className="d-flex align-items-center">
-                                {userId === team.owner._id ? (
-                                  <BsStarFill style={{marginRight: "5px", color: "#A14FE0"}}/>
-                                ) : null}
-                                {team.owner.name}
+                                  {userId === team.owner._id ? (
+                                    <BsStarFill
+                                      style={{
+                                        marginRight: "5px",
+                                        color: "#A14FE0",
+                                      }}
+                                    />
+                                  ) : null}
+                                  {team.owner.name}
                                 </div>
                               </td>
                               <LinkContainer to={`/fantasyteams/${team._id}`}>
