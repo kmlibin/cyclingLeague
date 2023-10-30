@@ -6,9 +6,9 @@ render deploy:
 
 ### About
 
-You need to register or login to get the full site functionality, feel free to use: 
-  email: 
-  pass:
+You need to register or login to get the full site functionality, feel free to use:
+email:
+pass:
 
 This is a MERN stack project I created where users can ultimately view individual information about the top 900 UCI pros, see all of the riders on professional teams, and where users can create their own fantasy teams and league. To create a team, a user must register and be logged in, and to create a league a registered user must have a fantasy team. Once a user has created a fantasy team, they have access to a dashboard screen where they can view their entire team, as well as a variety of statistics about their team (for example, you can see the highest scoring rider, the least cost effective rider, how many cyclists you have in each discipline (sprint, one day, time trial, climbers), best value cyclist). The data for each cyclist is scraped with Puppeteer from a cycling site, and I used that data to seed my DB.
 
@@ -43,6 +43,8 @@ JavaScript, React, TypeScript, Redux Toolkit, Bootstrap, React Router, React Dat
 9. Several tables from Recharts, complete with custom colors and legends...which probably took too much time to figure out.
 10. Displays loading and error states from the backend
 
+![Dashboard Screenshot](dashscreen.png)
+
 ### Challenges / What to Continue
 
 I really liked working in the MERN stack - being able to build an entire site was actually really helpful in getting me to organize my thoughts, plan, and work on the site in a more methodical manner.
@@ -55,7 +57,7 @@ I also started implementing the same component for different routes, but then us
 
 Bootstrap...I'm undecided how I feel about it. I tried to implement Bootstrap for the vast majority of my code, relying a lot on their Col and Row components. Of course, it made things like Navbars and Accordions extremely quick and simple, but I'm not sure I got the hang of the Rows and Cols - I like to use flexbox, so I kept trying to implement flexbox when I think I should have spent more time better arranging my Rows and Cols. It ended up getting quite confusing, actually, as I'd make a change and the UI would sometimes change in a very unexpected way.
 
-I mean, it could definitely use some more styling...it's not the most jazzy thing, but the styling became less of a focus as I started to get a better grasp on the fact that this project turned out to be bigger than I anticipated. 
+I mean, it could definitely use some more styling...it's not the most jazzy thing, but the styling became less of a focus as I started to get a better grasp on the fact that this project turned out to be bigger than I anticipated.
 
 ## Get Started
 
