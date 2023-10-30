@@ -25,7 +25,7 @@ const LandingScreen: React.FC = () => {
     <Container fluid>
       <Row className="responsive">
         <Col md={7} className="image-container">
-          <img src="/images/table2.png" alt="Your Image" />
+          <img src="/images/table2.png" alt="list of cyclists" />
           <div className="overlay"></div>
         </Col>
         <Col

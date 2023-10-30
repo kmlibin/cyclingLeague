@@ -8,7 +8,7 @@ import CountryFlag from "react-country-flag";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
-import Container from 'react-bootstrap/Container'
+import Container from "react-bootstrap/Container";
 
 //api and redux
 import { useGetTeamsQuery } from "../../slices/cyclistApiSlice";
@@ -21,16 +21,20 @@ import worldTourTeams from "./worldTourTeams.json";
 
 const AllTeamsScreen = () => {
   const { pageNumber } = useParams();
-  const { data, isLoading,  error: dataError } = useGetTeamsQuery<any>({ pageNumber });
+  const {
+    data,
+    isLoading,
+    error: dataError,
+  } = useGetTeamsQuery<any>({ pageNumber });
 
   return (
     <>
-     {isLoading && <Loader />}
-        {dataError && (
-          <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
-            {dataError?.data.msg}
-          </div>
-        )}
+      {isLoading && <Loader />}
+      {dataError && (
+        <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
+          {dataError?.data.msg}
+        </div>
+      )}
       {data && (
         <Container>
           <Row className="text-center m-4">
@@ -45,6 +49,7 @@ const AllTeamsScreen = () => {
               <Card key={team.name} style={{ minWidth: "32%" }} className="m-2">
                 <div className="d-flex align-items-center">
                   <Card.Img
+                    alt={`jersey of ${team.name}`}
                     src={team.img}
                     style={{ height: "60px", width: "60px" }}
                   />

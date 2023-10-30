@@ -25,8 +25,6 @@ import { Cyclist } from "../../interfaces/Cyclist";
 import PieChartComponent from "../PieChartComponent";
 import SocialMedia from "./SocialMedia";
 
-
-
 type Props = {
   cyclistData: Cyclist | any;
   isMyTeam?: boolean;
@@ -53,7 +51,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
   );
 
   return (
-    <Card  className= "col-12 col-md-4 responsive-cards">
+    <Card className="col-12 col-md-4 responsive-cards">
       <Card.Body>
         <Card.Title className="text-center">
           <h2>{rider.name}</h2>
@@ -68,6 +66,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
           style={{ backgroundColor: "#FBF4D4", borderRadius: "5px" }}
         >
           <Card.Img
+            alt={rider.name}
             style={{ maxWidth: "45%", height: "auto" }}
             src={rider.imageSrc}
           />
@@ -79,11 +78,13 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
               style={{ backgroundColor: "#84D2E0" }}
             >
               <span className="d-flex justify-content-start align-items-center">
-                <BsStarFill style={{ color: "#A14FE0" }} /> &nbsp; On My Team &nbsp;<BsStarFill style={{ color: "#A14FE0" }} />
+                <BsStarFill style={{ color: "#A14FE0" }} /> &nbsp; On My Team
+                &nbsp;
+                <BsStarFill style={{ color: "#A14FE0" }} />
               </span>
             </ListGroup.Item>
           )}
-             <ListGroup.Item style={{backgroundColor: "#DCA281"}}>
+          <ListGroup.Item style={{ backgroundColor: "#DCA281" }}>
             <Row>
               <Col>
                 <strong>Current UCI Rank: </strong>
@@ -91,7 +92,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
               <Col>{rider.currentRank}</Col>
             </Row>
           </ListGroup.Item>
-          <ListGroup.Item style={{backgroundColor: "#E1B595"}}>
+          <ListGroup.Item style={{ backgroundColor: "#E1B595" }}>
             <Row>
               <Col>
                 <strong>Main Specialty: </strong>
@@ -100,7 +101,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
             </Row>
           </ListGroup.Item>
 
-          <ListGroup.Item style={{backgroundColor: "#E6C8AA"}}>
+          <ListGroup.Item style={{ backgroundColor: "#E6C8AA" }}>
             <Row>
               <Col>
                 <strong>Team: </strong>
@@ -118,7 +119,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
             <PieChartComponent specialties={rider.riderSpecialties} />
           </ListGroup.Item>
 
-          <ListGroup.Item style={{backgroundColor: " #F0DAB9"}}>
+          <ListGroup.Item style={{ backgroundColor: " #F0DAB9" }}>
             <Row>
               <SocialMedia socialUrls={rider.socialUrls} />
             </Row>

@@ -11,12 +11,15 @@ type CyclistMiniDataProps = {
   cyclistData: Cyclist | null;
 };
 
-
 const StatsCard: React.FC<CyclistMiniDataProps> = ({ cyclistData }) => {
   return (
-    <Card className="d-flex flex-row justify-content-center align-items-center w-100" style={{boxShadow: "0 4px 6px rgba(0,0,0,.2"}}>
+    <Card
+      className="d-flex flex-row justify-content-center align-items-center w-100"
+      style={{ boxShadow: "0 4px 6px rgba(0,0,0,.2" }}
+    >
       <Col className="d-flex justify-content-center align-items-center">
         <Card.Img
+          alt={cyclistData?.name}
           style={{
             height: "175px",
             width: "125px",
@@ -29,18 +32,35 @@ const StatsCard: React.FC<CyclistMiniDataProps> = ({ cyclistData }) => {
       </Col>
       <Col>
         <Card.Body>
-          <Card.Title className="mb-1 p-1" style={{backgroundColor: "#D17C58"}}>{cyclistData?.name}</Card.Title>
-          <Card.Text className="mb-1 p-1" style={{backgroundColor: "#D68F6D"}}>
+          <Card.Title
+            className="mb-1 p-1"
+            style={{ backgroundColor: "#D17C58" }}
+          >
+            {cyclistData?.name}
+          </Card.Title>
+          <Card.Text
+            className="mb-1 p-1"
+            style={{ backgroundColor: "#D68F6D" }}
+          >
             <b>Country:</b>&nbsp;{cyclistData?.nationalityName}
           </Card.Text>
-          <Card.Text className="mb-1 p-1" style={{backgroundColor: "#DCA281"}}>
+          <Card.Text
+            className="mb-1 p-1"
+            style={{ backgroundColor: "#DCA281" }}
+          >
             <b>Specialty:</b> &nbsp;
             {cyclistData?.mainSpecialty}
           </Card.Text>
-          <Card.Text className="mb-1 p-1" style={{backgroundColor: "#E1B595"}}>
+          <Card.Text
+            className="mb-1 p-1"
+            style={{ backgroundColor: "#E1B595" }}
+          >
             <b>Rank:</b>&nbsp;{cyclistData?.currentRank}
           </Card.Text>
-          <Card.Text className="mb-1 p-1" style={{backgroundColor: "#E6C8AA"}}>
+          <Card.Text
+            className="mb-1 p-1"
+            style={{ backgroundColor: "#E6C8AA" }}
+          >
             <b>Points:</b> &nbsp;
             {cyclistData?.currentUciPoints}
           </Card.Text>
