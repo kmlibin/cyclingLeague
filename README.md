@@ -1,5 +1,7 @@
 # Create a Fantasy Cycling Team
 
+![Homepage Screenshot](home.png)
+
 render deploy:
 
 ### About
