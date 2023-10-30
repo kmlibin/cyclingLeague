@@ -284,11 +284,11 @@ const FantasyTeamsListScreen: React.FC = () => {
                             </Badge>
                             {leagueName ? (
                               <Button variant="info" onClick={editHandler}>
-                                Edit Team Name
+                                Edit League Name
                               </Button>
                             ) : (
                               <Button variant="info" onClick={editHandler}>
-                                Submit Team Name
+                                Submit League Name
                               </Button>
                             )}
                           </Col>
@@ -296,7 +296,7 @@ const FantasyTeamsListScreen: React.FC = () => {
 
                         <Col xs={4}>
                           <Button variant="info" onClick={createLeagueHandler}>
-                            Finalize Team
+                            Finalize League
                           </Button>
                         </Col>
                       </Row>
