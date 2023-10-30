@@ -7,8 +7,6 @@ import { FantasyTeam } from "../interfaces/FantasyTeam";
 import { AppDispatch } from "../store";
 import { SpecialtyData } from "../types/SpecialtyData";
 
-
-
 export const calculatePrice = (prevPoints: number) => {
   const psRatio = 0.00816;
   //round to the nearest number, but will always at least be 1
@@ -16,23 +14,21 @@ export const calculatePrice = (prevPoints: number) => {
   return price;
 };
 
-
 interface League {
-  name: string,
-  teamIds: [{
-    _id:string,
-    cyclists: string[],
-    owner: {
-      _id: string,
-      name: string,
-    },
-    teamName: string,
-    totalPoints: number
-  }]
-
+  name: string;
+  teamIds: [
+    {
+      _id: string;
+      cyclists: string[];
+      owner: {
+        _id: string;
+        name: string;
+      };
+      teamName: string;
+      totalPoints: number;
+    }
+  ];
 }
-
-
 
 export const findSharedRiders = (
   dispatch: AppDispatch,
@@ -41,7 +37,6 @@ export const findSharedRiders = (
   userId: string | null
 ) => {
   if (team && league) {
- 
     //find users team id
     const usersTeamId = team._id;
     //get cyclists ids from users team
@@ -84,7 +79,6 @@ export const cyclistsPerSpecialty = (team: FantasyTeam) => {
     oneday: 0,
   };
 
- 
   if (team) {
     const { cyclists } = team;
 
@@ -169,7 +163,6 @@ export const worstValueCyclist = (team: FantasyTeam) => {
     return worstValueCyclist;
   }
 };
-
 
 export const teamSpecialties = (team: FantasyTeam) => {
   let data: SpecialtyData[] = [

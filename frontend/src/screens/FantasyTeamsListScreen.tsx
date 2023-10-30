@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-import ListGroup from "react-bootstrap/ListGroup";
-
-import Button from "react-bootstrap/Button";
-import Accordion from "react-bootstrap/Accordion";
-import Container from "react-bootstrap/Container";
+//redux and api
 import {
   useGetAllFantasyTeamsQuery,
   useCreateLeagueMutation,
 } from "../slices/fantasyTeamApiSlice";
+import { useAppSelector } from "../hooks/hooks";
 
+//libraries
+import ListGroup from "react-bootstrap/ListGroup";
+import Button from "react-bootstrap/Button";
+import Accordion from "react-bootstrap/Accordion";
+import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Badge from "react-bootstrap/Badge";
 
-import { useAppSelector } from "../hooks/hooks";
-import { useNavigate, useLocation } from "react-router-dom";
-import ListOfTeams from "../components/ListOfTeams";
 import { MdGroupOff } from "react-icons/md";
-import { TeamError } from "../types/TeamError";
+
+//components
+import ListOfTeams from "../components/ListTeams";
 import Loader from "../components/Loader";
+//interfaces and types
+import { TeamError } from "../types/TeamError";
 
 type League = {
   teamName: string;
@@ -28,25 +32,28 @@ type League = {
   id: string;
 };
 
-const FantasyTeamsListScreen = () => {
-  const { userInfo } = useAppSelector((state) => state.auth);
+const FantasyTeamsListScreen: React.FC = () => {
   const [showCreateLeague, setShowCreateLeague] = useState(false);
+  const [league, setLeague] = useState<League[]>([]);
+  const [editing, setEditing] = useState(true);
+  const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
+  const [leagueName, setLeagueName] = useState<string>();
+  const [createError, setCreateError] = useState<TeamError | null>();
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const {
     data: team,
     isLoading: dataLoading,
     error: dataError,
   } = useGetAllFantasyTeamsQuery<any>({});
-  const [league, setLeague] = useState<League[]>([]);
-  const [editing, setEditing] = useState(true);
-  const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
-  const [leagueName, setLeagueName] = useState<string>();
-  const [createError, setCreateError] = useState<TeamError | null>();
+
   const [createLeague, { isLoading, error: leagueError }] =
     useCreateLeagueMutation<any>();
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { userInfo } = useAppSelector((state) => state.auth);
+
+  //figure out the route we are on to conditionally show create button ui
   const createRoute = location.pathname === "/createleague";
 
   //find logged in user's fantasy team so that it will always show in leagues, and cannot be deleted from league or ids
@@ -66,7 +73,6 @@ const FantasyTeamsListScreen = () => {
       }
     }
   }, [team, userInfo]);
-  console.log(userFantasyTeam)
 
   //kept getting stuck in infinite loop if this wasn't in a useEffect. now set teamIds and leagues so that users fantasy league is inside
   useEffect(() => {
@@ -92,7 +98,6 @@ const FantasyTeamsListScreen = () => {
       setCreateError({
         ...createError,
         alreadyOnTeam: "Team is already in league",
-        
       });
       return league;
     }
@@ -195,7 +200,7 @@ const FantasyTeamsListScreen = () => {
           {createRoute && !showCreateLeague && userFantasyTeam && (
             <Row className="w-100 d-flex justify-content-end mb-2">
               <Button
-              className="responsive-button"
+                className="responsive-button"
                 style={{ width: "15%" }}
                 onClick={() => setShowCreateLeague(true)}
                 variant="dark"

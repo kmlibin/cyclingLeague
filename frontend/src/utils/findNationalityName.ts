@@ -1,3 +1,5 @@
+//what's saved in the db doesn't always work with react flags/ codes, so need to convert
+
 const mapNationalityName = (nationalityName: string) => {
   switch (nationalityName) {
     case "Great Britain":

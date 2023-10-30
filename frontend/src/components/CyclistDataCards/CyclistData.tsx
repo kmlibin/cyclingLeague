@@ -1,18 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+//redux and api
+import { useAppSelector } from "../../hooks/hooks";
+
+//libraries
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import mapNationalityName from "../../utils/findNationalityName";
 import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
-import { Cyclist } from "../../interfaces/Cyclist";
+
 import { BsStarFill } from "react-icons/bs";
-import PieChartComponent from "../PieChartComponent";
-import SocialMedia from "./SocialMedia";
+
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
-import { useAppSelector } from "../../hooks/hooks";
+
+//utils
+import mapNationalityName from "../../utils/findNationalityName";
+
+//types and interfaces
+import { Cyclist } from "../../interfaces/Cyclist";
+
+//components
+import PieChartComponent from "../PieChartComponent";
+import SocialMedia from "./SocialMedia";
+
+
 
 type Props = {
   cyclistData: Cyclist | any;
@@ -39,7 +52,6 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
     (sharedRider: Cyclist) => sharedRider._id === rider._id
   );
 
-// className="col-12 col-md-4"
   return (
     <Card  className= "col-12 col-md-4 responsive-cards">
       <Card.Body>

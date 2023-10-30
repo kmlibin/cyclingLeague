@@ -6,29 +6,30 @@ import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { useRegisterMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 
-//styling
-import { Form, Button, Row, Col } from "react-bootstrap";
-
+//bootstrap
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 //components
 import FormContainer from "../components/FormContainer";
+import Loader from "../components/Loader";
 
-
-const RegisterScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
+const RegisterScreen: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [register, { isLoading }] = useRegisterMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
 
-  const redirect = sp.get("redirect") || "/cyclists";
-
-  const [register, { isLoading }] = useRegisterMutation();
   const { userInfo } = useAppSelector((state) => state.auth);
+
+  const redirect = sp.get("redirect") || "/cyclists";
 
   //if user info exists, we are going to navigate to the redirect
   useEffect(() => {
@@ -37,10 +38,10 @@ const RegisterScreen = () => {
     }
   }, [userInfo, redirect, navigate]);
 
-  const submitHandler = async (e : React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-        console.log('error') //add error toast or something
+      console.log("error"); //add error toast or something
       return;
     } else {
       //register and redirect
@@ -56,7 +57,7 @@ const RegisterScreen = () => {
   };
   return (
     <FormContainer>
-      <h1 style={{marginTop: "2rem"}}>Sign Up</h1>
+      <h1 style={{ marginTop: "2rem" }}>Sign Up</h1>
 
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="name" className="my-3">
@@ -103,7 +104,7 @@ const RegisterScreen = () => {
         >
           Register
         </Button>
-        {/* {isLoading && <Loader />} */}
+        {isLoading && <Loader />}
       </Form>
       <Row className="py-3">
         <Col>

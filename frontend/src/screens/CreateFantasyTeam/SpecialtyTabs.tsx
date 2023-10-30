@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 //bootstrap
 import Nav from "react-bootstrap/Nav";
 
-function SpecialtyTabs() {
+const SpecialtyTabs: React.FC = () => {
   const navigate = useNavigate();
 
   const handleClick = (tab: string | undefined) => {

@@ -1,5 +1,8 @@
 import React from "react";
+//extra styles
 import "./SocialMedia.css";
+
+//react icons
 import {
   BsStrava,
   BsFacebook,
@@ -8,6 +11,8 @@ import {
   BsFillGearFill,
   BsGlobe2,
 } from "react-icons/bs";
+
+
 type Props = {
   socialUrls: { icon: string; href: string }[];
 

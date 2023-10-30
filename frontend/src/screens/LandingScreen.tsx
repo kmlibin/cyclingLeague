@@ -15,7 +15,7 @@ import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
 import { MdOutlineDirectionsBike } from "react-icons/md";
 
-const LandingScreen = () => {
+const LandingScreen: React.FC = () => {
   const { userInfo } = useAppSelector((state) => state.auth);
   //grab id from state so can navigate to dashboard page, and conditionally
   //render login/register ui

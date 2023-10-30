@@ -1,7 +1,8 @@
+import React from "react";
+
+//boostrap stuff
 import { Pagination } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-
-import React from "react";
 
 interface PaginateProps {
   pages: number,

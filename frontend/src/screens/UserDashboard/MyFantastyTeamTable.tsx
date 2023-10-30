@@ -1,19 +1,28 @@
 import React from "react";
+
+//interfaces and types
 import { DataRow } from "../../types/DataRow";
 import { FantasyTeam } from "../../interfaces/FantasyTeam";
+
+//libraries
 import DataTable, { TableColumn } from "react-data-table-component";
-import getColorCircle from "../../utils/circleColor";
-import {calculatePrice} from "../../utils/calculateStats";
 import mapNationalityName from "../../utils/findNationalityName";
 import { getCode } from "country-list";
 import CountryFlag from "react-country-flag";
+
+//utils
+import getColorCircle from "../../utils/circleColor";
+import {calculatePrice} from "../../utils/calculateStats";
+
 
 type Props = {
   data: FantasyTeam;
 };
 
 
+
 const MyFantasyTeamTable: React.FC<Props> = ({ data }) => {
+
   const columns: TableColumn<DataRow>[] = [
     {
       name: "Specialty",

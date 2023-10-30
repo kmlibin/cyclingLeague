@@ -1,4 +1,6 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+
+//slices
 import { apiSlice } from "./slices/apiSlice";
 import authSliceReducer from "./slices/authSlice";
 import sharedRidersSliceReducer from "./slices/cyclistSlice";
@@ -18,5 +20,4 @@ const store = configureStore({
 export default store;
 
 export type RootState = ReturnType<typeof store.getState>;
-
 export type AppDispatch = typeof store.dispatch;

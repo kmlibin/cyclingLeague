@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
+//bootstrap
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-type Props = {};
 
-const SearchBar: React.FC<Props> = () => {
+const SearchBar: React.FC = () => {
   const navigate = useNavigate();
   const { keyword: search, tab } = useParams();
   const [keyword, setKeyword] = useState(search || "");

@@ -164,9 +164,9 @@ const CreateFantasyTeam: React.FC = () => {
     }
   };
 
-useEffect(() => {
-  console.log(teamIds.length, team.length)
-})
+// useEffect(() => {
+//   console.log(teamIds.length, team.length)
+// })
 
   //setting data to pass into RDT
   const columns: TableColumn<DataRow>[] = [

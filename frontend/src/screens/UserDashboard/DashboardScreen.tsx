@@ -28,7 +28,7 @@ import Error from "../../components/Error";
 import MyFantasyTeamTable from "./MyFantastyTeamTable";
 import PieChartComponent from "../../components/PieChartComponent";
 import SpecialtyBarChart from "./SpecialtyBarChart";
-import CyclistMiniData from "./CyclistMiniData";
+import StatsCard from "./StatsCard";
 
 //utils
 import {
@@ -188,13 +188,13 @@ const DashboardScreen: React.FC = () => {
               style={{ width: "90%" }}
             >
               <h5 className="mt-2 mb-2">Best Value Cyclist</h5>
-              <CyclistMiniData cyclistData={bestValue ? bestValue : null} />
+              <StatsCard cyclistData={bestValue ? bestValue : null} />
 
               <h5 className="mt-2 mb-2">Highest Scoring Cyclist</h5>
-              <CyclistMiniData cyclistData={topCyclist ? topCyclist : null} />
+              <StatsCard cyclistData={topCyclist ? topCyclist : null} />
 
               <h5 className="mt-2 mb-2">Least Cost Effective Cyclist</h5>
-              <CyclistMiniData cyclistData={worstValue ? worstValue : null} />
+              <StatsCard cyclistData={worstValue ? worstValue : null} />
 
               <h5 className="mt-2 mb-2 text-center">
                 {team?.teamName}'s Riders per Specialty
