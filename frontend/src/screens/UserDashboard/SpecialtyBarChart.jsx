@@ -48,7 +48,7 @@ const SpecialtyBarChart = ({ bardata, colors }) => {
           style={{ width: "75%", marginTop: "1rem" }}
         >
           {bardata.map((spec, index) => (
-            <div className="d-flex align-items-center m-1">
+            <div className="d-flex align-items-center m-1" key={spec}>
               <span
                 style={{
                   backgroundColor: colors[index % 20],
