@@ -16,7 +16,7 @@ import { getCode } from "country-list";
 import DataTable, { TableColumn } from "react-data-table-component";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
-import Container from 'react-bootstrap/Container'
+import Container from "react-bootstrap/Container";
 
 //components
 import SpecialtyTabs from "./SpecialtyTabs";
@@ -48,7 +48,6 @@ const HideSelectionSummary = styled.div`
 
 const CreateFantasyTeam: React.FC = () => {
   const [teamError, setTeamError] = useState<TeamError>();
-  const [showCreateTeam, setShowCreateTeam] = useState<boolean>(false);
   const [team, setTeam] = useState<DataRow[]>([]);
   const [teamName, setTeamName] = useState<string>("");
   const [teamIds, setTeamIds] = useState<string[]>([]);
@@ -112,7 +111,7 @@ const CreateFantasyTeam: React.FC = () => {
 
     //remove id from teamIds
     const newTeamIds = teamIds.filter((id) => id !== row._id);
-    setTeamIds(newTeamIds)
+    setTeamIds(newTeamIds);
     setPointsRemaining(pointsRemaining + calculatePrice(row.yearEndUciPoints));
   };
 
@@ -164,9 +163,9 @@ const CreateFantasyTeam: React.FC = () => {
     }
   };
 
-// useEffect(() => {
-//   console.log(teamIds.length, team.length)
-// })
+  // useEffect(() => {
+  //   console.log(teamIds.length, team.length)
+  // })
 
   //setting data to pass into RDT
   const columns: TableColumn<DataRow>[] = [
@@ -222,22 +221,23 @@ const CreateFantasyTeam: React.FC = () => {
       maxWidth: "5%",
       right: true,
       format: (row) => {
-        //show buttons only if user has clicked "create team"
-       if(createRoute && showCreateTeam) {
-        if (team.includes(row)) {
-          return <ImCheckmark style={{ color: "green", fontSize: "1.7em" }} />;
+        if (createRoute) {
+          if (team.includes(row)) {
+            return (
+              <ImCheckmark style={{ color: "green", fontSize: "1.7em" }} />
+            );
+          }
+        } else {
+          return null;
         }
-       }else {
-        return null
-       }
-       return (
-        <button
-        onClick={() => addToTeam(row)}
-        style={{ backgroundColor: "white" }}
-      >
-        <MdPersonAdd style={{ fontSize: "1.7em" }} />
-      </button>
-       )
+        return (
+          <button
+            onClick={() => addToTeam(row)}
+            style={{ backgroundColor: "white" }}
+          >
+            <MdPersonAdd style={{ fontSize: "1.7em" }} />
+          </button>
+        );
       },
     },
   ];
@@ -249,18 +249,7 @@ const CreateFantasyTeam: React.FC = () => {
   return (
     <Container className="mt-4">
       <SpecialtyTabs />
-      {createRoute && !showCreateTeam && (
-        <Row className="w-100 d-flex justify-content-end mt-2">
-          <Button
-            style={{ width: "15%" }}
-            onClick={() => setShowCreateTeam(true)}
-            variant="dark"
-          >
-            Create New Team
-          </Button>
-        </Row>
-      )}
-      {createRoute && showCreateTeam && (
+      {createRoute && (
         <CreateTeamDropdown
           team={team}
           points={pointsRemaining}
@@ -270,7 +259,6 @@ const CreateFantasyTeam: React.FC = () => {
           setTeamName={setTeamName}
           teamError={teamError}
           createError={createError}
-         
         />
       )}
 

@@ -33,7 +33,6 @@ type League = {
 };
 
 const FantasyTeamsListScreen: React.FC = () => {
-  const [showCreateLeague, setShowCreateLeague] = useState(false);
   const [league, setLeague] = useState<League[]>([]);
   const [editing, setEditing] = useState(true);
   const [userFantasyTeam, setUserFantasyTeam] = useState<any | null>(null);
@@ -182,9 +181,9 @@ const FantasyTeamsListScreen: React.FC = () => {
     setEditing(true);
   };
 
-  useEffect(() => {
-    console.log(leagueError?.data?.msg);
-  });
+  // useEffect(() => {
+  //   console.log(leagueError?.data?.msg);
+  // });
 
   return (
     <>
@@ -197,20 +196,7 @@ const FantasyTeamsListScreen: React.FC = () => {
 
       {team && (
         <Container className="d-flex flex-column mt-2 mb-2">
-          {createRoute && !showCreateLeague && userFantasyTeam && (
-            <Row className="w-100 d-flex justify-content-end mb-2">
-              <Button
-                className="responsive-button"
-                style={{ width: "15%" }}
-                onClick={() => setShowCreateLeague(true)}
-                variant="dark"
-              >
-                Create New League
-              </Button>
-            </Row>
-          )}
-
-          {showCreateLeague && (
+          {createRoute && (
             <Accordion defaultActiveKey="0">
               <Accordion.Item eventKey="0">
                 <Accordion.Header>
@@ -357,7 +343,6 @@ const FantasyTeamsListScreen: React.FC = () => {
                 )}
                 fantasyLeagueScreen={true}
                 url={`/fantasyteams/${team._id}`}
-                show={showCreateLeague}
               />
             ))}
           </ListGroup>

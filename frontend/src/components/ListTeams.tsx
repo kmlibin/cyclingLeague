@@ -40,7 +40,6 @@ const ListOfTeams: React.FC<TeamItemProps> = ({
   fantasyLeagueScreen,
   url,
   createRoute,
-  show,
 }) => {
   const eightRiders = team.cyclists.slice(0, 8);
 
@@ -81,7 +80,7 @@ const ListOfTeams: React.FC<TeamItemProps> = ({
         {team.cyclists.length}
       </Badge>
       {/* Conditionally render buttons based on the screen */}
-      {fantasyLeagueScreen && createRoute && show ? (
+      {fantasyLeagueScreen && createRoute ? (
         // Buttons for FantasyTeamsListScreen
         isAddedToLeague ? (
           <ImCheckmark
