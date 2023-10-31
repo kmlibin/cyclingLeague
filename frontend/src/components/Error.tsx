@@ -1,19 +1,14 @@
 import React from "react";
-
-interface ServerError {
-  data: {
-    msg: string;
-  };
-  status: number;
-}
+//interfaces and types
+import { ServerError } from "../interfaces/ServerError";
 
 type ErrorProps = {
   error: ServerError
 };
-const Error: React.FC<ErrorProps> = ({ error: teamError }) => {
+const Error: React.FC<ErrorProps> = ({ error }) => {
   return (
     <div style={{ width: "100%", height: "100%", textAlign: "center" }}>
-      {teamError?.data.msg}
+      {error?.data.msg}
     </div>
   );
 };
