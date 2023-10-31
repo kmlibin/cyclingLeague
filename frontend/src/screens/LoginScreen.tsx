@@ -12,14 +12,18 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+//interfaces and types
+import { ServerError } from "../interfaces/ServerError";
+
 //components
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
+import Error from "../components/Error";
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading, error }] = useLoginMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -29,7 +33,7 @@ const LoginScreen: React.FC = () => {
   const searchParams = new URLSearchParams(search);
   //will find if there is 'redirect' in url, if so it will set it as 'redirect', otherwise '/'
   const redirect = searchParams.get("redirect") || "/";
-
+console.log(error)
   //if user info exists, we are going to navigate to the redirect
   useEffect(() => {
     if (userInfo) {
@@ -48,6 +52,7 @@ const LoginScreen: React.FC = () => {
       console.log(err);
     }
   };
+
 
   return (
     <FormContainer>
@@ -81,6 +86,9 @@ const LoginScreen: React.FC = () => {
           Sign In
         </Button>
         {isLoading && <Loader />}
+        <div className="error">
+        {error && <Error error={error as ServerError} />}
+        </div>
       </Form>
       <Row className="py-3">
         <Col>
