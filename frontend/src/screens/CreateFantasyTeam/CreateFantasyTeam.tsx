@@ -168,7 +168,7 @@ const CreateFantasyTeam: React.FC = () => {
   useEffect(() => {
     setToastMessage({
       points: `${pointsRemaining}`,
-      roster: `${25 - team.length}`,
+      roster: `${team.length}`,
     });
   }, [pointsRemaining, team]);
 
@@ -289,7 +289,7 @@ const CreateFantasyTeam: React.FC = () => {
           />
         )}
       </HideSelectionSummary>
-      {team.length > 0 && (<Toast message={toastMessage} onClose={() => setToastMessage(undefined)} />)}
+      {team.length > 0 && (<Toast message={toastMessage}/>)}
     </Container>
   );
 };
