@@ -16,7 +16,7 @@ const SearchBar: React.FC = () => {
     if (keyword.trim()) {
       const route = tab
         ? `/cyclists/${tab}/search/${keyword}`
-        : `/search/${keyword}`;
+        : `/cyclists/search/${keyword}`;
       navigate(route);
       setKeyword("");
     } else {
