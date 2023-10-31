@@ -15,13 +15,16 @@ import Col from "react-bootstrap/Col";
 //components
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
+import Error from '../components/Error';
+import { ServerError } from "../interfaces/ServerError";
 
 const RegisterScreen: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
   const [name, setName] = useState<string>("");
-  const [register, { isLoading }] = useRegisterMutation();
+  const [register, { isLoading, error }] = useRegisterMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { search } = useLocation();
@@ -41,7 +44,7 @@ const RegisterScreen: React.FC = () => {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      console.log("error"); //add error toast or something
+      setPasswordError("Passwords do not match");
       return;
     } else {
       //register and redirect
@@ -105,6 +108,12 @@ const RegisterScreen: React.FC = () => {
           Register
         </Button>
         {isLoading && <Loader />}
+        {passwordError && (
+          <div style={{ width: "100%", height: "100%", textAlign: "center", color: "red", fontWeight: 'bold' }}>
+            {passwordError}
+          </div>
+        )}
+        {error && <Error error = {error as ServerError}/>}
       </Form>
       <Row className="py-3">
         <Col>
