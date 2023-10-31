@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 //redux
-import { useAppSelector } from "../hooks/hooks";
+import { useAppSelector } from "../../hooks/hooks";
 
 //styles
 import "./LandingScreen.css";
