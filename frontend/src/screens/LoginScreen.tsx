@@ -33,7 +33,7 @@ const LoginScreen: React.FC = () => {
   const searchParams = new URLSearchParams(search);
   //will find if there is 'redirect' in url, if so it will set it as 'redirect', otherwise '/'
   const redirect = searchParams.get("redirect") || "/";
-console.log(error)
+  console.log(error);
   //if user info exists, we are going to navigate to the redirect
   useEffect(() => {
     if (userInfo) {
@@ -52,7 +52,6 @@ console.log(error)
       console.log(err);
     }
   };
-
 
   return (
     <FormContainer>
@@ -86,9 +85,7 @@ console.log(error)
           Sign In
         </Button>
         {isLoading && <Loader />}
-        <div className="error">
         {error && <Error error={error as ServerError} />}
-        </div>
       </Form>
       <Row className="py-3">
         <Col>
