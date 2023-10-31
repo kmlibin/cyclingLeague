@@ -3,7 +3,11 @@
   padding: 0;
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   margin: 0;
   padding: 0;
 }
@@ -11,11 +15,10 @@ h1, h2, h3, h4, h5 {
 .item-margin {
   margin-right: 1rem;
   margin-left: 0;
- 
 }
 
-.card-title-padding{
-  padding: .25rem 0;
+.card-title-padding {
+  padding: 0.25rem 0;
 }
 
 .link-styles {
@@ -23,22 +26,22 @@ h1, h2, h3, h4, h5 {
   display: flex;
 }
 
-.link-styles:hover{
+.link-styles:hover {
   color: blue;
   cursor: pointer;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -59,7 +62,6 @@ code {
   display: flex;
   align-items: flex-end;
 }
-
 
 .left {
   text-align: left;
@@ -95,73 +97,53 @@ code {
 .navtabs a {
   color: black;
   text-decoration: none;
-  font-weight:bold;
+  font-weight: bold;
 }
 
-.navtabs a:hover  {
-  color: rgba(0, 0, 0, .5);
+.navtabs a:hover {
+  color: rgba(0, 0, 0, 0.5);
 }
 
 /* cyclist data cards */
 .responsive-cards {
-  background-color: #FBF4D4;
+  background-color: #fbf4d4;
   margin-top: 1rem;
-
 }
-  @media only screen and (max-width: 576px) {
-    .responsive-cards {
-      min-width: 100%;
-    }
+@media only screen and (max-width: 576px) {
+  .responsive-cards {
+    min-width: 100%;
   }
+}
 
-  @media screen and  (min-width: 577px) and (max-width: 992px) {
-    .responsive-cards {
-      min-width: 45%;
-    }
+@media screen and (min-width: 577px) and (max-width: 992px) {
+  .responsive-cards {
+    min-width: 45%;
   }
+}
 
-  @media screen and (min-width: 993px) {
-    .responsive-cards {
-      width: 31%;
-    }
+@media screen and (min-width: 993px) {
+  .responsive-cards {
+    width: 31%;
   }
+}
 
-  /* fantasy team list screen */
+/* fantasy team list screen */
 
-  @media only screen and (max-width: 576px) {
-    .responsive-button {
-      min-width: 50%;
-    }
+@media only screen and (max-width: 576px) {
+  .responsive-button {
+    min-width: 50%;
   }
-  
+}
 
-  /* list of riders component */
-  @media only screen and (max-width: 576px) {
-    .rider-images {
-     display: none !important;
-    }
+/* list of riders component */
+@media only screen and (max-width: 576px) {
+  .rider-images {
+    display: none !important;
   }
+}
 
-  @media only screen and (max-width: 950px) {
-    .rider-list{
-      min-width: 95% ;
-    }
+@media only screen and (max-width: 950px) {
+  .rider-list {
+    min-width: 95%;
   }
-
-  .custom-toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 1rem;
-    background-color: #333;
-    color: #fff;
-    border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-  }
-
-   .custom-toast.show {
-    opacity: 1;
-  }
-
- 
+}
