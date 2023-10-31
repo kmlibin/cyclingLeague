@@ -51,7 +51,7 @@ const authUser = async (req, res) => {
   //compare passwords
   if (user && (await user.comparePassword(password))) {
     generateToken(res, user._id);
-    res.status(200).json({
+    return res.status(StatusCodes.OK).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -59,7 +59,7 @@ const authUser = async (req, res) => {
       fantasyTeam: user.myTeam,
     });
   } else {
-    res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Invalid credentials" });
+    return res.status(StatusCodes.UNAUTHORIZED).json({ msg: "Invalid credentials" });
   }
 };
 
