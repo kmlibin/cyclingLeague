@@ -31,8 +31,8 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route index={true} path="/" element={<LandingScreen />} />
       <Route path="/createteam" element={<CreateFantasyTeam />} />
-      <Route path="/search/:keyword" element={<CreateFantasyTeam />} />
       <Route path="/cyclists" element={<CreateFantasyTeam />} />
+      <Route path="/cyclists/search/:keyword" element={<CreateFantasyTeam />} />
       <Route
         path="/cyclists/:tab/search/:keyword"
         element={<CreateFantasyTeam />}
