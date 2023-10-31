@@ -1,5 +1,6 @@
 import express from "express";
 
+//controllers
 import {
   registerUser,
   authUser,

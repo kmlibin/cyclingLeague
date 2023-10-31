@@ -1,5 +1,5 @@
 import express from "express";
-
+//controllers
 import {
   getAllTeams, getSingleTeam
 } from "../controllers/cyclistController.js";

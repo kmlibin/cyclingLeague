@@ -1,5 +1,6 @@
 import express from "express";
 
+//controllers
 import {
   createTeam,
   getSingleFantasyTeam,
@@ -9,6 +10,7 @@ import {
   getLeague,
 } from "../controllers/fantasyController.js";
 
+//middleware
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -20,4 +22,3 @@ router.route("/:userId/myleague").patch(protect, createLeague).get(protect, getL
 
 export default router;
 
-//@route PATCH /api/fantasyteam/:id/myleague
