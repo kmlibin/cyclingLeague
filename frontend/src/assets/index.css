@@ -75,6 +75,9 @@ code {
   margin-top: 5px;
 }
 
+.bold {
+  font-weight: bold;
+}
 .error {
   font-size: 18px;
   font-weight: bold;
@@ -145,3 +148,20 @@ code {
     }
   }
 
+  .custom-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem;
+    background-color: #333;
+    color: #fff;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+   .custom-toast.show {
+    opacity: 1;
+  }
+
+ 

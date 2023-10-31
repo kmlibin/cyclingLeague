@@ -14,14 +14,14 @@ import { ImCheckmark } from "react-icons/im";
 import CountryFlag from "react-country-flag";
 import { getCode } from "country-list";
 import DataTable, { TableColumn } from "react-data-table-component";
-import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
 //components
 import SpecialtyTabs from "./SpecialtyTabs";
 import SearchBar from "./SearchBar";
 import CreateTeamDropdown from "./CreateTeamDropdown";
+import Toast from "./Toast";
+import Loader from "../../components/Loader";
 
 //utils
 import getColorCircle from "../../utils/circleColor";
@@ -31,7 +31,7 @@ import mapNationalityName from "../../utils/findNationalityName";
 //types
 import { DataRow } from "../../types/DataRow";
 import { TeamError } from "../../types/TeamError";
-import Loader from "../../components/Loader";
+import { ToastMessage } from "../../types/ToastMessage";
 
 //override some of the styling of react data table
 const HideSelectionSummary = styled.div`
@@ -52,6 +52,7 @@ const CreateFantasyTeam: React.FC = () => {
   const [teamName, setTeamName] = useState<string>("");
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [pointsRemaining, setPointsRemaining] = useState<number>(150);
+  const [toastMessage, setToastMessage] = useState<ToastMessage | undefined>(undefined);
   const [createTeam, { error: createError }] = useCreateTeamMutation<any>();
   const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
@@ -163,9 +164,13 @@ const CreateFantasyTeam: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(teamIds.length, team.length)
-  // })
+  //update the setToastMessage when points remaining and team changes
+  useEffect(() => {
+    setToastMessage({
+      points: `${pointsRemaining}`,
+      roster: `${25 - team.length}`,
+    });
+  }, [pointsRemaining, team]);
 
   //setting data to pass into RDT
   const columns: TableColumn<DataRow>[] = [
@@ -284,6 +289,7 @@ const CreateFantasyTeam: React.FC = () => {
           />
         )}
       </HideSelectionSummary>
+      {team.length > 0 && (<Toast message={toastMessage} onClose={() => setToastMessage(undefined)} />)}
     </Container>
   );
 };
