@@ -23,7 +23,7 @@ import DashboardScreen from "./screens/UserDashboard/DashboardScreen";
 import FantasyTeamsListScreen from "./screens/FantasyTeamsListScreen";
 import RidersOnTeamScreen from "./screens/ShowCyclists";
 import CreateFantasyTeam from "./screens/CreateFantasyTeam/CreateFantasyTeam";
-import LandingScreen from "./screens/LandingScreen";
+import LandingScreen from "./screens/LandingScreen/LandingScreen";
 import PrivateRoute from "./components/PrivateRoute";
 
 const router = createBrowserRouter(
