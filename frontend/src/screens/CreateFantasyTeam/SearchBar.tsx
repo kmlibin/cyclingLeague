@@ -11,6 +11,8 @@ const SearchBar: React.FC = () => {
   const { keyword: search, tab } = useParams();
   const [keyword, setKeyword] = useState(search || "");
 
+  console.log(`Searchbar: tab: ${tab}, keyword: ${search}`)
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (keyword.trim()) {
@@ -18,9 +20,9 @@ const SearchBar: React.FC = () => {
         ? `/cyclists/${tab}/search/${keyword}`
         : `/cyclists/search/${keyword}`;
       navigate(route);
-      setKeyword("");
+      // setKeyword("");
     } else {
-      const route = tab ? `/cyclists/${tab}` : "/";
+      const route = tab ? `/cyclists/${tab}/search` : "/cyclists";
       navigate(route);
     }
   };
