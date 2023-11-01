@@ -1,12 +1,16 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 //bootstrap
 import Nav from "react-bootstrap/Nav";
 
-const SpecialtyTabs: React.FC = () => {
+type TabProps = {
+  createRoute: boolean;
+};
+
+const SpecialtyTabs: React.FC<TabProps> = ({ createRoute }) => {
   const navigate = useNavigate();
-  const {keyword: search} = useParams();
+  const { keyword: search } = useParams();
 
   const [keyword, setSearch] = useState(search || "");
 
@@ -14,15 +18,18 @@ const SpecialtyTabs: React.FC = () => {
     setSearch(search || ""); // Update the search state when URL changes
   }, [search]);
 
-  const handleClick = (tab: string | undefined) => {
-    if (keyword.trim()) {
-      const route = tab ? `/cyclists/${tab}/search/${keyword}` : `/cyclists/search/${keyword}`;
-      navigate(route);
-    } else {
-      const route = tab ? `/cyclists/${tab}/search` : "/";
-      navigate(route);
-    }
-  };
+const handleClick = (tab: string | undefined) => {
+  const baseRoute = createRoute ? '/createteam' : '/cyclists' 
+  if (keyword.trim()) {
+    const route = tab ? `${baseRoute}/${tab}/search/${keyword}` : `${baseRoute}/search/${keyword}`;
+    console.log(route)
+    navigate(route);
+  } else {
+    const route = tab ? `${baseRoute}/${tab}/search` : `${baseRoute}`;
+    console.log(route)
+    navigate(route);
+  }
+};
 
   return (
     <Nav variant="tabs" justify>
@@ -63,6 +70,6 @@ const SpecialtyTabs: React.FC = () => {
       </Nav.Item>
     </Nav>
   );
-}
+};
 
 export default SpecialtyTabs;

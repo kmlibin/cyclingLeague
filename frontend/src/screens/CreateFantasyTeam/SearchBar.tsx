@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 //bootstrap and react icons
@@ -7,27 +7,37 @@ import Button from "react-bootstrap/Button";
 
 import { IoCloseSharp } from "react-icons/io5";
 
-const SearchBar: React.FC = () => {
+type SearchProps = {
+  createRoute: boolean;
+};
+
+const SearchBar: React.FC<SearchProps> = ({ createRoute }) => {
   const navigate = useNavigate();
   const { keyword: search, tab } = useParams();
   const [keyword, setKeyword] = useState(search || "");
 
   //ref for the formvalue
   const inputRef = useRef<HTMLInputElement | null>(null);
-
+  const baseRoute = createRoute ? "/createteam" : "/cyclists";
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     //grab value of the input with ref
     const inputValue = inputRef.current?.value || "";
     //set state for the keyword to appear to the right of the button
     setKeyword(inputValue);
+
     if (inputValue.trim()) {
       const route = tab
-        ? `/cyclists/${tab}/search/${inputValue}`
-        : `/cyclists/search/${inputValue}`;
+        ? `${baseRoute}/${tab}/search/${inputValue}`
+        : `${baseRoute}/search/${inputValue}`;
+      console.log(route);
       navigate(route);
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
     } else {
-      const route = tab ? `/cyclists/${tab}/search` : "/cyclists";
+      const route = tab ? `${baseRoute}/${tab}/search` : `${baseRoute}`;
+      console.log(route);
       navigate(route);
     }
   };
@@ -35,34 +45,38 @@ const SearchBar: React.FC = () => {
   //remove the keyword so it effectively resets the search (minus any tabs selected)
   const removeKeyword = () => {
     setKeyword("");
-    const route = tab ? `/cyclists/${tab}/search` : `/cyclists`;
+    const route = tab ? `${baseRoute}/${tab}/search` : `${baseRoute}`;
     navigate(route);
   };
 
-  return (
+  //clear keyword state if the route path changes, that way the keyword won't display 
+  //to the right if you move from /cyclists to /createteam and vice versa
+  useEffect(() => {
+    setKeyword("");
+  }, [baseRoute]);
 
-      <Form onSubmit={handleSubmit} className="pt-4 d-flex  w-50 mb-2">
-        <div className="d-flex w-100">
+  return (
+    <Form onSubmit={handleSubmit} className="pt-4 d-flex  w-50 mb-2">
+      <div className="d-flex w-100">
         <Form.Control
           type="text"
           name="keyword"
           defaultValue={keyword}
           placeholder="Search Riders"
           ref={inputRef}
-       
         ></Form.Control>
 
         <Button type="submit" size="sm" style={{ marginLeft: "5px" }}>
           Search
         </Button>
+      </div>
+      {keyword && (
+        <div className=" keyword-container">
+          {keyword}
+          <IoCloseSharp className="close" onClick={removeKeyword} />
         </div>
-        {keyword && (
-          <div className=" keyword-container">
-            {keyword}
-            <IoCloseSharp className="close" onClick={removeKeyword} />
-          </div>
-        )}
-      </Form>
+      )}
+    </Form>
   );
 };
 
