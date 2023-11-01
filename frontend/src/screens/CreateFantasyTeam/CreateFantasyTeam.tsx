@@ -59,7 +59,7 @@ const CreateFantasyTeam: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const createRoute = location.pathname === "/createteam";
+  const createRoute = location.pathname.includes("/createteam");
 
   const { tab, keyword } = useParams();
   const searchObject = {
@@ -74,6 +74,7 @@ const CreateFantasyTeam: React.FC = () => {
     isLoading,
     error: dataError,
   } = useGetCyclistsQuery<any>(searchObject);
+
 
   //add rider to team
   const addToTeam = (row: DataRow) => {
@@ -253,7 +254,7 @@ const CreateFantasyTeam: React.FC = () => {
 
   return (
     <Container className="mt-4">
-      <SpecialtyTabs />
+      <SpecialtyTabs createRoute = {createRoute}/>
       {createRoute && (
         <CreateTeamDropdown
           team={team}
@@ -267,7 +268,7 @@ const CreateFantasyTeam: React.FC = () => {
         />
       )}
 
-      <SearchBar />
+      <SearchBar createRoute = {createRoute} />
       <HideSelectionSummary>
         {isLoading && <Loader />}
         {dataError && (
