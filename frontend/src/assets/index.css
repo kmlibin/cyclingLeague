@@ -147,3 +147,22 @@ code {
     min-width: 95%;
   }
 }
+
+/* searchbar */
+
+.keyword-container {
+display: flex;
+align-items: center;
+justify-content: center;
+margin-left: 5px;
+background-color:aquamarine;
+border-radius: 5px;
+padding: 0 5px;
+
+}
+.close {
+  margin-left: 5px;
+}
+.close:hover {
+  cursor: pointer;
+}
