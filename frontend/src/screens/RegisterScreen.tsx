@@ -32,7 +32,7 @@ const RegisterScreen: React.FC = () => {
 
   const { userInfo } = useAppSelector((state) => state.auth);
 
-  const redirect = sp.get("redirect") || "/cyclists";
+  const redirect = sp.get("redirect") || "/dashboard";
 
   //if user info exists, we are going to navigate to the redirect
   useEffect(() => {

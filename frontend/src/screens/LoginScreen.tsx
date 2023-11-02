@@ -37,7 +37,7 @@ const LoginScreen: React.FC = () => {
   //if user info exists, we are going to navigate to the redirect
   useEffect(() => {
     if (userInfo) {
-      navigate("/cyclists");
+      navigate("/dashboard");
     }
   }, [userInfo, navigate]);
 
