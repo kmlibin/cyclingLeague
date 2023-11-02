@@ -83,7 +83,7 @@ const CreateFantasyTeam: React.FC = () => {
       setTeamError({ alreadyOnTeam: "cyclist already on team", ...teamError });
       return team;
     }
-    if (team.length >= 25) {
+    if (team.length || teamIds.length >= 25) {
       setTeamError({
         teamLength: "Team Is Full",
         ...teamError,
