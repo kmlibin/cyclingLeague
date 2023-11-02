@@ -13,7 +13,7 @@
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "engines": {
-    "node": "14.15.0"
+    "node": ">=14 <18.17.1"
   },
   "repository": {
     "type": "git",
