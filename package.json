@@ -9,13 +9,14 @@
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
     "scrape": "concurrently \"npm run server\" \"node backend/utils/scraping.js\"",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kmlibin/cyclingLeague.git"
   },
-  "author": "",
+  "author": "Kelli Libin",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kmlibin/cyclingLeague/issues"
