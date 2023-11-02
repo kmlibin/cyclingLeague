@@ -12,17 +12,13 @@ import CountryFlag from "react-country-flag";
 
 //utils
 import getColorCircle from "../../utils/circleColor";
-import {calculatePrice} from "../../utils/calculateStats";
-
+import { calculatePrice } from "../../utils/calculateStats";
 
 type Props = {
   data: FantasyTeam;
 };
 
-
-
 const MyFantasyTeamTable: React.FC<Props> = ({ data }) => {
-
   const columns: TableColumn<DataRow>[] = [
     {
       name: "Specialty",
@@ -33,8 +29,8 @@ const MyFantasyTeamTable: React.FC<Props> = ({ data }) => {
       name: "Rank",
       sortable: true,
       selector: (row) => {
-        return row.currentRank === "n/a" ? "n/a" : Number(row.currentRank)
-      }
+        return row.currentRank === "n/a" ? "n/a" : Number(row.currentRank);
+      },
     },
 
     {
@@ -45,7 +41,10 @@ const MyFantasyTeamTable: React.FC<Props> = ({ data }) => {
       format: (row) => (
         <>
           <CountryFlag
-            countryCode={getCode(mapNationalityName(row.nationalityName)) || "none"}
+            alt={`${row.nationalityName} flag`}
+            countryCode={
+              getCode(mapNationalityName(row.nationalityName)) || "none"
+            }
             svg
           />
           &nbsp;

@@ -61,6 +61,7 @@ const AllTeamsScreen = () => {
                           style={{ marginLeft: "10px", marginRight: "10px" }}
                         >
                           <CountryFlag
+                            alt={`${team.country} flag`}
                             countryCode={getCode(team.country) || "none"}
                             svg
                           />

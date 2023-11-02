@@ -52,7 +52,9 @@ const CreateFantasyTeam: React.FC = () => {
   const [teamName, setTeamName] = useState<string>("");
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [pointsRemaining, setPointsRemaining] = useState<number>(150);
-  const [toastMessage, setToastMessage] = useState<ToastMessage | undefined>(undefined);
+  const [toastMessage, setToastMessage] = useState<ToastMessage | undefined>(
+    undefined
+  );
   const [createTeam, { error: createError }] = useCreateTeamMutation<any>();
   const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
@@ -75,7 +77,6 @@ const CreateFantasyTeam: React.FC = () => {
     isLoading,
     error: dataError,
   } = useGetCyclistsQuery<any>(searchObject);
-
 
   //add rider to team
   const addToTeam = (row: DataRow) => {
@@ -175,8 +176,8 @@ const CreateFantasyTeam: React.FC = () => {
   }, [pointsRemaining, team]);
 
   useEffect(() => {
-    console.log(teamIds, team)
-  })
+    console.log(teamIds, team);
+  });
 
   //setting data to pass into RDT
   const columns: TableColumn<DataRow>[] = [
@@ -201,6 +202,7 @@ const CreateFantasyTeam: React.FC = () => {
       format: (row) => (
         <>
           <CountryFlag
+            alt={`${row.nationalityName} flag`}
             countryCode={
               getCode(mapNationalityName(row.nationalityName)) || "none"
             }
@@ -259,7 +261,7 @@ const CreateFantasyTeam: React.FC = () => {
 
   return (
     <Container className="mt-4">
-      <SpecialtyTabs createRoute = {createRoute}/>
+      <SpecialtyTabs createRoute={createRoute} />
       {createRoute && (
         <CreateTeamDropdown
           team={team}
@@ -273,7 +275,7 @@ const CreateFantasyTeam: React.FC = () => {
         />
       )}
 
-      <SearchBar createRoute = {createRoute} />
+      <SearchBar createRoute={createRoute} />
       <HideSelectionSummary>
         {isLoading && <Loader />}
         {dataError && (
@@ -295,7 +297,7 @@ const CreateFantasyTeam: React.FC = () => {
           />
         )}
       </HideSelectionSummary>
-      {team.length > 0 && (<Toast message={toastMessage}/>)}
+      {team.length > 0 && <Toast message={toastMessage} />}
     </Container>
   );
 };

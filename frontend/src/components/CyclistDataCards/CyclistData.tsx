@@ -59,7 +59,7 @@ const CyclistData: React.FC<Props> = ({ cyclistData: rider, isMyTeam }) => {
         <Card.Text className="text-center pb-2 d-flex align-items-center justify-content-center">
           <strong>Country:&nbsp;</strong>
           {rider.nationalityName}&nbsp;
-          <CountryFlag countryCode={countryCode ? countryCode : "none"} svg />
+          <CountryFlag alt={`${rider.nationalityName} flag`} countryCode={countryCode ? countryCode : "none"} svg />
         </Card.Text>
         <div
           className="d-flex justify-content-center align-items-center mb-4"
