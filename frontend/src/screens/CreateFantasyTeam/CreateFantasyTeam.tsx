@@ -79,7 +79,7 @@ const CreateFantasyTeam: React.FC = () => {
 
   //add rider to team
   const addToTeam = (row: DataRow) => {
-    if (team.includes(row)) {
+    if (teamIds.includes(row._id)) {
       setTeamError({ alreadyOnTeam: "cyclist already on team", ...teamError });
       return team;
     }
@@ -174,6 +174,10 @@ const CreateFantasyTeam: React.FC = () => {
     });
   }, [pointsRemaining, team]);
 
+  useEffect(() => {
+    console.log(teamIds, team)
+  })
+
   //setting data to pass into RDT
   const columns: TableColumn<DataRow>[] = [
     {
@@ -229,7 +233,7 @@ const CreateFantasyTeam: React.FC = () => {
       right: true,
       format: (row) => {
         if (createRoute) {
-          if (team.includes(row)) {
+          if (teamIds.includes(row._id)) {
             return (
               <ImCheckmark style={{ color: "green", fontSize: "1.7em" }} />
             );
