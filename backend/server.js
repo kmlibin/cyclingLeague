@@ -1,6 +1,9 @@
 //server
 import express from "express";
 
+import path from "path"
+import { fileURLToPath } from 'url';
+
 //libraries
 import dotenv from "dotenv";
 dotenv.config();
@@ -17,6 +20,10 @@ import fantasyTeamRoutes from "./routes/fantasyRoutes.js";
 
 //port variable
 const port = process.env.PORT || 5000;
+
+//using es modules, but dirname is  acommon js feature. have to use import meta to get the dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); 
 
 //init db and server
 connectDB();
@@ -36,7 +43,7 @@ app.use("/api/fantasyteam", fantasyTeamRoutes);
 
 //for production
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "frontend/build")));
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
 
   app.get("*", (req, res) =>
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
