@@ -1,5 +1,8 @@
+//models
 import User from "../models/User.js";
+//libraries
 import { StatusCodes } from "http-status-codes";
+//local imports
 import generateToken from "../utils/generateToken.js";
 
 //@desc register user
