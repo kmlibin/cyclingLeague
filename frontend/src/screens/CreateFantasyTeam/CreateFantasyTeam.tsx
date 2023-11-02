@@ -90,7 +90,7 @@ const CreateFantasyTeam: React.FC = () => {
   useEffect(() => {
     setPage(1);
     setTotalRows(count);
-  }, [count, createRoute]);
+  }, [count, data, createRoute]);
 
   //add rider to team
   const addToTeam = (row: DataRow) => {
