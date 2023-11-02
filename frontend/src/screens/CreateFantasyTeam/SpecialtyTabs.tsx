@@ -11,37 +11,38 @@ type TabProps = {
 const SpecialtyTabs: React.FC<TabProps> = ({ createRoute }) => {
   const navigate = useNavigate();
   const { keyword: search } = useParams();
-
   const [keyword, setSearch] = useState(search || "");
 
+  const baseRoute = createRoute ? "/createteam" : "/cyclists";
+
+  // update the search state when URL changes
   useEffect(() => {
-    setSearch(search || ""); // Update the search state when URL changes
+    setSearch(search || "");
   }, [search]);
 
-const handleClick = (tab: string | undefined) => {
-  const baseRoute = createRoute ? '/createteam' : '/cyclists' 
-  if (keyword.trim()) {
-    const route = tab ? `${baseRoute}/${tab}/search/${keyword}` : `${baseRoute}/search/${keyword}`;
-    console.log(route)
-    navigate(route);
-  } else {
-    const route = tab ? `${baseRoute}/${tab}/search` : `${baseRoute}`;
-    console.log(route)
-    navigate(route);
-  }
-};
+  const handleClick = (tab: string | undefined) => {
+    if (keyword.trim()) {
+      const route = tab
+        ? `${baseRoute}/${tab}/search/${keyword}`
+        : `${baseRoute}/search/${keyword}`;
+      navigate(route);
+    } else {
+      const route = tab ? `${baseRoute}/${tab}/search` : `${baseRoute}`;
+      navigate(route);
+    }
+  };
 
   return (
     <Nav variant="tabs" justify>
       <Nav.Item
         className="navtabs"
         onClick={() => handleClick("all")}
-        style={{ backgroundColor: "rgba(103, 81, 235, .65)" }}
+        style={{ backgroundColor:  "rgba(103, 81, 235, .65)" }}
       >
         <Nav.Link eventKey="all">All</Nav.Link>
       </Nav.Item>
       <Nav.Item
-        className="navtabs"
+         className="navtabs"
         onClick={() => handleClick("Climber")}
         style={{ backgroundColor: "rgba(265, 165, 0, .65" }}
       >
