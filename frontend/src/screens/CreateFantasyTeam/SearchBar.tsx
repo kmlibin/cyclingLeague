@@ -18,7 +18,10 @@ const SearchBar: React.FC<SearchProps> = ({ createRoute }) => {
 
   //ref for the formvalue
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  //determine what route user is on
   const baseRoute = createRoute ? "/createteam" : "/cyclists";
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     //grab value of the input with ref
@@ -30,14 +33,13 @@ const SearchBar: React.FC<SearchProps> = ({ createRoute }) => {
       const route = tab
         ? `${baseRoute}/${tab}/search/${inputValue}`
         : `${baseRoute}/search/${inputValue}`;
-      console.log(route);
       navigate(route);
+      //reset the input
       if (inputRef.current) {
         inputRef.current.value = "";
       }
     } else {
       const route = tab ? `${baseRoute}/${tab}/search` : `${baseRoute}`;
-      console.log(route);
       navigate(route);
     }
   };
@@ -49,7 +51,7 @@ const SearchBar: React.FC<SearchProps> = ({ createRoute }) => {
     navigate(route);
   };
 
-  //clear keyword state if the route path changes, that way the keyword won't display 
+  //clear keyword state if the route path changes, that way the keyword won't display
   //to the right if you move from /cyclists to /createteam and vice versa
   useEffect(() => {
     setKeyword("");
@@ -65,7 +67,6 @@ const SearchBar: React.FC<SearchProps> = ({ createRoute }) => {
           placeholder="Search Riders"
           ref={inputRef}
         ></Form.Control>
-
         <Button type="submit" size="sm" style={{ marginLeft: "5px" }}>
           Search
         </Button>
