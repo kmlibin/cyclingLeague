@@ -55,28 +55,40 @@ const CreateFantasyTeam: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<ToastMessage | undefined>(
     undefined
   );
+  const [totalRows, setTotalRows] = useState(0);
+  const [perPage, setPerPage] = useState(20);
+  const [page, setPage] = useState<number>(1);
   const [createTeam, { error: createError }] = useCreateTeamMutation<any>();
   const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  //figure out what route user is on
-  const createRoute = location.pathname.includes("/createteam");
-
   const { tab, keyword } = useParams();
   const searchObject = {
     tab: tab === "all" ? {} : tab,
     keyword: keyword ? keyword : {},
+    page,
+    perPage
   };
 
   //all doesn't have a value in the db, so pass back an empty object if 'all' in order to get all riders
   const {
-    data: cyclists,
+    data,
     refetch,
     isLoading,
     error: dataError,
   } = useGetCyclistsQuery<any>(searchObject);
+
+  //grab data
+  const cyclists = data?.cyclists
+  const count = data?.count
+
+  useEffect(() => {
+    setTotalRows(count)
+  }, [cyclists])
+  //figure out what route user is on
+  const createRoute = location.pathname.includes("/createteam");
 
   //add rider to team
   const addToTeam = (row: DataRow) => {
@@ -167,6 +179,16 @@ const CreateFantasyTeam: React.FC = () => {
     }
   };
 
+  //hook up RTD to backend pagination
+  const handlePageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const handlePerRowsChange = async (newPerPage: number, page: number) => {
+    setPerPage(newPerPage);
+    setPage(page);
+  };
+
   //update the setToastMessage when points remaining and team changes
   useEffect(() => {
     setToastMessage({
@@ -174,10 +196,6 @@ const CreateFantasyTeam: React.FC = () => {
       roster: `${team.length}`,
     });
   }, [pointsRemaining, team]);
-
-  useEffect(() => {
-    console.log(teamIds, team);
-  });
 
   //setting data to pass into RDT
   const columns: TableColumn<DataRow>[] = [
@@ -290,10 +308,15 @@ const CreateFantasyTeam: React.FC = () => {
             data={cyclists || []}
             dense
             pagination
+            paginationServer
+            paginationTotalRows={totalRows}
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+            paginationPerPage={perPage}
             highlightOnHover
             responsive
+            progressPending={isLoading}
             fixedHeader
-            paginationPerPage={20}
           />
         )}
       </HideSelectionSummary>

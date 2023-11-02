@@ -4,10 +4,11 @@ import { apiSlice } from "./apiSlice";
 export const cyclistsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCyclists: builder.query({
-      query: ({ tab, keyword }) => ({
+      query: ({ tab, keyword, page, perPage }) => ({
         url: CYCLISTS_URL,
         method: "GET",
-        params: { tab, keyword },
+        params: { tab, keyword, page, perPage },
+       
       }),
       providesTags: ["Cyclist"],
       keepUnusedDataFor: 5,

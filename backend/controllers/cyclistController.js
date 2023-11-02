@@ -9,19 +9,33 @@ import { StatusCodes } from "http-status-codes";
 //@access  public
 
 const getAllRiders = async (req, res) => {
+  const pageNumber = req.query.page
+  const perPage = req.query.perPage
+
   const tab = req.query.tab
     ? { mainSpecialty: { $regex: req.query.tab, $options: "i" } }
     : {};
   const keyword = req.query.keyword
     ? { name: { $regex: req.query.keyword, $options: "i" } }
     : {};
+
+
+  //how many delivered per page
+  const pageSize = Number(perPage || 20);
+  //get the page number from frontend, or set at 1
+  const page = Number(pageNumber || 1);
+  //get total docus in the collection
+  const count = await Cyclist.countDocuments({...tab, ...keyword});
+  //limit to 20, then skip to the page entered from frontend
   //search the db for cyclists that match the search objects
+  // console.log(pageSize, page, count)
   try {
-    const cyclists = await Cyclist.find({ ...tab, ...keyword });
+    const cyclists = await Cyclist.find({ ...tab, ...keyword }).limit(pageSize).skip(pageSize * (page - 1));
     if (!cyclists) {
       return res.status(StatusCodes.NOT_FOUND).json({ msg: "No cyclists found" });
     }
-    return res.status(StatusCodes.OK).json(cyclists);
+  
+    return res.status(StatusCodes.OK).json({cyclists, page, pageSize, count});
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
