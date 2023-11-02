@@ -86,7 +86,7 @@ const CreateFantasyTeam: React.FC = () => {
 
   useEffect(() => {
     setTotalRows(count)
-  }, [cyclists])
+  }, [count])
   //figure out what route user is on
   const createRoute = location.pathname.includes("/createteam");
 
@@ -146,7 +146,7 @@ const CreateFantasyTeam: React.FC = () => {
         return;
       }
       // make sure team has 25 people
-      if (team.length != 25) {
+      if (team.length !== 25) {
         setTeamError({ ...teamError, teamLength: "Must have 25 riders" });
         return;
       }

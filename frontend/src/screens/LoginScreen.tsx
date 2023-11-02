@@ -41,7 +41,7 @@ const LoginScreen: React.FC = () => {
     if (userInfo) {
       navigate(`/users/${id}/dashboard`);
     }
-  }, [userInfo, navigate]);
+  }, [userInfo, navigate, id]);
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
