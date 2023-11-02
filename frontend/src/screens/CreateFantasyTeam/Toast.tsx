@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 
+//types
 import { ToastMessage } from "../../types/ToastMessage";
+
+//libraries
 import {IoCloseSharp} from 'react-icons/io5'
 
+//styles
 import './Toast.css'
 
 type ToastProps = {
