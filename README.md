@@ -6,9 +6,9 @@ render deploy:
 
 ### About
 
-You need to register or login to get the full site functionality, feel free to use:
-email:
-pass:
+You need to register or login to get the full site functionality, feel free to use fake Steve and adjust his team/league:
+email: steve@email.com
+pass: secret
 
 This is a MERN stack project I created where users can ultimately view individual information about the top 900 UCI pros, see all of the riders on professional teams, and where users can create their own fantasy teams and league. To create a team, a user must register and be logged in, and to create a league a registered user must have a fantasy team. Once a user has created a fantasy team, they have access to a dashboard screen where they can view their entire team, as well as a variety of statistics about their team (for example, you can see the highest scoring rider, the least cost effective rider, how many cyclists you have in each discipline (sprint, one day, time trial, climbers), best value cyclist). The data for each cyclist is scraped with Puppeteer from a cycling site, and I used that data to seed my DB.
 
