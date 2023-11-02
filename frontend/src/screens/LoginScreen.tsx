@@ -26,18 +26,20 @@ const LoginScreen: React.FC = () => {
   const [login, { isLoading, error }] = useLoginMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const { userInfo } = useAppSelector((state) => state.auth);
-
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
+
+  //grab userinfo state and id
+  const { userInfo } = useAppSelector((state) => state.auth);
+  const id = typeof userInfo === "object" ? userInfo._id : null;
+
   //will find if there is 'redirect' in url, if so it will set it as 'redirect', otherwise '/'
   const redirect = searchParams.get("redirect") || "/";
-  console.log(error);
+
   //if user info exists, we are going to navigate to the redirect
   useEffect(() => {
     if (userInfo) {
-      navigate("/dashboard");
+      navigate(`/users/${id}/dashboard`);
     }
   }, [userInfo, navigate]);
 

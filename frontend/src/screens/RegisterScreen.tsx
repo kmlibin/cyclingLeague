@@ -30,9 +30,11 @@ const RegisterScreen: React.FC = () => {
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
 
+  //grab userinfo state and id
   const { userInfo } = useAppSelector((state) => state.auth);
+  const id = typeof userInfo === "object" ? userInfo._id : null;
 
-  const redirect = sp.get("redirect") || "/dashboard";
+  const redirect = sp.get("redirect") || `/users/${id}/dashboard`;
 
   //if user info exists, we are going to navigate to the redirect
   useEffect(() => {
