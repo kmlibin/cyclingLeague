@@ -69,7 +69,7 @@ const CreateFantasyTeam: React.FC = () => {
     tab: tab === "all" ? {} : tab,
     keyword: keyword ? keyword : {},
     page,
-    perPage
+    perPage,
   };
 
   //all doesn't have a value in the db, so pass back an empty object if 'all' in order to get all riders
@@ -81,14 +81,16 @@ const CreateFantasyTeam: React.FC = () => {
   } = useGetCyclistsQuery<any>(searchObject);
 
   //grab data
-  const cyclists = data?.cyclists
-  const count = data?.count
+  const cyclists = data?.cyclists;
+  const count = data?.count;
 
-  useEffect(() => {
-    setTotalRows(count)
-  }, [count])
   //figure out what route user is on
   const createRoute = location.pathname.includes("/createteam");
+
+  useEffect(() => {
+    setPage(1);
+    setTotalRows(count);
+  }, [count, createRoute]);
 
   //add rider to team
   const addToTeam = (row: DataRow) => {
