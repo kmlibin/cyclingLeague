@@ -59,6 +59,7 @@ const CreateFantasyTeam: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  //figure out what route user is on
   const createRoute = location.pathname.includes("/createteam");
 
   const { tab, keyword } = useParams();
