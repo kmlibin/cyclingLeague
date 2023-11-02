@@ -14,7 +14,7 @@ type SearchProps = {
 const SearchBar: React.FC<SearchProps> = ({ createRoute }) => {
   const navigate = useNavigate();
   const { keyword: search, tab } = useParams();
-  const [keyword, setKeyword] = useState(search || "");
+  const [keyword, setKeyword] = useState(search);
 
   //ref for the formvalue
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -51,7 +51,7 @@ const SearchBar: React.FC<SearchProps> = ({ createRoute }) => {
     navigate(route);
   };
 
-  //clear keyword state if the route path changes, that way the keyword won't display
+  //clear keyword state if the route path changes, that way the keyword won't display in search bar or
   //to the right if you move from /cyclists to /createteam and vice versa
   useEffect(() => {
     setKeyword("");
@@ -71,9 +71,9 @@ const SearchBar: React.FC<SearchProps> = ({ createRoute }) => {
           Search
         </Button>
       </div>
-      {keyword && (
+      {search && (
         <div className=" keyword-container">
-          {keyword}
+          <span className="bold">{search}</span>
           <IoCloseSharp className="close" onClick={removeKeyword} />
         </div>
       )}
