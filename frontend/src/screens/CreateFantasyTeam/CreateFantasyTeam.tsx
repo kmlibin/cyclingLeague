@@ -87,10 +87,16 @@ const CreateFantasyTeam: React.FC = () => {
   //figure out what route user is on
   const createRoute = location.pathname.includes("/createteam");
 
+
+  //reset total rows when the count changes, or when create route changes
   useEffect(() => {
-    setPage(1);
     setTotalRows(count);
-  }, [count, data, createRoute]);
+  }, [count, createRoute]);
+
+  //set page to 1 when create route changes
+  useEffect(() => {
+    setPage(1)
+  }, [createRoute])
 
   //add rider to team
   const addToTeam = (row: DataRow) => {
