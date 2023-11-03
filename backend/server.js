@@ -16,7 +16,7 @@ import connectDB from "./config/db.js";
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimiter from 'express-rate-limit';
-import cors from 'cors'
+
 
 //routes
 import cyclistRoutes from "./routes/cyclistRoutes.js";
@@ -44,7 +44,6 @@ app.use(
   })
 );
 app.use(helmet());
-app.use(cors());
 app.use(mongoSanitize());
 
 //body parser middleware
