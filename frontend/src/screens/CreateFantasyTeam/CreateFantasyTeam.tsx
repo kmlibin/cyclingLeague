@@ -93,10 +93,10 @@ const CreateFantasyTeam: React.FC = () => {
     setTotalRows(count);
   }, [count, createRoute]);
 
-  //set page to 1 when create route changes
+  //set page to 1 when create route changes...add search object as well? 
   useEffect(() => {
     setPage(1)
-  }, [createRoute])
+  }, [createRoute, tab])
 
   //add rider to team
   const addToTeam = (row: DataRow) => {
