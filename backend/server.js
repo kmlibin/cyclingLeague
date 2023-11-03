@@ -43,8 +43,15 @@ app.use(
     max: 60,
   })
 );
-app.use(helmet());
 app.use(mongoSanitize());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
+    },
+  })
+);
 
 //body parser middleware
 app.use(express.json());
