@@ -12,6 +12,12 @@ import cookieParser from "cookie-parser";
 //database
 import connectDB from "./config/db.js";
 
+//rest of packages
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import rateLimiter from 'express-rate-limit';
+import cors from 'cors'
+
 //routes
 import cyclistRoutes from "./routes/cyclistRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
@@ -28,6 +34,18 @@ const __dirname = path.dirname(__filename);
 //init db and server
 connectDB();
 const app = express();
+
+//security
+app.set("trust proxy", 1);
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 60,
+  })
+);
+app.use(helmet());
+app.use(cors());
+app.use(mongoSanitize());
 
 //body parser middleware
 app.use(express.json());
