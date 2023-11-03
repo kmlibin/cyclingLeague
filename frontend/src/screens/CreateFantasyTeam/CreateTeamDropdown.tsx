@@ -105,7 +105,7 @@ const CreateTeamDropdown: React.FC<Props> = ({
                   Points Remaining: <strong>{points.toString()}</strong>
                 </Col>
                 <Col xs="auto" className="text-end">
-                  Total Riders: <strong>{team.length}</strong>
+                  Total Riders: <strong>{team.length} / 25</strong>
                 </Col>
               </Row>
             </ListGroup.Item>
